@@ -266,6 +266,45 @@ class GoalTemplateManager: ObservableObject {
                     TaskTemplate(title: "工具使用", description: "使用时间管理工具", estimatedDuration: 20, difficulty: .medium, tags: ["工具", "实践"]),
                     TaskTemplate(title: "习惯培养", description: "培养时间管理习惯", estimatedDuration: 15, difficulty: .hard, tags: ["习惯", "坚持"])
                 ]
+            ),
+            
+            // 初中英语成绩提升模板
+            GoalTemplate(
+                name: "提升初中英语成绩",
+                description: "在本学期结束时，英语成绩提升至班级前 10 名，期末考试 ≥ 90 分，并养成稳定的学习习惯。",
+                category: .english,
+                goalType: .okr,
+                priority: .high,
+                duration: 90, // 一个学期约90天
+                icon: "graduationcap.fill",
+                tags: ["英语", "成绩提升", "初中", "OKR"],
+                milestones: [
+                    MilestoneTemplate(title: "词汇积累", description: "掌握并熟练运用 800 个核心单词，每周新增 ≥50 单词", duration: 30, order: 1),
+                    MilestoneTemplate(title: "阅读理解", description: "完成 12 篇英语阅读理解练习，阅读正确率 ≥80%", duration: 45, order: 2),
+                    MilestoneTemplate(title: "写作能力", description: "完成 15 篇英语作文，至少 5 篇作文得分 ≥85/100", duration: 60, order: 3),
+                    MilestoneTemplate(title: "听力与口语", description: "每周 30 分钟听力训练，参与 5 次口语对话练习", duration: 75, order: 4),
+                    MilestoneTemplate(title: "考试模拟", description: "完成 6 套英语模拟试卷，错题订正率 ≥90%", duration: 90, order: 5)
+                ],
+                keyResults: [
+                    KeyResultTemplate(title: "词汇掌握", description: "掌握并熟练运用 800 个核心单词", targetValue: 800, unit: "个"),
+                    KeyResultTemplate(title: "阅读理解", description: "完成 12 篇英语阅读理解练习", targetValue: 12, unit: "篇"),
+                    KeyResultTemplate(title: "阅读正确率", description: "阅读正确率 ≥80%", targetValue: 80, unit: "%"),
+                    KeyResultTemplate(title: "作文完成", description: "完成 15 篇英语作文", targetValue: 15, unit: "篇"),
+                    KeyResultTemplate(title: "高分作文", description: "至少 5 篇作文得分 ≥85/100", targetValue: 5, unit: "篇"),
+                    KeyResultTemplate(title: "听力训练", description: "每周 30 分钟听力训练", targetValue: 6, unit: "小时"),
+                    KeyResultTemplate(title: "口语练习", description: "参与 5 次口语对话练习", targetValue: 5, unit: "次"),
+                    KeyResultTemplate(title: "模拟考试", description: "完成 6 套英语模拟试卷", targetValue: 6, unit: "套"),
+                    KeyResultTemplate(title: "错题订正", description: "错题订正率 ≥90%", targetValue: 90, unit: "%")
+                ],
+                suggestedTasks: [
+                    TaskTemplate(title: "单词背诵", description: "背诵20个新单词", estimatedDuration: 30, difficulty: .easy, tags: ["词汇", "背诵"]),
+                    TaskTemplate(title: "阅读理解", description: "完成一篇英语阅读理解", estimatedDuration: 25, difficulty: .medium, tags: ["阅读", "理解"]),
+                    TaskTemplate(title: "英语作文", description: "写一篇英语作文", estimatedDuration: 45, difficulty: .medium, tags: ["写作", "作文"]),
+                    TaskTemplate(title: "听力练习", description: "进行30分钟听力训练", estimatedDuration: 30, difficulty: .easy, tags: ["听力", "练习"]),
+                    TaskTemplate(title: "口语对话", description: "参与英语口语对话练习", estimatedDuration: 20, difficulty: .hard, tags: ["口语", "对话"]),
+                    TaskTemplate(title: "模拟考试", description: "完成一套英语模拟试卷", estimatedDuration: 90, difficulty: .hard, tags: ["考试", "模拟"]),
+                    TaskTemplate(title: "错题订正", description: "订正错题并总结", estimatedDuration: 20, difficulty: .medium, tags: ["订正", "总结"])
+                ]
             )
         ]
     }

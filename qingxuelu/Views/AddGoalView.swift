@@ -21,34 +21,29 @@ struct AddGoalView: View {
     @State private var goalType: GoalType = .smart
     @State private var showingAddMilestone = false
     @State private var showingAddKeyResult = false
-    @State private var showingTemplateSelector = false
+    @State private var showingTemplates = false
     
     var body: some View {
         NavigationView {
             Form {
+                // 模板选择部分
+                Section {
+                    Button("浏览模板") {
+                        showingTemplates = true
+                    }
+                    .foregroundColor(.blue)
+                } header: {
+                    Text("快速开始")
+                } footer: {
+                    Text("使用预设模板快速创建学习目标，包含里程碑和关键结果")
+                }
+                
                 Section {
                     TextField("目标标题", text: $title)
                     TextField("目标描述", text: $description, axis: .vertical)
                         .lineLimit(3...6)
-                    
-                    Button(action: {
-                        showingTemplateSelector = true
-                    }) {
-                        HStack {
-                            Image(systemName: "doc.text")
-                                .foregroundColor(.blue)
-                            Text("从模板创建")
-                                .foregroundColor(.blue)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
                 } header: {
                     Text("基本信息")
-                } footer: {
-                    Text("选择预设模板可以快速创建常见的学习目标")
                 }
                 
                 Section {
@@ -152,30 +147,8 @@ struct AddGoalView: View {
                 keyResults.append(keyResult)
             }
         }
-        .sheet(isPresented: $showingTemplateSelector) {
-            GoalTemplateView { template in
-                applyTemplate(template)
-            }
-        }
-    }
-    
-    private func applyTemplate(_ template: GoalTemplate) {
-        let goal = template.toLearningGoal()
-        
-        // 应用模板数据到当前表单
-        title = goal.title
-        description = goal.description
-        category = goal.category
-        priority = goal.priority
-        targetDate = goal.targetDate
-        goalType = goal.goalType
-        milestones = goal.milestones
-        keyResults = goal.keyResults
-        
-        // 自动创建建议的任务
-        for taskTemplate in template.suggestedTasks {
-            let task = taskTemplate.toLearningTask(goalId: goal.id)
-            dataManager.addTask(task)
+        .sheet(isPresented: $showingTemplates) {
+            GoalTemplateView()
         }
     }
     
@@ -203,7 +176,6 @@ struct AddGoalView: View {
         keyResults.remove(atOffsets: offsets)
     }
 }
-
 
 // MARK: - 添加关键结果视图
 struct AddKeyResultView: View {
@@ -376,6 +348,7 @@ struct EditGoalView: View {
     @State private var goalType: GoalType
     @State private var showingAddMilestone = false
     @State private var showingAddKeyResult = false
+    @State private var showingTemplates = false
     
     init(goal: LearningGoal) {
         self.goal = goal
@@ -394,6 +367,18 @@ struct EditGoalView: View {
     var body: some View {
         NavigationView {
             Form {
+                // 模板选择部分
+                Section {
+                    Button("浏览模板") {
+                        showingTemplates = true
+                    }
+                    .foregroundColor(.blue)
+                } header: {
+                    Text("快速开始")
+                } footer: {
+                    Text("使用预设模板快速创建学习目标，包含里程碑和关键结果")
+                }
+                
                 Section {
                     TextField("目标标题", text: $title)
                     TextField("目标描述", text: $description, axis: .vertical)
@@ -519,6 +504,9 @@ struct EditGoalView: View {
             AddKeyResultView { keyResult in
                 keyResults.append(keyResult)
             }
+        }
+        .sheet(isPresented: $showingTemplates) {
+            GoalTemplateView()
         }
     }
     

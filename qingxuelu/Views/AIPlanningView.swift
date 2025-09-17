@@ -358,7 +358,7 @@ struct StudentInfoStep: View {
                 if studentInfo.subjects.isEmpty {
                     Text("请至少添加一门科目的成绩，这样AI能更好地为您生成学习计划")
                         .font(.caption)
-                        .foregroundColor(.orange)
+                        .foregroundColor(Color(.systemOrange))
                         .padding(.top, 4)
                 }
             }
@@ -441,7 +441,7 @@ struct AIGenerationStep: View {
                 VStack(spacing: 16) {
                     Image(systemName: "exclamationmark.triangle")
                         .font(.system(size: 50))
-                        .foregroundColor(.red)
+                        .foregroundColor(Color(.systemRed))
                     
                     Text("生成失败")
                         .font(.headline)
@@ -455,7 +455,7 @@ struct AIGenerationStep: View {
                 VStack(spacing: 16) {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.system(size: 50))
-                        .foregroundColor(.green)
+                        .foregroundColor(Color(.systemGreen))
                     
                     Text("AI分析完成")
                         .font(.headline)

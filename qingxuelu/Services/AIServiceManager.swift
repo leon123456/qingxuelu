@@ -96,6 +96,9 @@ class AIServiceManager: ObservableObject {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(requestBody)
         
+        // 设置更长的超时时间，因为AI生成模板需要更多时间
+        request.timeoutInterval = 120.0 // 2分钟超时
+        
         let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse,

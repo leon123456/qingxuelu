@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - 学生信息模型
 struct Student: Identifiable, Codable {
-    let id = UUID()
+    let id: UUID
     var name: String
     var grade: String
     var school: String
@@ -17,7 +17,8 @@ struct Student: Identifiable, Codable {
     var createdAt: Date
     var updatedAt: Date
     
-    init(name: String, grade: String, school: String, avatar: String? = nil) {
+    init(id: UUID = UUID(), name: String, grade: String, school: String, avatar: String? = nil) {
+        self.id = id
         self.name = name
         self.grade = grade
         self.school = school
@@ -29,8 +30,9 @@ struct Student: Identifiable, Codable {
 
 // MARK: - 学习目标模型
 struct LearningGoal: Identifiable, Codable, Hashable {
-    let id = UUID()
-    var userId: UUID = UUID()  // 新增：关联用户，第一版暂不使用
+    let id: UUID
+    var userId: UUID  // 新增：关联用户，第一版暂不使用
+    var planId: UUID?  // 关联的学习计划ID
     var title: String
     var description: String
     var category: SubjectCategory
@@ -46,7 +48,10 @@ struct LearningGoal: Identifiable, Codable, Hashable {
     var createdAt: Date
     var updatedAt: Date
     
-    init(title: String, description: String, category: SubjectCategory, priority: Priority, targetDate: Date, goalType: GoalType = .smart) {
+    init(id: UUID = UUID(), userId: UUID = UUID(), planId: UUID? = nil, title: String, description: String, category: SubjectCategory, priority: Priority, targetDate: Date, goalType: GoalType = .smart) {
+        self.id = id
+        self.userId = userId
+        self.planId = planId
         self.title = title
         self.description = description
         self.category = category
@@ -65,7 +70,7 @@ struct LearningGoal: Identifiable, Codable, Hashable {
 
 // MARK: - 关键结果模型（OKR）
 struct KeyResult: Identifiable, Codable, Hashable {
-    let id = UUID()
+    let id: UUID
     var title: String
     var description: String
     var targetValue: Double
@@ -74,7 +79,8 @@ struct KeyResult: Identifiable, Codable, Hashable {
     var isCompleted: Bool
     var createdAt: Date
     
-    init(title: String, description: String, targetValue: Double, unit: String) {
+    init(id: UUID = UUID(), title: String, description: String, targetValue: Double, unit: String) {
+        self.id = id
         self.title = title
         self.description = description
         self.targetValue = targetValue
@@ -117,7 +123,7 @@ enum GoalType: String, CaseIterable, Codable {
 
 // MARK: - 里程碑模型
 struct Milestone: Identifiable, Codable, Hashable {
-    let id = UUID()
+    let id: UUID
     var title: String
     var description: String
     var targetDate: Date
@@ -125,7 +131,8 @@ struct Milestone: Identifiable, Codable, Hashable {
     var isCompleted: Bool
     var progress: Double
     
-    init(title: String, description: String, targetDate: Date) {
+    init(id: UUID = UUID(), title: String, description: String, targetDate: Date) {
+        self.id = id
         self.title = title
         self.description = description
         self.targetDate = targetDate
@@ -136,8 +143,8 @@ struct Milestone: Identifiable, Codable, Hashable {
 
 // MARK: - 学习任务模型
 struct LearningTask: Identifiable, Codable, Hashable {
-    let id = UUID()
-    var userId: UUID = UUID()  // 新增：关联用户，第一版暂不使用
+    let id: UUID
+    var userId: UUID  // 新增：关联用户，第一版暂不使用
     var title: String
     var description: String
     var category: SubjectCategory
@@ -151,7 +158,9 @@ struct LearningTask: Identifiable, Codable, Hashable {
     var createdAt: Date
     var updatedAt: Date
     
-    init(title: String, description: String, category: SubjectCategory, priority: Priority, estimatedDuration: TimeInterval, goalId: UUID? = nil) {
+    init(id: UUID = UUID(), userId: UUID = UUID(), title: String, description: String, category: SubjectCategory, priority: Priority, estimatedDuration: TimeInterval, goalId: UUID? = nil) {
+        self.id = id
+        self.userId = userId
         self.title = title
         self.description = description
         self.category = category
@@ -166,8 +175,8 @@ struct LearningTask: Identifiable, Codable, Hashable {
 
 // MARK: - 学习记录模型
 struct LearningRecord: Identifiable, Codable {
-    let id = UUID()
-    var userId: UUID = UUID()  // 新增：关联用户，第一版暂不使用
+    let id: UUID
+    var userId: UUID  // 新增：关联用户，第一版暂不使用
     var taskId: UUID
     var startTime: Date
     var endTime: Date
@@ -176,7 +185,9 @@ struct LearningRecord: Identifiable, Codable {
     var rating: Int? // 学习质量评分 1-5
     var createdAt: Date
     
-    init(taskId: UUID, startTime: Date, endTime: Date, notes: String? = nil, rating: Int? = nil) {
+    init(id: UUID = UUID(), userId: UUID = UUID(), taskId: UUID, startTime: Date, endTime: Date, notes: String? = nil, rating: Int? = nil) {
+        self.id = id
+        self.userId = userId
         self.taskId = taskId
         self.startTime = startTime
         self.endTime = endTime
@@ -265,6 +276,142 @@ enum TaskStatus: String, CaseIterable, Codable {
         case .completed: return "green"
         case .overdue: return "red"
         case .cancelled: return "orange"
+        }
+    }
+}
+
+// MARK: - 学习计划
+struct LearningPlan: Identifiable, Codable {
+    let id: UUID  // 这个ID就是目标的ID
+    var title: String
+    var description: String
+    var startDate: Date
+    var endDate: Date
+    var totalWeeks: Int
+    var weeklyPlans: [WeeklyPlan]
+    var resources: [LearningResource]
+    var isActive: Bool
+    var createdAt: Date
+    var userId: UUID = UUID() // 默认值，第一版暂不使用
+    
+    init(id: UUID, title: String, description: String, startDate: Date, endDate: Date, totalWeeks: Int, weeklyPlans: [WeeklyPlan] = [], resources: [LearningResource] = [], isActive: Bool = true, userId: UUID = UUID()) {
+        self.id = id  // 使用目标的ID
+        self.title = title
+        self.description = description
+        self.startDate = startDate
+        self.endDate = endDate
+        self.totalWeeks = totalWeeks
+        self.weeklyPlans = weeklyPlans
+        self.resources = resources
+        self.isActive = isActive
+        self.createdAt = Date()
+        self.userId = userId
+    }
+}
+
+// MARK: - 周任务
+struct WeeklyTask: Identifiable, Codable {
+    let id: UUID
+    var title: String
+    var description: String
+    var quantity: String // 具体数量，如"20个单词"、"5道题"
+    var duration: String // 预估时长，如"30分钟"、"2小时"
+    var difficulty: String // 难度等级，如"简单"、"中等"、"困难"
+    var isCompleted: Bool
+    var startedDate: Date? // 实际开始时间
+    var completedDate: Date? // 实际完成时间
+    var actualDuration: TimeInterval? // 实际耗时（秒）
+    var completionNotes: String? // 完成备注
+    var completionRating: Int? // 完成质量评分 1-5
+    var completionProgress: Double? // 完成度 0.0-1.0
+    
+    init(id: UUID = UUID(), title: String, description: String = "", quantity: String = "", duration: String = "", difficulty: String = "中等", isCompleted: Bool = false, startedDate: Date? = nil, completedDate: Date? = nil, actualDuration: TimeInterval? = nil, completionNotes: String? = nil, completionRating: Int? = nil, completionProgress: Double? = nil) {
+        self.id = id
+        self.title = title
+        self.description = description
+        self.quantity = quantity
+        self.duration = duration
+        self.difficulty = difficulty
+        self.isCompleted = isCompleted
+        self.startedDate = startedDate
+        self.completedDate = completedDate
+        self.actualDuration = actualDuration
+        self.completionNotes = completionNotes
+        self.completionRating = completionRating
+        self.completionProgress = completionProgress
+    }
+}
+
+// MARK: - 周计划
+struct WeeklyPlan: Identifiable, Codable {
+    let id: UUID
+    var weekNumber: Int
+    var startDate: Date
+    var endDate: Date
+    var milestones: [String]
+    var taskCount: Int
+    var estimatedHours: Double
+    var completedTasks: Int
+    var isCompleted: Bool
+    var tasks: [WeeklyTask] // 新增：具体的任务列表
+    
+    init(id: UUID = UUID(), weekNumber: Int, startDate: Date, endDate: Date, milestones: [String] = [], taskCount: Int = 0, estimatedHours: Double = 0, completedTasks: Int = 0, isCompleted: Bool = false, tasks: [WeeklyTask] = []) {
+        self.id = id
+        self.weekNumber = weekNumber
+        self.startDate = startDate
+        self.endDate = endDate
+        self.milestones = milestones
+        self.taskCount = taskCount
+        self.estimatedHours = estimatedHours
+        self.completedTasks = completedTasks
+        self.isCompleted = isCompleted
+        self.tasks = tasks
+    }
+    
+    var progress: Double {
+        guard taskCount > 0 else { return 0 }
+        return Double(completedTasks) / Double(taskCount)
+    }
+}
+
+// MARK: - 学习资源
+struct LearningResource: Identifiable, Codable {
+    let id: UUID
+    var title: String
+    var type: ResourceType
+    var url: String?
+    var description: String
+    var isCompleted: Bool
+    
+    init(id: UUID = UUID(), title: String, type: ResourceType, url: String? = nil, description: String = "", isCompleted: Bool = false) {
+        self.id = id
+        self.title = title
+        self.type = type
+        self.url = url
+        self.description = description
+        self.isCompleted = isCompleted
+    }
+}
+
+// MARK: - 资源类型
+enum ResourceType: String, CaseIterable, Codable {
+    case textbook = "教材"
+    case video = "视频"
+    case exercise = "习题"
+    case course = "课程"
+    case website = "网站"
+    case app = "应用"
+    case other = "其他"
+    
+    var icon: String {
+        switch self {
+        case .textbook: return "book.fill"
+        case .video: return "play.rectangle.fill"
+        case .exercise: return "doc.text.fill"
+        case .course: return "graduationcap.fill"
+        case .website: return "globe"
+        case .app: return "app.fill"
+        case .other: return "folder.fill"
         }
     }
 }

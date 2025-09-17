@@ -15,6 +15,7 @@ class DataManager: ObservableObject {
     @Published var tasks: [LearningTask] = []
     @Published var records: [LearningRecord] = []
     @Published var reflections: [LearningReflection] = []
+    @Published var plans: [LearningPlan] = []
     
     // 兼容性支持（逐步迁移）
     @Published var profiles: [StudentProfile] = []
@@ -29,6 +30,7 @@ class DataManager: ObservableObject {
     private let tasksKey = "tasks"
     private let recordsKey = "records"
     private let reflectionsKey = "reflections"
+    private let plansKey = "plans"
     
     // 兼容性键
     private let profilesKey = "profiles"
@@ -38,6 +40,10 @@ class DataManager: ObservableObject {
     
     init() {
         loadData()
+        // 完全禁用示例数据生成，避免UUID冲突
+        // if goals.isEmpty && plans.isEmpty && tasks.isEmpty && records.isEmpty && reflections.isEmpty {
+        //     addSampleData()
+        // }
     }
     
     // MARK: - 数据持久化
@@ -54,6 +60,9 @@ class DataManager: ObservableObject {
         }
         if let reflectionsData = try? JSONEncoder().encode(reflections) {
             userDefaults.set(reflectionsData, forKey: reflectionsKey)
+        }
+        if let plansData = try? JSONEncoder().encode(plans) {
+            userDefaults.set(plansData, forKey: plansKey)
         }
         
         // 兼容性保存
@@ -88,6 +97,16 @@ class DataManager: ObservableObject {
         if let reflectionsData = userDefaults.data(forKey: reflectionsKey),
            let loadedReflections = try? JSONDecoder().decode([LearningReflection].self, from: reflectionsData) {
             reflections = loadedReflections
+        }
+        if let plansData = userDefaults.data(forKey: plansKey),
+           let loadedPlans = try? JSONDecoder().decode([LearningPlan].self, from: plansData) {
+            plans = loadedPlans
+            print("=== 加载计划调试信息 ===")
+            print("加载的计划数量: \(plans.count)")
+            for plan in plans {
+                print("计划ID: \(plan.id), 标题: \(plan.title)")
+            }
+            print("=== 加载计划调试信息结束 ===")
         }
         
         // 兼容性加载
@@ -325,6 +344,207 @@ class DataManager: ObservableObject {
     
     func getReflectionsForTimeRange(_ timeRange: DateInterval) -> [LearningReflection] {
         return reflections.filter { timeRange.contains($0.createdAt) }
+    }
+    
+    // MARK: - 测试数据
+    private func addSampleData() {
+        // 添加示例目标
+        let sampleGoal = LearningGoal(
+            title: "英语口语提升",
+            description: "通过日常练习提升英语口语表达能力",
+            category: .english,
+            priority: .high,
+            targetDate: Calendar.current.date(byAdding: .month, value: 3, to: Date()) ?? Date()
+        )
+        addGoal(sampleGoal)
+        
+        // 为这个目标生成计划
+        let plan = generatePlanFromGoal(sampleGoal)
+        addPlan(plan)
+        
+        // 添加一些任务
+        let task1 = LearningTask(
+            title: "每日英语对话练习",
+            description: "与AI或朋友进行15分钟英语对话",
+            category: .english,
+            priority: .high,
+            estimatedDuration: 15 * 60 // 15分钟
+        )
+        addTask(task1)
+        
+        let task2 = LearningTask(
+            title: "英语单词背诵",
+            description: "背诵20个新单词",
+            category: .english,
+            priority: .medium,
+            estimatedDuration: 30 * 60 // 30分钟
+        )
+        addTask(task2)
+    }
+    
+    // MARK: - 学习计划管理
+    func addPlan(_ plan: LearningPlan) {
+        // 更新目标的planId
+        if let goalIndex = goals.firstIndex(where: { $0.id == plan.id }) {
+            goals[goalIndex].planId = plan.id
+        }
+        
+        // 如果已存在相同ID的计划，则更新它
+        if let existingIndex = plans.firstIndex(where: { $0.id == plan.id }) {
+            plans[existingIndex] = plan
+        } else {
+            plans.append(plan)
+        }
+        
+        print("=== 添加计划调试信息 ===")
+        print("计划ID: \(plan.id)")
+        print("计划标题: \(plan.title)")
+        print("当前计划总数: \(plans.count)")
+        print("=== 添加计划调试信息结束 ===")
+        saveData()
+    }
+    
+    func updatePlan(_ plan: LearningPlan) {
+        if let index = plans.firstIndex(where: { $0.id == plan.id }) {
+            plans[index] = plan
+            saveData()
+        }
+    }
+    
+    func deletePlan(_ plan: LearningPlan) {
+        plans.removeAll { $0.id == plan.id }
+        saveData()
+    }
+    
+    func getPlanForGoal(_ goalId: UUID) -> LearningPlan? {
+        print("=== 获取目标计划详细调试信息 ===")
+        print("查询的目标ID: \(goalId)")
+        let plan = plans.first(where: { $0.id == goalId })
+        if let plan = plan {
+            print("找到计划 - ID: \(plan.id), 标题: \(plan.title)")
+        } else {
+            print("未找到计划")
+        }
+        print("=== 获取目标计划详细调试信息结束 ===")
+        return plan
+    }
+    
+    func getActivePlans() -> [LearningPlan] {
+        return plans.filter { $0.isActive }
+    }
+    
+    func generatePlanFromGoal(_ goal: LearningGoal) -> LearningPlan {
+        let totalWeeks = Int(goal.targetDate.timeIntervalSince(goal.startDate) / (7 * 24 * 3600))
+        let plan = LearningPlan(
+            id: goal.id,
+            title: "\(goal.title) 学习计划",
+            description: "基于目标自动生成的 \(totalWeeks) 周学习计划",
+            startDate: goal.startDate,
+            endDate: goal.targetDate,
+            totalWeeks: totalWeeks
+        )
+        
+        // 生成周计划
+        var weeklyPlans: [WeeklyPlan] = []
+        for week in 1...totalWeeks {
+            let weekStart = Calendar.current.date(byAdding: .weekOfYear, value: week - 1, to: goal.startDate) ?? goal.startDate
+            let weekEnd = Calendar.current.date(byAdding: .day, value: 6, to: weekStart) ?? weekStart
+            
+            let milestones = generateMilestonesForWeek(week: week, totalWeeks: totalWeeks, goal: goal)
+            let taskCount = calculateTaskCountForWeek(week: week, totalWeeks: totalWeeks, goal: goal)
+            let estimatedHours = calculateEstimatedHoursForWeek(week: week, totalWeeks: totalWeeks, goal: goal)
+            
+            let weeklyPlan = WeeklyPlan(
+                weekNumber: week,
+                startDate: weekStart,
+                endDate: weekEnd,
+                milestones: milestones,
+                taskCount: taskCount,
+                estimatedHours: estimatedHours
+            )
+            weeklyPlans.append(weeklyPlan)
+        }
+        
+        var updatedPlan = plan
+        updatedPlan.weeklyPlans = weeklyPlans
+        updatedPlan.resources = generateResourcesForGoal(goal)
+        
+        return updatedPlan
+    }
+    
+    private func generateMilestonesForWeek(week: Int, totalWeeks: Int, goal: LearningGoal) -> [String] {
+        // 根据目标类型和里程碑生成周里程碑
+        var milestones: [String] = []
+        
+        if week <= totalWeeks / 3 {
+            // 前1/3阶段：基础阶段
+            milestones.append("完成基础理论学习")
+        } else if week <= totalWeeks * 2 / 3 {
+            // 中1/3阶段：练习阶段
+            milestones.append("完成专项练习")
+        } else {
+            // 后1/3阶段：冲刺阶段
+            milestones.append("完成综合复习")
+        }
+        
+        return milestones
+    }
+    
+    private func calculateTaskCountForWeek(week: Int, totalWeeks: Int, goal: LearningGoal) -> Int {
+        // 根据目标类型计算每周任务数量
+        switch goal.category {
+        case .math, .physics, .chemistry:
+            return 10 + (week * 2) // 理科任务递增
+        case .chinese, .english:
+            return 8 + week // 文科任务递增
+        case .history, .geography, .politics:
+            return 6 + (week / 2) // 文科任务递增较慢
+        case .biology:
+            return 8 + (week * 3 / 2) // 生物任务递增
+        case .other:
+            return 5 + week // 其他任务递增
+        }
+    }
+    
+    private func calculateEstimatedHoursForWeek(week: Int, totalWeeks: Int, goal: LearningGoal) -> Double {
+        // 根据目标类型计算每周预估学习时间
+        let baseHours: Double
+        switch goal.category {
+        case .math, .physics, .chemistry:
+            baseHours = 15.0
+        case .chinese, .english:
+            baseHours = 12.0
+        case .history, .geography, .politics:
+            baseHours = 10.0
+        case .biology:
+            baseHours = 12.0
+        case .other:
+            baseHours = 8.0
+        }
+        
+        // 随着周数增加，学习时间逐渐增加
+        return baseHours + Double(week) * 0.5
+    }
+    
+    private func generateResourcesForGoal(_ goal: LearningGoal) -> [LearningResource] {
+        // 根据目标类型生成相关学习资源
+        var resources: [LearningResource] = []
+        
+        switch goal.category {
+        case .math:
+            resources.append(LearningResource(title: "数学教材", type: .textbook, description: "主要学习教材"))
+            resources.append(LearningResource(title: "数学题库", type: .exercise, description: "练习题集"))
+        case .english:
+            resources.append(LearningResource(title: "英语单词书", type: .textbook, description: "词汇学习"))
+            resources.append(LearningResource(title: "英语听力材料", type: .video, description: "听力练习"))
+        case .chinese:
+            resources.append(LearningResource(title: "语文教材", type: .textbook, description: "课文学习"))
+            resources.append(LearningResource(title: "作文素材", type: .website, description: "写作素材收集"))
+        default:
+            resources.append(LearningResource(title: "相关教材", type: .textbook, description: "主要学习材料"))
+        }
+        
+        return resources
     }
     
     // MARK: - 模板管理

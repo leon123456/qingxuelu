@@ -2,25 +2,39 @@
 //  GoalTemplateView.swift
 //  qingxuelu
 //
-//  Created by ZL on 2025/9/10.
+//  Created by Assistant on 2025-09-11.
 //
 
 import SwiftUI
 
 struct GoalTemplateView: View {
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject var templateManager = GoalTemplateManager.shared
+    @EnvironmentObject var dataManager: DataManager
+    
     @State private var searchText = ""
     @State private var selectedCategory: SubjectCategory? = nil
     @State private var selectedTemplate: GoalTemplate? = nil
     
-    let onTemplateSelected: (GoalTemplate) -> Void
-    
-    var filteredTemplates: [GoalTemplate] {
-        return templateManager.searchTemplates(query: searchText)
-            .filter { template in
-                selectedCategory == nil || template.category == selectedCategory
+    private var filteredTemplates: [GoalTemplate] {
+        let templates = GoalTemplateManager.shared.templates
+        
+        var filtered = templates
+        
+        // 按类别筛选
+        if let category = selectedCategory {
+            filtered = filtered.filter { $0.category == category }
+        }
+        
+        // 按搜索文本筛选
+        if !searchText.isEmpty {
+            filtered = filtered.filter { template in
+                template.name.localizedCaseInsensitiveContains(searchText) ||
+                template.description.localizedCaseInsensitiveContains(searchText) ||
+                template.tags.contains { $0.localizedCaseInsensitiveContains(searchText) }
             }
+        }
+        
+        return filtered
     }
     
     var body: some View {
@@ -30,37 +44,114 @@ struct GoalTemplateView: View {
                 SearchBar(text: $searchText)
                     .padding(.horizontal)
                 
-                // 分类筛选
-                CategoryFilterView(selectedCategory: $selectedCategory)
-                
-                // 模板列表
-                ScrollView {
-                    LazyVStack(spacing: 16) {
-                        ForEach(filteredTemplates) { template in
-                            TemplateCardView(template: template) {
-                                selectedTemplate = template
-                            }
+                // 类别筛选
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        CategoryChip(
+                            title: "全部",
+                            isSelected: selectedCategory == nil,
+                            action: { selectedCategory = nil }
+                        )
+                        
+                        ForEach(SubjectCategory.allCases, id: \.self) { category in
+                            CategoryChip(
+                                title: category.rawValue,
+                                isSelected: selectedCategory == category,
+                                action: { selectedCategory = category }
+                            )
                         }
                     }
-                    .padding()
+                    .padding(.horizontal)
+                }
+                .padding(.vertical, 8)
+                
+                // 模板列表
+                if filteredTemplates.isEmpty {
+                    EmptyTemplatesView()
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 16) {
+                            ForEach(filteredTemplates) { template in
+                                TemplateCardView(template: template) {
+                                    selectedTemplate = template
+                                }
+                            }
+                        }
+                        .padding()
+                    }
                 }
             }
-            .navigationTitle("选择模板")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("目标模板")
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("取消") {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("完成") {
                         dismiss()
                     }
                 }
             }
         }
         .sheet(item: $selectedTemplate) { template in
-            TemplateDetailView(template: template) { selectedTemplate in
-                onTemplateSelected(selectedTemplate)
-                dismiss()
+            TemplateDetailView(template: template) { appliedTemplate in
+                applyTemplate(appliedTemplate)
+                selectedTemplate = nil  // 这会自动关闭 sheet
             }
         }
+    }
+    
+    private func applyTemplate(_ template: GoalTemplate) {
+        // 将模板转换为学习目标
+        var goal = LearningGoal(
+            title: template.name,
+            description: template.description,
+            category: template.category,
+            priority: template.priority,
+            targetDate: Date().addingTimeInterval(TimeInterval(template.duration * 24 * 3600)),
+            goalType: template.goalType
+        )
+        
+        // 添加里程碑
+        goal.milestones = template.milestones.map { milestoneTemplate in
+            Milestone(
+                title: milestoneTemplate.title,
+                description: milestoneTemplate.description,
+                targetDate: Date().addingTimeInterval(TimeInterval(milestoneTemplate.duration * 24 * 3600))
+            )
+        }
+        
+        // 添加关键结果
+        goal.keyResults = template.keyResults.map { keyResultTemplate in
+            KeyResult(
+                title: keyResultTemplate.title,
+                description: keyResultTemplate.description,
+                targetValue: keyResultTemplate.targetValue,
+                unit: keyResultTemplate.unit
+            )
+        }
+        
+        // 添加建议任务
+        for taskTemplate in template.suggestedTasks {
+            let priority: Priority = {
+                switch taskTemplate.difficulty {
+                case .easy: return .low
+                case .medium: return .medium
+                case .hard: return .high
+                }
+            }()
+            
+            let task = LearningTask(
+                title: taskTemplate.title,
+                description: taskTemplate.description,
+                category: template.category,
+                priority: priority,
+                estimatedDuration: TimeInterval(taskTemplate.estimatedDuration * 60),
+                goalId: goal.id
+            )
+            dataManager.addTask(task)
+        }
+        
+        dataManager.addGoal(goal)
+        dismiss()
     }
 }
 
@@ -71,7 +162,7 @@ struct SearchBar: View {
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
-                .foregroundColor(.secondary)
+                .foregroundColor(.gray)
             
             TextField("搜索模板...", text: $text)
                 .textFieldStyle(PlainTextFieldStyle())
@@ -80,7 +171,6 @@ struct SearchBar: View {
                 Button("清除") {
                     text = ""
                 }
-                .font(.caption)
                 .foregroundColor(.blue)
             }
         }
@@ -91,61 +181,26 @@ struct SearchBar: View {
     }
 }
 
-// MARK: - 分类筛选
-struct CategoryFilterView: View {
-    @Binding var selectedCategory: SubjectCategory?
-    
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
-                // 全部选项
-                CategoryChip(
-                    title: "全部",
-                    icon: "square.grid.2x2",
-                    isSelected: selectedCategory == nil
-                ) {
-                    selectedCategory = nil
-                }
-                
-                // 各科目选项
-                ForEach(SubjectCategory.allCases, id: \.self) { category in
-                    CategoryChip(
-                        title: category.rawValue,
-                        icon: category.icon,
-                        isSelected: selectedCategory == category
-                    ) {
-                        selectedCategory = category
-                    }
-                }
-            }
-            .padding(.horizontal)
-        }
-        .padding(.vertical, 8)
-    }
-}
-
-// MARK: - 分类芯片
+// MARK: - 类别标签
 struct CategoryChip: View {
     let title: String
-    let icon: String
     let isSelected: Bool
     let action: () -> Void
     
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 6) {
-                Image(systemName: icon)
-                    .font(.caption)
-                Text(title)
-                    .font(.caption)
-                    .fontWeight(.medium)
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .background(isSelected ? Color.blue : Color(.systemGray5))
-            .foregroundColor(isSelected ? .white : .primary)
-            .cornerRadius(16)
+            Text(title)
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(isSelected ? Color.blue : Color(.systemGray6))
+                )
+                .foregroundColor(isSelected ? .white : .primary)
         }
+        .buttonStyle(PlainButtonStyle())
     }
 }
 
@@ -157,16 +212,15 @@ struct TemplateCardView: View {
     var body: some View {
         Button(action: onTap) {
             VStack(alignment: .leading, spacing: 12) {
-                // 头部信息
                 HStack {
                     Image(systemName: template.icon)
                         .font(.title2)
                         .foregroundColor(.blue)
-                        .frame(width: 30)
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(template.name)
                             .font(.headline)
+                            .fontWeight(.semibold)
                             .foregroundColor(.primary)
                         
                         Text(template.description)
@@ -178,17 +232,18 @@ struct TemplateCardView: View {
                     Spacer()
                     
                     VStack(alignment: .trailing, spacing: 4) {
-                        Text("\(template.duration)天")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.blue)
-                        
-                        Text(template.priority.rawValue)
+                        Text(template.category.rawValue)
                             .font(.caption)
                             .padding(.horizontal, 8)
-                            .padding(.vertical, 2)
-                            .background(priorityColor(template.priority).opacity(0.2))
-                            .foregroundColor(priorityColor(template.priority))
+                            .padding(.vertical, 4)
+                            .background(Color.blue.opacity(0.2))
+                            .cornerRadius(8)
+                        
+                        Text(template.goalType.rawValue)
+                            .font(.caption)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.green.opacity(0.2))
                             .cornerRadius(8)
                     }
                 }
@@ -196,15 +251,14 @@ struct TemplateCardView: View {
                 // 标签
                 if !template.tags.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 6) {
+                        HStack(spacing: 8) {
                             ForEach(template.tags, id: \.self) { tag in
                                 Text(tag)
                                     .font(.caption)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 4)
-                                    .background(Color(.systemGray6))
-                                    .foregroundColor(.secondary)
-                                    .cornerRadius(8)
+                                    .background(Color(.systemGray5))
+                                    .cornerRadius(6)
                             }
                         }
                         .padding(.horizontal, 1)
@@ -212,35 +266,22 @@ struct TemplateCardView: View {
                 }
                 
                 // 统计信息
-                HStack(spacing: 16) {
-                    HStack(spacing: 4) {
-                        Image(systemName: "flag")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Text("\(template.milestones.count)个里程碑")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    HStack(spacing: 4) {
-                        Image(systemName: "target")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Text("\(template.keyResults.count)个关键结果")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
+                HStack {
+                    Label("\(template.milestones.count) 里程碑", systemImage: "flag")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                     
                     Spacer()
                     
-                    HStack(spacing: 4) {
-                        Image(systemName: "list.bullet")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Text("\(template.suggestedTasks.count)个任务")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
+                    Label("\(template.keyResults.count) 关键结果", systemImage: "target")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    Spacer()
+                    
+                    Label("\(template.suggestedTasks.count) 任务", systemImage: "checklist")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
             }
             .padding()
@@ -250,114 +291,40 @@ struct TemplateCardView: View {
         }
         .buttonStyle(PlainButtonStyle())
     }
-    
-    private func priorityColor(_ priority: Priority) -> Color {
-        switch priority {
-        case .low: return .green
-        case .medium: return .orange
-        case .high: return .red
-        case .urgent: return .purple
-        }
-    }
 }
 
 // MARK: - 模板详情视图
 struct TemplateDetailView: View {
-    let template: GoalTemplate
-    let onUseTemplate: (GoalTemplate) -> Void
     @Environment(\.dismiss) private var dismiss
+    let template: GoalTemplate
+    let onApply: (GoalTemplate) -> Void
     
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    // 模板头部
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            Image(systemName: template.icon)
-                                .font(.largeTitle)
-                                .foregroundColor(.blue)
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(template.name)
-                                    .font(.title2)
-                                    .fontWeight(.bold)
-                                
-                                Text(template.description)
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
-                            
-                            Spacer()
-                        }
-                        
-                        // 基本信息
-                        HStack(spacing: 20) {
-                            InfoItem(title: "科目", value: template.category.rawValue, icon: template.category.icon)
-                            InfoItem(title: "类型", value: template.goalType.rawValue, icon: template.goalType.icon)
-                            InfoItem(title: "时长", value: "\(template.duration)天", icon: "calendar")
-                            InfoItem(title: "优先级", value: template.priority.rawValue, icon: "exclamationmark.triangle")
-                        }
-                    }
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(12)
+                    // 模板基本信息
+                    TemplateInfoSection(template: template)
                     
                     // 里程碑
                     if !template.milestones.isEmpty {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("里程碑")
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                            
-                            ForEach(template.milestones.sorted(by: { $0.order < $1.order })) { milestone in
-                                MilestoneTemplateRow(milestone: milestone)
-                            }
-                        }
-                        .padding()
-                        .background(Color(.systemBackground))
-                        .cornerRadius(12)
-                        .shadow(color: .black.opacity(0.05), radius: 1, x: 0, y: 1)
+                        TemplateMilestonesSection(template: template)
                     }
                     
                     // 关键结果
                     if !template.keyResults.isEmpty {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("关键结果")
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                            
-                            ForEach(template.keyResults) { keyResult in
-                                KeyResultTemplateRow(keyResult: keyResult)
-                            }
-                        }
-                        .padding()
-                        .background(Color(.systemBackground))
-                        .cornerRadius(12)
-                        .shadow(color: .black.opacity(0.05), radius: 1, x: 0, y: 1)
+                        KeyResultsSection(template: template)
                     }
                     
                     // 建议任务
                     if !template.suggestedTasks.isEmpty {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("建议任务")
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                            
-                            ForEach(template.suggestedTasks) { task in
-                                TaskTemplateRow(task: task)
-                            }
-                        }
-                        .padding()
-                        .background(Color(.systemBackground))
-                        .cornerRadius(12)
-                        .shadow(color: .black.opacity(0.05), radius: 1, x: 0, y: 1)
+                        SuggestedTasksSection(template: template)
                     }
                 }
                 .padding()
             }
-            .navigationTitle("模板详情")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(template.name)
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("取消") {
@@ -366,8 +333,8 @@ struct TemplateDetailView: View {
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("使用模板") {
-                        onUseTemplate(template)
+                    Button("应用模板") {
+                        onApply(template)
                     }
                     .fontWeight(.semibold)
                 }
@@ -376,24 +343,141 @@ struct TemplateDetailView: View {
     }
 }
 
-// MARK: - 信息项
-struct InfoItem: View {
+// MARK: - 模板信息区域
+struct TemplateInfoSection: View {
+    let template: GoalTemplate
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: template.icon)
+                    .font(.title)
+                    .foregroundColor(.blue)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(template.name)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    
+                    Text(template.description)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+            }
+            
+            // 标签
+            if !template.tags.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(template.tags, id: \.self) { tag in
+                            Text(tag)
+                                .font(.caption)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Color(.systemGray5))
+                                .cornerRadius(6)
+                        }
+                    }
+                    .padding(.horizontal, 1)
+                }
+            }
+            
+            // 基本信息
+            VStack(alignment: .leading, spacing: 8) {
+                TemplateInfoRow(title: "科目", value: template.category.rawValue, icon: template.category.icon)
+                TemplateInfoRow(title: "目标类型", value: template.goalType.rawValue, icon: template.goalType.icon)
+                TemplateInfoRow(title: "优先级", value: template.priority.rawValue, icon: "exclamationmark.triangle")
+                TemplateInfoRow(title: "预计时长", value: "\(template.duration) 天", icon: "clock")
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+    }
+}
+
+// MARK: - 模板里程碑区域
+struct TemplateMilestonesSection: View {
+    let template: GoalTemplate
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("里程碑")
+                .font(.headline)
+                .fontWeight(.semibold)
+            
+            ForEach(template.milestones) { milestone in
+                MilestoneTemplateRow(milestone: milestone)
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+    }
+}
+
+// MARK: - 关键结果区域
+struct KeyResultsSection: View {
+    let template: GoalTemplate
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("关键结果")
+                .font(.headline)
+                .fontWeight(.semibold)
+            
+            ForEach(template.keyResults) { keyResult in
+                KeyResultTemplateRow(keyResult: keyResult)
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+    }
+}
+
+// MARK: - 建议任务区域
+struct SuggestedTasksSection: View {
+    let template: GoalTemplate
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("建议任务")
+                .font(.headline)
+                .fontWeight(.semibold)
+            
+            ForEach(template.suggestedTasks) { task in
+                TaskTemplateRow(task: task)
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+    }
+}
+
+// MARK: - 模板信息行
+struct TemplateInfoRow: View {
     let title: String
     let value: String
     let icon: String
     
     var body: some View {
-        VStack(spacing: 4) {
+        HStack {
             Image(systemName: icon)
-                .font(.caption)
                 .foregroundColor(.blue)
+                .frame(width: 20)
             
             Text(title)
-                .font(.caption2)
+                .font(.subheadline)
                 .foregroundColor(.secondary)
             
+            Spacer()
+            
             Text(value)
-                .font(.caption)
+                .font(.subheadline)
                 .fontWeight(.medium)
         }
     }
@@ -405,7 +489,11 @@ struct MilestoneTemplateRow: View {
     
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
+            Image(systemName: "flag")
+                .foregroundColor(Color(.systemOrange))
+                .frame(width: 20)
+            
+            VStack(alignment: .leading, spacing: 2) {
                 Text(milestone.title)
                     .font(.subheadline)
                     .fontWeight(.medium)
@@ -417,10 +505,9 @@ struct MilestoneTemplateRow: View {
             
             Spacer()
             
-            Text("第\(milestone.duration)天")
+            Text("\(milestone.duration)天")
                 .font(.caption)
-                .fontWeight(.medium)
-                .foregroundColor(.blue)
+                .foregroundColor(.secondary)
         }
         .padding(.vertical, 4)
     }
@@ -432,7 +519,11 @@ struct KeyResultTemplateRow: View {
     
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
+            Image(systemName: "target")
+                .foregroundColor(Color(.systemGreen))
+                .frame(width: 20)
+            
+            VStack(alignment: .leading, spacing: 2) {
                 Text(keyResult.title)
                     .font(.subheadline)
                     .fontWeight(.medium)
@@ -446,8 +537,8 @@ struct KeyResultTemplateRow: View {
             
             Text("\(Int(keyResult.targetValue)) \(keyResult.unit)")
                 .font(.caption)
-                .fontWeight(.medium)
-                .foregroundColor(.green)
+                .fontWeight(.bold)
+                .foregroundColor(.blue)
         }
         .padding(.vertical, 4)
     }
@@ -459,7 +550,11 @@ struct TaskTemplateRow: View {
     
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
+            Image(systemName: "checklist")
+                .foregroundColor(.purple)
+                .frame(width: 20)
+            
+            VStack(alignment: .leading, spacing: 2) {
                 Text(task.title)
                     .font(.subheadline)
                     .fontWeight(.medium)
@@ -471,35 +566,47 @@ struct TaskTemplateRow: View {
             
             Spacer()
             
-            VStack(alignment: .trailing, spacing: 4) {
+            VStack(alignment: .trailing, spacing: 2) {
                 Text("\(task.estimatedDuration)分钟")
                     .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundColor(.blue)
+                    .foregroundColor(.secondary)
                 
                 Text(task.difficulty.rawValue)
-                    .font(.caption2)
+                    .font(.caption)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
-                    .background(difficultyColor(task.difficulty).opacity(0.2))
-                    .foregroundColor(difficultyColor(task.difficulty))
-                    .cornerRadius(6)
+                    .background(Color(task.difficulty.color).opacity(0.2))
+                    .cornerRadius(4)
             }
         }
         .padding(.vertical, 4)
     }
-    
-    private func difficultyColor(_ difficulty: TaskDifficulty) -> Color {
-        switch difficulty {
-        case .easy: return .green
-        case .medium: return .orange
-        case .hard: return .red
+}
+
+// MARK: - 空模板视图
+struct EmptyTemplatesView: View {
+    var body: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "doc.text.magnifyingglass")
+                .font(.system(size: 60))
+                .foregroundColor(.gray)
+            
+            Text("没有找到匹配的模板")
+                .font(.title2)
+                .fontWeight(.semibold)
+                .foregroundColor(.secondary)
+            
+            Text("尝试调整搜索条件或选择不同的类别")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
 #Preview {
-    GoalTemplateView { template in
-        print("Selected template: \(template.name)")
-    }
+    GoalTemplateView()
+        .environmentObject(DataManager())
 }

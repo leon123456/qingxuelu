@@ -192,7 +192,7 @@ struct StudentProfileView: View {
                     
                     if let errorMessage = aiService.errorMessage {
                         Text(errorMessage)
-                            .foregroundColor(.red)
+                            .foregroundColor(Color(.systemRed))
                             .font(.caption)
                     }
                 } header: {

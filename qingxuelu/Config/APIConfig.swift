@@ -14,7 +14,7 @@ struct APIConfig {
     static let baseURL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
     static let model = "qwen-plus"
     static let temperature = 0.7
-    static let maxTokens = 4000
+    static let maxTokens = 8000  // 增加token限制以支持更长的计划生成
     static let topP = 0.8
     
     // API端点

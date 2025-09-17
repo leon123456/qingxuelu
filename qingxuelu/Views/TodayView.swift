@@ -356,12 +356,12 @@ struct PomodoroView: View {
                     Button(isRunning ? "暂停" : "开始") {
                         toggleTimer()
                     }
-                    .buttonStyle(TodayPrimaryButtonStyle())
+                    .buttonStyle(PrimaryButtonStyle())
                     
                     Button("重置") {
                         resetTimer()
                     }
-                    .buttonStyle(TodaySecondaryButtonStyle())
+                    .buttonStyle(SecondaryButtonStyle())
                 }
                 
                 Spacer()

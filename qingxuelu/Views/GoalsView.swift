@@ -11,15 +11,20 @@ struct GoalsView: View {
     @EnvironmentObject var dataManager: DataManager
     @State private var showingAddGoal = false
     @State private var selectedStatus: GoalStatus? = nil
-    @State private var showingTemplateBrowser = false
+    @State private var showingTemplates = false
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
+            VStack {
                 let goals = filteredGoals()
                 
                 if goals.isEmpty {
-                    EmptyGoalsView()
+                    VStack {
+                        EmptyGoalsView()
+                        
+                        // 浏览模板部分 - 常驻显示
+                        BrowseTemplatesSection()
+                    }
                 } else {
                     List {
                         ForEach(goals) { goal in
@@ -28,11 +33,11 @@ struct GoalsView: View {
                             }
                         }
                         .onDelete(perform: deleteGoals)
+                        
+                        // 浏览模板部分
+                        BrowseTemplatesSection()
                     }
                 }
-                
-                // 浏览模板区域
-                BrowseTemplatesSection(showingTemplateBrowser: $showingTemplateBrowser)
             }
             .navigationTitle("学习目标")
             .toolbar {
@@ -57,12 +62,8 @@ struct GoalsView: View {
         .sheet(isPresented: $showingAddGoal) {
             AddGoalView()
         }
-        .sheet(isPresented: $showingTemplateBrowser) {
-            GoalTemplateView { selectedTemplate in
-                // 直接创建目标，不需要再进入 AddGoalView
-                createGoalFromTemplate(selectedTemplate)
-                showingTemplateBrowser = false
-            }
+        .sheet(isPresented: $showingTemplates) {
+            GoalTemplateView()
         }
     }
     
@@ -78,27 +79,6 @@ struct GoalsView: View {
         let goals = dataManager.goals
         for index in offsets {
             dataManager.deleteGoal(goals[index])
-        }
-    }
-    
-    private func createGoalFromTemplate(_ template: GoalTemplate) {
-        var goal = LearningGoal(
-            title: template.name,
-            description: template.description,
-            category: template.category,
-            priority: template.priority,
-            targetDate: Date().addingTimeInterval(TimeInterval(template.duration * 24 * 3600)),
-            goalType: template.goalType
-        )
-        goal.milestones = template.milestones.map { $0.toMilestone() }
-        goal.keyResults = template.keyResults.map { $0.toKeyResult() }
-        
-        dataManager.addGoal(goal)
-        
-        // 添加建议的任务
-        for taskTemplate in template.suggestedTasks {
-            let task = taskTemplate.toLearningTask(goalId: goal.id)
-            dataManager.addTask(task)
         }
     }
 }
@@ -238,12 +218,16 @@ struct GoalDetailView: View {
     let goal: LearningGoal
     @EnvironmentObject var dataManager: DataManager
     @State private var showingEditGoal = false
+    @State private var showingCreatePlan = false
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 // 目标基本信息
                 GoalInfoSection(goal: goal)
+                
+                // 制定计划区域
+                CreatePlanSection(goal: goal, showingCreatePlan: $showingCreatePlan)
                 
                 // 进度信息
                 ProgressSection(goal: goal)
@@ -264,6 +248,9 @@ struct GoalDetailView: View {
                     showingEditGoal = true
                 }
             }
+        }
+        .sheet(isPresented: $showingCreatePlan) {
+            CreatePlanView(goal: goal)
         }
         .sheet(isPresented: $showingEditGoal) {
             EditGoalView(goal: goal)
@@ -428,7 +415,7 @@ struct MilestoneRowView: View {
                 if let completedDate = milestone.completedDate {
                     Text("完成: \(completedDate, formatter: dateFormatter)")
                         .font(.caption)
-                        .foregroundColor(.green)
+                        .foregroundColor(Color(.systemGreen))
                 }
             }
         }
@@ -457,7 +444,7 @@ struct RelatedTasksSection: View {
                     .padding()
             } else {
                 ForEach(relatedTasks) { task in
-                    TaskRowView(task: task)
+                    SimpleTaskRowView(task: task)
                 }
             }
         }
@@ -504,6 +491,206 @@ struct InfoRow: View {
     }
 }
 
+
+// MARK: - 制定计划区域
+struct CreatePlanSection: View {
+    let goal: LearningGoal
+    @Binding var showingCreatePlan: Bool
+    @EnvironmentObject var dataManager: DataManager
+    
+    private var hasExistingPlan: Bool {
+        dataManager.getPlanForGoal(goal.id) != nil
+    }
+    
+    private var existingPlan: LearningPlan? {
+        dataManager.getPlanForGoal(goal.id)
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: hasExistingPlan ? "calendar.badge.checkmark" : "calendar.badge.plus")
+                    .foregroundColor(hasExistingPlan ? .green : .blue)
+                    .font(.title2)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("学习计划")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                    
+                    if hasExistingPlan {
+                        Text("已制定计划，点击查看详情")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    } else {
+                        Text("为目标制定详细的学习计划")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                
+                Spacer()
+                
+                if hasExistingPlan {
+                    NavigationLink(destination: PlanDetailView(plan: existingPlan!)) {
+                        Text("查看计划")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(Color.green)
+                            .cornerRadius(8)
+                    }
+                } else {
+                    Button("制定计划") {
+                        showingCreatePlan = true
+                    }
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(Color.blue)
+                    .cornerRadius(8)
+                }
+            }
+            
+            if !hasExistingPlan {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("制定计划后，系统将：")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundColor(.secondary)
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        PlanFeatureRow(icon: "calendar", text: "将目标拆解为周计划")
+                        PlanFeatureRow(icon: "target", text: "设置每周的关键结果")
+                        PlanFeatureRow(icon: "clock", text: "自动生成每日任务")
+                        PlanFeatureRow(icon: "chart.line.uptrend.xyaxis", text: "跟踪学习进度")
+                    }
+                }
+                .padding(.top, 8)
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+    }
+}
+
+// MARK: - 计划功能行
+struct PlanFeatureRow: View {
+    let icon: String
+    let text: String
+    
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon)
+                .foregroundColor(.blue)
+                .frame(width: 16)
+            
+            Text(text)
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+    }
+}
+
+// MARK: - 浏览模板部分
+struct BrowseTemplatesSection: View {
+    @State private var showingTemplates = false
+    
+    private let previewTemplates = Array(GoalTemplateManager.shared.templates.prefix(3))
+    
+    var body: some View {
+        Section {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text("目标模板")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                    
+                    Spacer()
+                    
+                    Button("查看全部") {
+                        showingTemplates = true
+                    }
+                    .font(.subheadline)
+                    .foregroundColor(.blue)
+                }
+                
+                Text("使用预设模板快速创建学习目标")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(previewTemplates) { template in
+                            TemplatePreviewCard(template: template)
+                        }
+                    }
+                    .padding(.horizontal, 1)
+                }
+            }
+            .padding(.vertical, 8)
+        }
+        .sheet(isPresented: $showingTemplates) {
+            GoalTemplateView()
+        }
+    }
+}
+
+// MARK: - 模板预览卡片
+struct TemplatePreviewCard: View {
+    let template: GoalTemplate
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: template.icon)
+                    .foregroundColor(.blue)
+                    .font(.title3)
+                
+                Spacer()
+                
+                Text(template.category.rawValue)
+                    .font(.caption)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Color.blue.opacity(0.2))
+                    .cornerRadius(4)
+            }
+            
+            Text(template.name)
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .lineLimit(2)
+            
+            Text(template.description)
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .lineLimit(2)
+            
+            HStack {
+                Label("\(template.milestones.count)", systemImage: "flag")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                
+                Spacer()
+                
+                Label("\(template.keyResults.count)", systemImage: "target")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .padding(12)
+        .frame(width: 160)
+        .background(Color(.systemGray6))
+        .cornerRadius(8)
+    }
+}
+
 // MARK: - 日期格式化器
 private let dateFormatter: DateFormatter = {
     let formatter = DateFormatter()
@@ -511,128 +698,6 @@ private let dateFormatter: DateFormatter = {
     formatter.timeStyle = .none
     return formatter
 }()
-
-// MARK: - 浏览模板区域
-struct BrowseTemplatesSection: View {
-    @Binding var showingTemplateBrowser: Bool
-    @ObservedObject var templateManager = GoalTemplateManager.shared
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Image(systemName: "doc.text.fill")
-                    .foregroundColor(.blue)
-                    .font(.title2)
-                
-                Text("浏览模板")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                
-                Spacer()
-                
-                Button("查看全部") {
-                    showingTemplateBrowser = true
-                }
-                .font(.subheadline)
-                .foregroundColor(.blue)
-            }
-            
-            Text("使用预设模板快速创建学习目标")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            
-            // 模板预览卡片
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(Array(templateManager.templates.prefix(3))) { template in
-                        TemplatePreviewCard(template: template) {
-                            showingTemplateBrowser = true
-                        }
-                    }
-                    
-                    // 查看更多卡片
-                    Button(action: {
-                        showingTemplateBrowser = true
-                    }) {
-                        VStack(spacing: 8) {
-                            Image(systemName: "ellipsis")
-                                .font(.title2)
-                                .foregroundColor(.blue)
-                            
-                            Text("更多")
-                                .font(.caption)
-                                .foregroundColor(.blue)
-                        }
-                        .frame(width: 80, height: 100)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(12)
-                    }
-                }
-                .padding(.horizontal)
-            }
-        }
-        .padding()
-        .background(Color(.systemBackground))
-        .overlay(
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(Color(.systemGray5)),
-            alignment: .top
-        )
-    }
-}
-
-// MARK: - 模板预览卡片
-struct TemplatePreviewCard: View {
-    let template: GoalTemplate
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Image(systemName: template.icon)
-                        .font(.title3)
-                        .foregroundColor(.blue)
-                    
-                    Spacer()
-                    
-                    Text("\(template.duration)天")
-                        .font(.caption2)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(Capsule().fill(Color.blue.opacity(0.2)))
-                        .foregroundColor(.blue)
-                }
-                
-                Text(template.name)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.leading)
-                
-                Spacer()
-                
-                HStack {
-                    Label("\(template.milestones.count)", systemImage: "flag.fill")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                    
-                    Spacer()
-                    
-                    Label("\(template.keyResults.count)", systemImage: "checkmark.circle.fill")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                }
-            }
-            .frame(width: 120, height: 100)
-            .padding(8)
-            .background(Color(.systemGray6))
-            .cornerRadius(12)
-        }
-        .buttonStyle(PlainButtonStyle())
-    }
-}
 
 #Preview {
     GoalsView()

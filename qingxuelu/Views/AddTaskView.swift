@@ -360,7 +360,7 @@ struct StudyTimerView: View {
                     Button(action: stopTimer) {
                         Image(systemName: "stop.fill")
                             .font(.title)
-                            .foregroundColor(.red)
+                            .foregroundColor(Color(.systemRed))
                     }
                     .disabled(!isRunning)
                     

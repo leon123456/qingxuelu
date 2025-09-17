@@ -75,7 +75,7 @@ struct SettingsView: View {
                                 .foregroundColor(.secondary)
                             Text(result)
                                 .font(.body)
-                                .foregroundColor(.green)
+                                .foregroundColor(Color(.systemGreen))
                         }
                         .padding(.vertical, 4)
                     }
@@ -87,7 +87,7 @@ struct SettingsView: View {
                                 .foregroundColor(.secondary)
                             Text(error)
                                 .font(.body)
-                                .foregroundColor(.red)
+                                .foregroundColor(Color(.systemRed))
                         }
                         .padding(.vertical, 4)
                     }
@@ -102,7 +102,7 @@ struct SettingsView: View {
                     NavigationLink(destination: NotificationSettingsView()) {
                         HStack {
                             Image(systemName: "bell")
-                                .foregroundColor(.orange)
+                                .foregroundColor(Color(.systemOrange))
                             Text("通知设置")
                         }
                     }
@@ -110,7 +110,7 @@ struct SettingsView: View {
                     NavigationLink(destination: DataManagementView()) {
                         HStack {
                             Image(systemName: "externaldrive")
-                                .foregroundColor(.green)
+                                .foregroundColor(Color(.systemGreen))
                             Text("数据管理")
                         }
                     }
@@ -236,7 +236,7 @@ struct StudentRowView: View {
             // 当前学生标识
             if dataManager.currentStudent?.id == student.id {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.green)
+                    .foregroundColor(Color(.systemGreen))
             }
             
             // 操作按钮
@@ -474,7 +474,7 @@ struct DataManagementView: View {
                 Button("清除所有数据") {
                     showingClearAlert = true
                 }
-                .foregroundColor(.red)
+                .foregroundColor(Color(.systemRed))
             } header: {
                 Text("危险操作")
             } footer: {

@@ -24,7 +24,7 @@ struct TasksView: View {
                         List {
                             ForEach(tasks) { task in
                                 NavigationLink(destination: TaskDetailView(task: task)) {
-                                    TaskRowView(task: task)
+                                    SimpleTaskRowView(task: task)
                                 }
                             }
                             .onDelete(perform: deleteTasks)
@@ -341,6 +341,7 @@ private func formatDuration(_ duration: TimeInterval) -> String {
         return "\(minutes)分钟"
     }
 }
+
 
 private let dateTimeFormatter: DateFormatter = {
     let formatter = DateFormatter()

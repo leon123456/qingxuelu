@@ -65,6 +65,9 @@ class AITestService: ObservableObject {
         
         request.httpBody = try JSONEncoder().encode(requestBody)
         
+        // 设置超时时间
+        request.timeoutInterval = 60.0 // 测试API用1分钟超时即可
+        
         let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse else {
@@ -72,7 +75,7 @@ class AITestService: ObservableObject {
         }
         
         if httpResponse.statusCode != 200 {
-            let errorMessage = String(data: data, encoding: .utf8) ?? "未知错误"
+            let _ = String(data: data, encoding: .utf8) ?? "未知错误"
             throw AIServiceError.apiError
         }
         
