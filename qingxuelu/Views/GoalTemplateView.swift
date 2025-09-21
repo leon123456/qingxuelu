@@ -165,26 +165,7 @@ struct GoalTemplateView: View {
             )
         }
         
-        // 添加建议任务
-        for taskTemplate in template.suggestedTasks {
-            let priority: Priority = {
-                switch taskTemplate.difficulty {
-                case .easy: return .low
-                case .medium: return .medium
-                case .hard: return .high
-                }
-            }()
-            
-            let task = LearningTask(
-                title: taskTemplate.title,
-                description: taskTemplate.description,
-                category: template.category,
-                priority: priority,
-                estimatedDuration: TimeInterval(taskTemplate.estimatedDuration * 60),
-                goalId: goal.id
-            )
-            dataManager.addTask(task)
-        }
+        // 注意：建议任务不会自动创建，用户需要在目标内手动生成计划或添加任务
         
         dataManager.addGoal(goal)
         dismiss()

@@ -43,8 +43,14 @@ struct TimelineTaskView: View {
                 let impactFeedback = UIImpactFeedbackGenerator(style: .light)
                 impactFeedback.impactOccurred()
                 
-                // 检查是否需要扩展范围
-                expandDateRangeIfNeeded(around: newDate)
+                // 检查新日期是否在当前日期范围内
+                if !dateRange.contains(newDate) {
+                    // 如果新日期不在范围内，重新生成以新日期为中心的范围
+                    dateRange = generateDateRange(around: newDate)
+                } else {
+                    // 如果新日期在范围内，检查是否需要扩展范围
+                    expandDateRangeIfNeeded(around: newDate)
+                }
             }
         }
         .navigationBarHidden(true)
@@ -85,13 +91,17 @@ struct TimelineTaskView: View {
     
     // MARK: - 生成初始日期范围
     private func generateInitialDateRange() -> [Date] {
+        return generateDateRange(around: selectedDate)
+    }
+    
+    // MARK: - 生成以指定日期为中心的日期范围
+    private func generateDateRange(around centerDate: Date) -> [Date] {
         let calendar = Calendar.current
         var dates: [Date] = []
         
-        // 以当前选中日期为中心，生成固定范围
-        let baseDate = selectedDate
+        // 以指定日期为中心，生成固定范围（前后各30天）
         for i in -30...30 {
-            if let date = calendar.date(byAdding: .day, value: i, to: baseDate) {
+            if let date = calendar.date(byAdding: .day, value: i, to: centerDate) {
                 dates.append(date)
             }
         }
@@ -101,15 +111,20 @@ struct TimelineTaskView: View {
     
     // MARK: - 扩展日期范围
     private func expandDateRangeIfNeeded(around date: Date) {
-        guard let currentIndex = dateRange.firstIndex(of: date) else { return }
+        guard let currentIndex = dateRange.firstIndex(of: date) else { 
+            print("⚠️ 警告：日期 \(date.formatted()) 不在当前日期范围内")
+            return 
+        }
         
         let threshold = 5 // 距离边界5个位置时开始扩展
         
         if currentIndex < threshold {
             // 接近左边界，扩展前面的日期
+            print("📅 接近左边界，扩展前面的日期")
             expandPreviousDates()
         } else if currentIndex > dateRange.count - threshold - 1 {
             // 接近右边界，扩展后面的日期
+            print("📅 接近右边界，扩展后面的日期")
             expandNextDates()
         }
     }
@@ -128,6 +143,7 @@ struct TimelineTaskView: View {
         
         // 将新日期添加到前面
         dateRange = newDates.reversed() + dateRange
+        print("📅 扩展前面日期完成，新范围大小: \(dateRange.count)")
     }
     
     // MARK: - 扩展后面的日期
@@ -144,6 +160,7 @@ struct TimelineTaskView: View {
         
         // 将新日期添加到后面
         dateRange = dateRange + newDates
+        print("📅 扩展后面日期完成，新范围大小: \(dateRange.count)")
     }
     
     // MARK: - 检查选中日期是否有任务
