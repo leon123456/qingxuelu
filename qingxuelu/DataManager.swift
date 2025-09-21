@@ -313,14 +313,23 @@ class DataManager: ObservableObject {
     }
     
     func clearAllData() {
+        // 清除所有数据
         students.removeAll()
         goals.removeAll()
         tasks.removeAll()
         records.removeAll()
+        reflections.removeAll()
+        plans.removeAll()
+        recycleBin.removeAll()
+        pomodoroSessions.removeAll()
         profiles.removeAll()
         templates.removeAll()
         currentStudent = nil
+        
+        // 保存到持久化存储
         saveData()
+        
+        print("✅ 已清除所有数据")
     }
     
     // MARK: - 学生档案管理
@@ -754,4 +763,5 @@ class DataManager: ObservableObject {
             Calendar.current.isDate(session.startTime, inSameDayAs: today)
         }
     }
+    
 }

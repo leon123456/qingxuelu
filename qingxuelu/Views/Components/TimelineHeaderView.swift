@@ -21,10 +21,12 @@ struct TimelineHeaderView: View {
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(.primary)
+                        .animation(.easeInOut(duration: 0.3), value: selectedDate)
                     
                     Text(formatWeekday(selectedDate))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
+                        .animation(.easeInOut(duration: 0.3), value: selectedDate)
                 }
                 
                 Spacer()

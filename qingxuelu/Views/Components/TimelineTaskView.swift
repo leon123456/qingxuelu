@@ -12,6 +12,7 @@ struct TimelineTaskView: View {
     @EnvironmentObject var dataManager: DataManager
     @State private var selectedDate = Date()
     @State private var showingAddTask = false
+    @State private var dateRange: [Date] = []
     
     var body: some View {
         VStack(spacing: 0) {
@@ -20,18 +21,31 @@ struct TimelineTaskView: View {
             
             // 时间轴内容 - 可滑动的整页切换
             TabView(selection: $selectedDate) {
-                ForEach(generateDateRange(), id: \.self) { date in
+                ForEach(dateRange, id: \.self) { date in
                     TimelineContentView(date: date)
                         .tag(date)
                 }
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            .animation(.easeInOut(duration: 0.3), value: selectedDate)
+            .onAppear {
+                // 初始化固定日期范围
+                if dateRange.isEmpty {
+                    dateRange = generateInitialDateRange()
+                    // 确保 selectedDate 在日期范围内
+                    if !dateRange.contains(selectedDate) {
+                        selectedDate = Date() // 使用当前日期作为默认选中日期
+                    }
+                }
+            }
             .onChange(of: selectedDate) { _, newDate in
                 // 添加触觉反馈
                 let impactFeedback = UIImpactFeedbackGenerator(style: .light)
                 impactFeedback.impactOccurred()
+                
+                // 检查是否需要扩展范围
+                expandDateRangeIfNeeded(around: newDate)
             }
-            .id(selectedDate) // 强制重新渲染，确保日期范围更新
         }
         .navigationBarHidden(true)
         .sheet(isPresented: $showingAddTask) {
@@ -69,19 +83,67 @@ struct TimelineTaskView: View {
         )
     }
     
-    // MARK: - 生成日期范围
-    private func generateDateRange() -> [Date] {
+    // MARK: - 生成初始日期范围
+    private func generateInitialDateRange() -> [Date] {
         let calendar = Calendar.current
         var dates: [Date] = []
         
-        // 生成前后各30天的日期范围，以当前选中日期为中心
+        // 以当前选中日期为中心，生成固定范围
+        let baseDate = selectedDate
         for i in -30...30 {
-            if let date = calendar.date(byAdding: .day, value: i, to: selectedDate) {
+            if let date = calendar.date(byAdding: .day, value: i, to: baseDate) {
                 dates.append(date)
             }
         }
         
         return dates
+    }
+    
+    // MARK: - 扩展日期范围
+    private func expandDateRangeIfNeeded(around date: Date) {
+        guard let currentIndex = dateRange.firstIndex(of: date) else { return }
+        
+        let threshold = 5 // 距离边界5个位置时开始扩展
+        
+        if currentIndex < threshold {
+            // 接近左边界，扩展前面的日期
+            expandPreviousDates()
+        } else if currentIndex > dateRange.count - threshold - 1 {
+            // 接近右边界，扩展后面的日期
+            expandNextDates()
+        }
+    }
+    
+    // MARK: - 扩展前面的日期
+    private func expandPreviousDates() {
+        let calendar = Calendar.current
+        guard let firstDate = dateRange.first else { return }
+        
+        var newDates: [Date] = []
+        for i in 1...30 {
+            if let date = calendar.date(byAdding: .day, value: -i, to: firstDate) {
+                newDates.append(date)
+            }
+        }
+        
+        // 将新日期添加到前面
+        dateRange = newDates.reversed() + dateRange
+    }
+    
+    // MARK: - 扩展后面的日期
+    private func expandNextDates() {
+        let calendar = Calendar.current
+        guard let lastDate = dateRange.last else { return }
+        
+        var newDates: [Date] = []
+        for i in 1...30 {
+            if let date = calendar.date(byAdding: .day, value: i, to: lastDate) {
+                newDates.append(date)
+            }
+        }
+        
+        // 将新日期添加到后面
+        dateRange = dateRange + newDates
     }
     
     // MARK: - 检查选中日期是否有任务
@@ -318,15 +380,27 @@ struct TaskTimelineCard: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            // 任务图标 - 更精致的圆形背景
+            // 任务图标 - 现代化设计
             ZStack {
+                // 渐变背景
                 Circle()
-                    .fill(getCategoryColor().opacity(0.2))
-                    .frame(width: 40, height: 40)
+                    .fill(
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                getCategoryColor().opacity(0.8),
+                                getCategoryColor().opacity(0.6)
+                            ]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 44, height: 44)
+                    .shadow(color: getCategoryColor().opacity(0.3), radius: 4, x: 0, y: 2)
                 
+                // 图标
                 Image(systemName: task.category.icon)
-                    .foregroundColor(getCategoryColor())
-                    .font(.system(size: 18, weight: .medium))
+                    .foregroundColor(.white)
+                    .font(.system(size: 20, weight: .semibold))
             }
             
             VStack(alignment: .leading, spacing: 6) {
@@ -454,7 +528,7 @@ struct TaskTimelineCard: View {
         case .politics:
             return .pink
         case .other:
-            return .gray
+            return .indigo
         }
     }
     
@@ -669,6 +743,7 @@ struct TimelineContentView: View {
             .padding(.horizontal, 20)
             .padding(.top, 20) // 增加顶部距离
         }
+        .animation(.easeInOut(duration: 0.3), value: date)
     }
     
     // MARK: - 检查指定日期是否有任务

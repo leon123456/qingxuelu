@@ -531,11 +531,7 @@ struct DataManagementView: View {
     }
     
     private func clearAllData() {
-        dataManager.students.removeAll()
-        dataManager.goals.removeAll()
-        dataManager.tasks.removeAll()
-        dataManager.records.removeAll()
-        dataManager.currentStudent = nil
+        dataManager.clearAllData()
     }
 }
 
