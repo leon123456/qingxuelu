@@ -44,6 +44,14 @@ struct MainTabView: View {
                     Text("复盘")
                 }
                 .tag(3)
+            
+            // Settings - 设置
+            SettingsView()
+                .tabItem {
+                    Image(systemName: "gearshape.fill")
+                    Text("设置")
+                }
+                .tag(4)
         }
         .environmentObject(dataManager)
     }

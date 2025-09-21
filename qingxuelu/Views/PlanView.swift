@@ -256,8 +256,8 @@ struct GeneratePlanView: View {
         
         Task {
             do {
-                let totalWeeks = Int(goal.targetDate.timeIntervalSince(goal.startDate) / (7 * 24 * 3600))
-                let plan = try await AIPlanServiceManager.shared.generateLearningPlan(for: goal, totalWeeks: totalWeeks)
+                // 移除错误的周数计算，让AIPlanServiceManager自己计算正确的周数
+                let plan = try await AIPlanServiceManager.shared.generateLearningPlan(for: goal, dataManager: dataManager)
                 
                 await MainActor.run {
                     generatedPlan = plan
@@ -284,59 +284,65 @@ struct AIPlanPreviewView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    // 计划概览
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("计划概览")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            PlanViewInfoRow(title: "总时长", value: "\(plan.totalWeeks) 周", icon: "calendar")
-                            PlanViewInfoRow(title: "开始时间", value: plan.startDate, formatter: dateFormatter, icon: "clock")
-                            PlanViewInfoRow(title: "结束时间", value: plan.endDate, formatter: dateFormatter, icon: "target")
-                            PlanViewInfoRow(title: "总任务数", value: "\(plan.weeklyPlans.reduce(0) { $0 + $1.taskCount }) 个", icon: "checklist")
-                        }
+            VStack(spacing: 0) {
+                // 顶部固定操作区域
+                VStack(spacing: 12) {
+                    Button("应用此计划") {
+                        onApply()
                     }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color(.systemGray6))
+                    .background(Color.blue)
                     .cornerRadius(12)
                     
-                    // 周计划预览
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("周计划预览")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                        
-                        ForEach(Array(plan.weeklyPlans.prefix(3))) { week in
-                            PlanViewWeeklyPreviewCard(week: week)
-                        }
-                        
-                        if plan.weeklyPlans.count > 3 {
-                            Text("... 还有 \(plan.weeklyPlans.count - 3) 周计划")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                                .padding(.leading, 16)
-                        }
+                    Button("取消") {
+                        dismiss()
                     }
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color(.systemGray6))
+                    .background(Color(.systemGray5))
                     .cornerRadius(12)
-                    
-                    // 学习资源
-                    if !plan.resources.isEmpty {
+                }
+                .padding()
+                .background(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                
+                // 计划详情内容
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                        // 计划概览
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("学习资源")
+                            Text("计划概览")
                                 .font(.headline)
                                 .fontWeight(.semibold)
                             
-                            ForEach(Array(plan.resources.prefix(3))) { resource in
-                                ResourcePreviewRow(resource: resource)
+                            VStack(alignment: .leading, spacing: 8) {
+                                PlanViewInfoRow(title: "总时长", value: "\(plan.totalWeeks) 周", icon: "calendar")
+                                PlanViewInfoRow(title: "开始时间", value: plan.startDate, formatter: dateFormatter, icon: "clock")
+                                PlanViewInfoRow(title: "结束时间", value: plan.endDate, formatter: dateFormatter, icon: "target")
+                                PlanViewInfoRow(title: "总任务数", value: "\(plan.weeklyPlans.reduce(0) { $0 + $1.taskCount }) 个", icon: "checklist")
+                            }
+                        }
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
+                        
+                        // 周计划预览
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("周计划预览")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                            
+                            ForEach(Array(plan.weeklyPlans.prefix(3))) { week in
+                                PlanViewWeeklyPreviewCard(week: week)
                             }
                             
-                            if plan.resources.count > 3 {
-                                Text("... 还有 \(plan.resources.count - 3) 个资源")
+                            if plan.weeklyPlans.count > 3 {
+                                Text("... 还有 \(plan.weeklyPlans.count - 3) 周计划")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                     .padding(.leading, 16)
@@ -345,33 +351,32 @@ struct AIPlanPreviewView: View {
                         .padding()
                         .background(Color(.systemGray6))
                         .cornerRadius(12)
-                    }
-                    
-                    // 操作按钮
-                    VStack(spacing: 12) {
-                        Button("应用此计划") {
-                            onApply()
-                        }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .cornerRadius(12)
                         
-                        Button("取消") {
-                            dismiss()
+                        // 学习资源
+                        if !plan.resources.isEmpty {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("学习资源")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                                
+                                ForEach(Array(plan.resources.prefix(3))) { resource in
+                                    ResourcePreviewRow(resource: resource)
+                                }
+                                
+                                if plan.resources.count > 3 {
+                                    Text("... 还有 \(plan.resources.count - 3) 个资源")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                        .padding(.leading, 16)
+                                }
+                            }
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(12)
                         }
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color(.systemGray5))
-                        .cornerRadius(12)
                     }
                     .padding()
                 }
-                .padding()
             }
             .navigationTitle("AI生成的学习计划")
             .navigationBarTitleDisplayMode(.inline)
@@ -1219,7 +1224,7 @@ struct WeeklyTasksSection: View {
             description: "",
             quantity: "",
             duration: "",
-            difficulty: "中等"
+            difficulty: .medium
         )
         plan.tasks.append(newTask)
         // 更新任务计数

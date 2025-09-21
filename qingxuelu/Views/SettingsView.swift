@@ -97,6 +97,33 @@ struct SettingsView: View {
                     Text("测试阿里云Qwen Plus API连接状态")
                 }
                 
+                // 回收站区域
+                Section {
+                    NavigationLink(destination: RecycleBinView()) {
+                        HStack {
+                            Image(systemName: "trash")
+                                .foregroundColor(Color(.systemRed))
+                            Text("回收站")
+                            
+                            Spacer()
+                            
+                            if !dataManager.recycleBin.isEmpty {
+                                Text("\(dataManager.recycleBin.count)")
+                                    .font(.caption)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(Color(.systemRed).opacity(0.2))
+                                    .foregroundColor(Color(.systemRed))
+                                    .cornerRadius(8)
+                            }
+                        }
+                    }
+                } header: {
+                    Text("回收站")
+                } footer: {
+                    Text("已删除的目标会保存在回收站中，可以恢复或永久删除")
+                }
+                
                 // 应用设置区域
                 Section {
                     NavigationLink(destination: NotificationSettingsView()) {
@@ -567,6 +594,163 @@ private func formatDuration(_ duration: TimeInterval) -> String {
         return "\(hours)小时\(minutes)分钟"
     } else {
         return "\(minutes)分钟"
+    }
+}
+
+// MARK: - 回收站视图
+struct RecycleBinView: View {
+    @EnvironmentObject var dataManager: DataManager
+    @State private var showingClearAlert = false
+    
+    var deletedGoals: [DeletedGoal] {
+        dataManager.getRecycleBinGoals()
+    }
+    
+    var body: some View {
+        List {
+            if deletedGoals.isEmpty {
+                EmptyRecycleBinView()
+            } else {
+                ForEach(deletedGoals) { deletedGoal in
+                    DeletedGoalRowView(deletedGoal: deletedGoal)
+                }
+                
+                Section {
+                    Button("清空回收站") {
+                        showingClearAlert = true
+                    }
+                    .foregroundColor(Color(.systemRed))
+                }
+            }
+        }
+        .navigationTitle("回收站")
+        .navigationBarTitleDisplayMode(.large)
+        .alert("清空回收站", isPresented: $showingClearAlert) {
+            Button("取消", role: .cancel) { }
+            Button("清空", role: .destructive) {
+                dataManager.clearRecycleBin()
+            }
+        } message: {
+            Text("确定要清空回收站吗？此操作将永久删除所有已删除的目标，且无法恢复。")
+        }
+    }
+}
+
+// MARK: - 空回收站视图
+struct EmptyRecycleBinView: View {
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "trash")
+                .font(.system(size: 60))
+                .foregroundColor(.gray)
+            
+            Text("回收站为空")
+                .font(.title2)
+                .fontWeight(.semibold)
+                .foregroundColor(.secondary)
+            
+            Text("已删除的目标会显示在这里")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 40)
+    }
+}
+
+// MARK: - 已删除目标行视图
+struct DeletedGoalRowView: View {
+    let deletedGoal: DeletedGoal
+    @EnvironmentObject var dataManager: DataManager
+    @State private var showingRestoreAlert = false
+    @State private var showingDeleteAlert = false
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: deletedGoal.goal.category.icon)
+                    .foregroundColor(.blue)
+                    .frame(width: 24)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(deletedGoal.goal.title)
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                    
+                    Text(deletedGoal.goal.description)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .lineLimit(2)
+                }
+                
+                Spacer()
+                
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text(formatDate(deletedGoal.deletedAt))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    Text("已删除")
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
+            }
+            
+            HStack(spacing: 12) {
+                Button(action: { showingRestoreAlert = true }) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "arrow.uturn.backward")
+                        Text("恢复")
+                    }
+                    .font(.caption)
+                    .foregroundColor(.blue)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color.blue.opacity(0.1))
+                    .cornerRadius(8)
+                }
+                
+                Button(action: { showingDeleteAlert = true }) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "trash")
+                        Text("永久删除")
+                    }
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color.red.opacity(0.1))
+                    .cornerRadius(8)
+                }
+                
+                Spacer()
+            }
+        }
+        .padding(.vertical, 8)
+        .alert("恢复目标", isPresented: $showingRestoreAlert) {
+            Button("取消", role: .cancel) { }
+            Button("恢复") {
+                dataManager.restoreGoal(deletedGoal)
+            }
+        } message: {
+            Text("确定要恢复「\(deletedGoal.goal.title)」吗？")
+        }
+        .alert("永久删除", isPresented: $showingDeleteAlert) {
+            Button("取消", role: .cancel) { }
+            Button("删除", role: .destructive) {
+                dataManager.permanentlyDeleteGoal(deletedGoal)
+            }
+        } message: {
+            Text("确定要永久删除「\(deletedGoal.goal.title)」吗？此操作无法撤销。")
+        }
+    }
+    
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
     }
 }
 

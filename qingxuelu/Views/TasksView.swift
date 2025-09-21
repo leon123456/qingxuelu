@@ -133,7 +133,7 @@ struct TaskDetailView: View {
             EditTaskView(task: task)
         }
         .sheet(isPresented: $showingTimer) {
-            StudyTimerView(task: task)
+            PomodoroView(task: task)
         }
     }
 }
@@ -141,6 +141,7 @@ struct TaskDetailView: View {
 // MARK: - 任务信息区域
 struct TaskInfoSection: View {
     let task: LearningTask
+    @EnvironmentObject var dataManager: DataManager
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -153,6 +154,20 @@ struct TaskInfoSection: View {
                 InfoRow(title: "优先级", value: task.priority.rawValue, icon: "exclamationmark.triangle")
                 InfoRow(title: "状态", value: task.status.rawValue, icon: "circle.fill")
                 InfoRow(title: "预估时间", value: formatDuration(task.estimatedDuration), icon: "clock")
+                
+                // 显示关联的目标信息
+                if let goalId = task.goalId {
+                    if let goal = dataManager.goals.first(where: { $0.id == goalId }) {
+                        InfoRow(title: "关联目标", value: goal.title, icon: "target")
+                    }
+                }
+                
+                // 显示关联的计划信息
+                if let planId = task.planId {
+                    if let plan = dataManager.plans.first(where: { $0.id == planId }) {
+                        InfoRow(title: "关联计划", value: plan.title, icon: "calendar")
+                    }
+                }
                 
                 if let actualDuration = task.actualDuration {
                     InfoRow(title: "实际时间", value: formatDuration(actualDuration), icon: "clock.fill")
@@ -265,52 +280,67 @@ struct ActionButtonsSection: View {
     let task: LearningTask
     @Binding var showingTimer: Bool
     @EnvironmentObject var dataManager: DataManager
+    @State private var showingCompletionAlert = false
     
     var body: some View {
         VStack(spacing: 12) {
-            if task.status != .completed {
-                Button(action: { showingTimer = true }) {
-                    HStack {
-                        Image(systemName: "play.circle.fill")
-                        Text("开始学习")
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
-                }
-            }
-            
-            HStack(spacing: 12) {
-                if task.status == .pending {
-                    Button(action: { markTaskAsInProgress() }) {
+            // 任务完成状态显示
+            if task.status == .completed {
+                TaskCompletionStatusView(task: task)
+            } else {
+                // 未完成任务的操作按钮
+                if task.status != .completed {
+                    Button(action: { showingTimer = true }) {
                         HStack {
-                            Image(systemName: "play.fill")
-                            Text("开始")
+                            Image(systemName: "play.circle.fill")
+                            Text("开始学习")
                         }
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.green)
+                        .background(Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(12)
                     }
                 }
                 
-                if task.status == .inProgress {
-                    Button(action: { markTaskAsCompleted() }) {
-                        HStack {
-                            Image(systemName: "checkmark")
-                            Text("完成")
+                HStack(spacing: 12) {
+                    if task.status == .pending {
+                        Button(action: { markTaskAsInProgress() }) {
+                            HStack {
+                                Image(systemName: "play.fill")
+                                Text("开始")
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
+                    }
+                    
+                    if task.status == .inProgress {
+                        Button(action: { showingCompletionAlert = true }) {
+                            HStack {
+                                Image(systemName: "checkmark")
+                                Text("完成")
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                        }
                     }
                 }
             }
+        }
+        .alert("完成任务", isPresented: $showingCompletionAlert) {
+            Button("取消", role: .cancel) { }
+            Button("完成", role: .destructive) {
+                markTaskAsCompleted()
+            }
+        } message: {
+            Text("确定要标记「\(task.title)」为已完成吗？")
         }
     }
     
@@ -325,6 +355,88 @@ struct ActionButtonsSection: View {
         var updatedTask = task
         updatedTask.status = .completed
         updatedTask.completedDate = Date()
+        updatedTask.updatedAt = Date()
+        dataManager.updateTask(updatedTask)
+    }
+}
+
+// MARK: - 任务完成状态视图
+struct TaskCompletionStatusView: View {
+    let task: LearningTask
+    @EnvironmentObject var dataManager: DataManager
+    @State private var showingReopenAlert = false
+    
+    var body: some View {
+        VStack(spacing: 16) {
+            // 完成状态图标和文字
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(Color.green)
+                        .frame(width: 50, height: 50)
+                    
+                    Image(systemName: "checkmark")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                }
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("任务已完成")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.green)
+                    
+                    if let completedDate = task.completedDate {
+                        Text("完成时间: \(completedDate, formatter: dateTimeFormatter)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                
+                Spacer()
+            }
+            
+            // 重新打开按钮
+            Button(action: { showingReopenAlert = true }) {
+                HStack {
+                    Image(systemName: "arrow.uturn.backward")
+                    Text("重新打开")
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.orange.opacity(0.1))
+                .foregroundColor(.orange)
+                .cornerRadius(12)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.orange.opacity(0.3), lineWidth: 1)
+                )
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.green.opacity(0.05))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color.green.opacity(0.2), lineWidth: 1)
+                )
+        )
+        .alert("重新打开任务", isPresented: $showingReopenAlert) {
+            Button("取消", role: .cancel) { }
+            Button("重新打开", role: .destructive) {
+                reopenTask()
+            }
+        } message: {
+            Text("确定要重新打开「\(task.title)」吗？任务状态将变为进行中。")
+        }
+    }
+    
+    private func reopenTask() {
+        var updatedTask = task
+        updatedTask.status = .inProgress
+        updatedTask.completedDate = nil
         updatedTask.updatedAt = Date()
         dataManager.updateTask(updatedTask)
     }

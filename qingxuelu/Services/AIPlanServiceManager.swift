@@ -20,20 +20,62 @@ class AIPlanServiceManager: ObservableObject {
     
     private init() {}
     
+    // MARK: - 计算实际周数
+    private func calculateActualWeeks(from startDate: Date, to endDate: Date) -> Int {
+        let calendar = Calendar.current
+        
+        // 计算两个日期之间的天数
+        let daysBetween = calendar.dateComponents([.day], from: startDate, to: endDate).day ?? 0
+        
+        // 将天数转换为周数，向上取整
+        let weeks = Int(ceil(Double(daysBetween) / 7.0))
+        
+        // 确保至少为1周
+        let finalWeeks = max(1, weeks)
+        
+        // 添加调试日志
+        print("=== 周数计算调试 ===")
+        print("开始日期: \(startDate)")
+        print("结束日期: \(endDate)")
+        print("天数差: \(daysBetween)")
+        print("计算周数: \(daysBetween) ÷ 7 = \(Double(daysBetween) / 7.0)")
+        print("向上取整: \(weeks)")
+        print("最终周数: \(finalWeeks)")
+        print("=== 周数计算调试结束 ===")
+        
+        return finalWeeks
+    }
+    
     // MARK: - 生成学习计划
-    func generateLearningPlan(for goal: LearningGoal, totalWeeks: Int? = nil) async throws -> LearningPlan {
+    func generateLearningPlan(for goal: LearningGoal, totalWeeks: Int? = nil, dataManager: DataManager? = nil) async throws -> LearningPlan {
         // 根据目标的开始日期和结束日期计算实际周数
-        let actualWeeks = Calendar.current.dateComponents([.weekOfYear], from: goal.startDate, to: goal.targetDate).weekOfYear ?? 16
+        let actualWeeks = calculateActualWeeks(from: goal.startDate, to: goal.targetDate)
         let weeks = totalWeeks ?? actualWeeks
         isLoading = true
         defer { isLoading = false }
         
         do {
             let prompt = buildPlanPrompt(for: goal, totalWeeks: weeks)
+            
+            // 添加调试日志：打印传给大模型的prompt
+            print("=== AI计划生成Prompt开始 ===")
+            print("目标开始时间: \(goal.startDate)")
+            print("目标结束时间: \(goal.targetDate)")
+            print("计算的实际周数: \(actualWeeks)")
+            print("使用的周数: \(weeks)")
+            print("完整Prompt:")
+            print(prompt)
+            print("=== AI计划生成Prompt结束 ===")
+            
             let response = try await callQwenAPI(prompt: prompt)
             
             // 解析响应
-            return try parsePlanResponse(response, goal: goal, totalWeeks: weeks)
+            let plan = try parsePlanResponse(response, goal: goal, totalWeeks: weeks)
+            
+            // 自动调度任务到具体日期和时间
+            let scheduledPlan = try await schedulePlanTasks(plan, dataManager: dataManager)
+            
+            return scheduledPlan
         } catch let error as URLError {
             switch error.code {
             case .timedOut:
@@ -356,15 +398,45 @@ class AIPlanServiceManager: ObservableObject {
         
         let quantity = taskDict["quantity"] as? String ?? ""
         let duration = taskDict["duration"] as? String ?? ""
-        let difficulty = taskDict["difficulty"] as? String ?? "中等"
+        let difficultyString = taskDict["difficulty"] as? String ?? "中等"
+        
+        // 解析难度
+        let difficulty: TaskDifficulty
+        switch difficultyString.lowercased() {
+        case "简单", "easy":
+            difficulty = .easy
+        case "困难", "hard":
+            difficulty = .hard
+        default:
+            difficulty = .medium
+        }
+        
+        // 解析预估时长（从duration字符串中提取）
+        let estimatedDuration = parseDurationFromString(duration)
         
         return WeeklyTask(
             title: title,
             description: "", // 简化版本不包含描述
             quantity: quantity,
             duration: duration,
-            difficulty: difficulty
+            difficulty: difficulty,
+            estimatedDuration: estimatedDuration
         )
+    }
+    
+    // MARK: - 解析时长字符串
+    private func parseDurationFromString(_ durationString: String) -> TimeInterval {
+        // 解析类似"30分钟"、"2小时"的字符串
+        let components = durationString.components(separatedBy: CharacterSet.decimalDigits.inverted)
+        let numbers = components.compactMap { Double($0) }
+        
+        if durationString.contains("小时") || durationString.contains("hour") {
+            return numbers.first ?? 1.0
+        } else if durationString.contains("分钟") || durationString.contains("minute") {
+            return (numbers.first ?? 30.0) / 60.0 // 转换为小时
+        } else {
+            return 1.0 // 默认1小时
+        }
     }
     
     // MARK: - 解析学习资源
@@ -430,11 +502,11 @@ class AIPlanServiceManager: ObservableObject {
             
             // 生成默认任务
             let defaultTasks = [
-                WeeklyTask(title: "理论学习", description: "学习相关理论知识", quantity: "2小时", duration: "2小时", difficulty: "中等"),
-                WeeklyTask(title: "实践练习", description: "完成相关练习", quantity: "5道题", duration: "1小时", difficulty: "中等"),
-                WeeklyTask(title: "复习巩固", description: "复习本周学习内容", quantity: "1次", duration: "1小时", difficulty: "简单"),
-                WeeklyTask(title: "拓展阅读", description: "阅读相关资料", quantity: "3篇文章", duration: "1小时", difficulty: "简单"),
-                WeeklyTask(title: "总结反思", description: "总结学习心得", quantity: "1篇", duration: "30分钟", difficulty: "简单")
+                WeeklyTask(title: "理论学习", description: "学习相关理论知识", quantity: "2小时", duration: "2小时", difficulty: .medium),
+                WeeklyTask(title: "实践练习", description: "完成相关练习", quantity: "5道题", duration: "1小时", difficulty: .medium),
+                WeeklyTask(title: "复习巩固", description: "复习本周学习内容", quantity: "1次", duration: "1小时", difficulty: .easy),
+                WeeklyTask(title: "拓展阅读", description: "阅读相关资料", quantity: "3篇文章", duration: "1小时", difficulty: .easy),
+                WeeklyTask(title: "总结反思", description: "总结学习心得", quantity: "1篇", duration: "30分钟", difficulty: .easy)
             ]
             
             let weeklyPlan = WeeklyPlan(
@@ -453,6 +525,40 @@ class AIPlanServiceManager: ObservableObject {
         updatedPlan.weeklyPlans = weeklyPlans
         
         return updatedPlan
+    }
+    
+    // MARK: - 任务调度
+    private func schedulePlanTasks(_ plan: LearningPlan, dataManager: DataManager?) async throws -> LearningPlan {
+        let scheduledPlan = plan
+        var allScheduledTasks: [LearningTask] = []
+        
+        // 为每个周计划调度任务
+        for weeklyPlan in plan.weeklyPlans {
+            let scheduledTasks = TaskScheduler.shared.scheduleWeeklyTasks(
+                weeklyPlan, 
+                for: weeklyPlan.startDate,
+                goalId: plan.id, // LearningPlan的id就是目标的ID
+                planId: plan.id  // 传递计划ID
+            )
+            allScheduledTasks.append(contentsOf: scheduledTasks)
+        }
+        
+        // 将调度的任务存储到DataManager
+        for task in allScheduledTasks {
+            if let dataManager = dataManager {
+                // 确保在主线程更新DataManager
+                await MainActor.run {
+                    dataManager.addTask(task)
+                }
+                print("📅 调度任务已保存: \(task.title) - \(task.scheduledStartTime?.formatted() ?? "未安排时间")")
+            } else {
+                print("⚠️ 调度任务未保存（DataManager为空）: \(task.title) - \(task.scheduledStartTime?.formatted() ?? "未安排时间")")
+            }
+        }
+        
+        print("✅ 任务调度完成！共调度了 \(allScheduledTasks.count) 个任务")
+        
+        return scheduledPlan
     }
 }
 

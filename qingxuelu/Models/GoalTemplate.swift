@@ -305,6 +305,94 @@ class GoalTemplateManager: ObservableObject {
                     TaskTemplate(title: "模拟考试", description: "完成一套英语模拟试卷", estimatedDuration: 90, difficulty: .hard, tags: ["考试", "模拟"]),
                     TaskTemplate(title: "错题订正", description: "订正错题并总结", estimatedDuration: 20, difficulty: .medium, tags: ["订正", "总结"])
                 ]
+            ),
+            
+            // 唐诗宋词学习模板
+            GoalTemplate(
+                name: "唐诗宋词学习",
+                description: "系统学习唐诗宋词，掌握经典诗词的背诵、理解和鉴赏，提升文学素养和古诗词功底",
+                category: .chinese,
+                goalType: .smart,
+                priority: .medium,
+                duration: 60,
+                icon: "scroll",
+                tags: ["唐诗", "宋词", "古诗词", "文学"],
+                milestones: [
+                    MilestoneTemplate(title: "唐诗基础", description: "学习并背诵30首经典唐诗", duration: 15, order: 1),
+                    MilestoneTemplate(title: "宋词入门", description: "学习并背诵20首经典宋词", duration: 30, order: 2),
+                    MilestoneTemplate(title: "诗词鉴赏", description: "掌握诗词鉴赏的基本方法和技巧", duration: 45, order: 3),
+                    MilestoneTemplate(title: "创作实践", description: "尝试创作简单的古体诗", duration: 60, order: 4)
+                ],
+                keyResults: [
+                    KeyResultTemplate(title: "唐诗背诵", description: "背诵30首经典唐诗", targetValue: 30, unit: "首"),
+                    KeyResultTemplate(title: "宋词背诵", description: "背诵20首经典宋词", targetValue: 20, unit: "首"),
+                    KeyResultTemplate(title: "诗词鉴赏", description: "完成50首诗词的鉴赏分析", targetValue: 50, unit: "首"),
+                    KeyResultTemplate(title: "创作作品", description: "创作5首古体诗", targetValue: 5, unit: "首")
+                ],
+                suggestedTasks: [
+                    TaskTemplate(title: "诗词背诵", description: "背诵指定诗词", estimatedDuration: 20, difficulty: .easy, tags: ["背诵", "记忆"]),
+                    TaskTemplate(title: "诗词鉴赏", description: "分析诗词的意境和技巧", estimatedDuration: 30, difficulty: .medium, tags: ["鉴赏", "分析"]),
+                    TaskTemplate(title: "诗词创作", description: "尝试创作古体诗", estimatedDuration: 45, difficulty: .hard, tags: ["创作", "写作"])
+                ]
+            ),
+            
+            // 文言文学习模板
+            GoalTemplate(
+                name: "文言文学习",
+                description: "系统学习文言文基础知识，掌握常见文言实词、虚词和句式，提升文言文阅读和理解能力",
+                category: .chinese,
+                goalType: .okr,
+                priority: .high,
+                duration: 45,
+                icon: "book.closed",
+                tags: ["文言文", "古文", "语文", "阅读"],
+                milestones: [
+                    MilestoneTemplate(title: "实词积累", description: "掌握200个常用文言实词", duration: 10, order: 1),
+                    MilestoneTemplate(title: "虚词理解", description: "掌握20个常用文言虚词", duration: 18, order: 2),
+                    MilestoneTemplate(title: "句式分析", description: "掌握常见文言句式", duration: 28, order: 3),
+                    MilestoneTemplate(title: "篇章阅读", description: "能够独立阅读中等难度的文言文", duration: 45, order: 4)
+                ],
+                keyResults: [
+                    KeyResultTemplate(title: "实词掌握", description: "掌握200个常用文言实词", targetValue: 200, unit: "个"),
+                    KeyResultTemplate(title: "虚词掌握", description: "掌握20个常用文言虚词", targetValue: 20, unit: "个"),
+                    KeyResultTemplate(title: "篇章阅读", description: "完成30篇文言文阅读", targetValue: 30, unit: "篇"),
+                    KeyResultTemplate(title: "翻译准确率", description: "文言文翻译准确率达到85%", targetValue: 85, unit: "%")
+                ],
+                suggestedTasks: [
+                    TaskTemplate(title: "实词学习", description: "学习文言实词的含义和用法", estimatedDuration: 25, difficulty: .easy, tags: ["实词", "词汇"]),
+                    TaskTemplate(title: "虚词分析", description: "分析文言虚词的语法功能", estimatedDuration: 20, difficulty: .medium, tags: ["虚词", "语法"]),
+                    TaskTemplate(title: "文言翻译", description: "翻译文言文段落", estimatedDuration: 35, difficulty: .hard, tags: ["翻译", "理解"])
+                ]
+            ),
+            
+            // 写作能力提升模板
+            GoalTemplate(
+                name: "写作能力提升",
+                description: "全面提升写作能力，包括记叙文、议论文、说明文等不同文体的写作技巧，提升语言表达和逻辑思维能力",
+                category: .chinese,
+                goalType: .hybrid,
+                priority: .high,
+                duration: 75,
+                icon: "pencil.and.outline",
+                tags: ["写作", "作文", "语文", "表达"],
+                milestones: [
+                    MilestoneTemplate(title: "记叙文写作", description: "掌握记叙文的基本写作技巧", duration: 20, order: 1),
+                    MilestoneTemplate(title: "议论文写作", description: "学会议论文的论证方法和结构", duration: 40, order: 2),
+                    MilestoneTemplate(title: "说明文写作", description: "掌握说明文的写作要点", duration: 55, order: 3),
+                    MilestoneTemplate(title: "综合提升", description: "综合运用各种写作技巧", duration: 75, order: 4)
+                ],
+                keyResults: [
+                    KeyResultTemplate(title: "记叙文", description: "完成10篇记叙文", targetValue: 10, unit: "篇"),
+                    KeyResultTemplate(title: "议论文", description: "完成8篇议论文", targetValue: 8, unit: "篇"),
+                    KeyResultTemplate(title: "说明文", description: "完成6篇说明文", targetValue: 6, unit: "篇"),
+                    KeyResultTemplate(title: "优秀作文", description: "至少5篇作文获得优秀评价", targetValue: 5, unit: "篇")
+                ],
+                suggestedTasks: [
+                    TaskTemplate(title: "记叙文练习", description: "写一篇记叙文", estimatedDuration: 60, difficulty: .medium, tags: ["记叙文", "写作"]),
+                    TaskTemplate(title: "议论文练习", description: "写一篇议论文", estimatedDuration: 75, difficulty: .hard, tags: ["议论文", "论证"]),
+                    TaskTemplate(title: "说明文练习", description: "写一篇说明文", estimatedDuration: 50, difficulty: .medium, tags: ["说明文", "说明"]),
+                    TaskTemplate(title: "作文修改", description: "修改和完善作文", estimatedDuration: 30, difficulty: .easy, tags: ["修改", "完善"])
+                ]
             )
         ]
     }

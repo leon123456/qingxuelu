@@ -12,41 +12,41 @@ struct GoalsView: View {
     @State private var showingAddGoal = false
     @State private var selectedStatus: GoalStatus? = nil
     @State private var showingTemplates = false
+    @State private var goalToDelete: LearningGoal? = nil
+    @State private var showingDeleteAlert = false
     
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: 0) {
                 let goals = filteredGoals()
                 
+                // 主要内容区域
                 if goals.isEmpty {
+                    // 空状态 - 使用 Spacer 让内容居中，模板区域固定在底部
                     VStack {
+                        Spacer()
                         EmptyGoalsView()
-                        
-                        // 浏览模板部分 - 常驻显示
-                        BrowseTemplatesSection()
+                        Spacer()
                     }
                 } else {
+                    // 有目标时 - 使用 List 显示目标
                     List {
                         ForEach(goals) { goal in
                             NavigationLink(destination: GoalDetailView(goal: goal)) {
-                                GoalRowView(goal: goal)
+                                GoalRowView(goal: goal) {
+                                    goalToDelete = goal
+                                    showingDeleteAlert = true
+                                }
                             }
                         }
-                        .onDelete(perform: deleteGoals)
-                        
-                        // 浏览模板部分
-                        BrowseTemplatesSection()
-                    }
-                }
-            }
-            .navigationTitle("学习目标")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showingAddGoal = true }) {
-                        Image(systemName: "plus")
                     }
                 }
                 
+                // 目标模板区域 - 始终固定在底部
+                BrowseTemplatesSection()
+            }
+            .navigationTitle("学习目标")
+            .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Menu {
                         Button("全部") { selectedStatus = nil }
@@ -57,6 +57,28 @@ struct GoalsView: View {
                         Image(systemName: "line.3.horizontal.decrease.circle")
                     }
                 }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    HStack(spacing: 12) {
+                        // 手动创建目标按钮
+                        Button(action: { showingAddGoal = true }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(.blue)
+                                Text("手动创建")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                        
+                        // 模板按钮
+                        Button(action: { showingTemplates = true }) {
+                            Image(systemName: "doc.text.magnifyingglass")
+                        }
+                    }
+                }
             }
         }
         .sheet(isPresented: $showingAddGoal) {
@@ -64,6 +86,18 @@ struct GoalsView: View {
         }
         .sheet(isPresented: $showingTemplates) {
             GoalTemplateView()
+        }
+        .alert("删除目标", isPresented: $showingDeleteAlert) {
+            Button("取消", role: .cancel) { }
+            Button("删除", role: .destructive) {
+                if let goal = goalToDelete {
+                    dataManager.deleteGoal(goal)
+                }
+            }
+        } message: {
+            if let goal = goalToDelete {
+                Text("确定要删除「\(goal.title)」吗？\n\n删除的目标将移到回收站，您可以在设置中恢复或永久删除。")
+            }
         }
     }
     
@@ -75,17 +109,12 @@ struct GoalsView: View {
         return goals
     }
     
-    private func deleteGoals(offsets: IndexSet) {
-        let goals = dataManager.goals
-        for index in offsets {
-            dataManager.deleteGoal(goals[index])
-        }
-    }
 }
 
 // MARK: - 目标行视图
 struct GoalRowView: View {
     let goal: LearningGoal
+    let onDelete: () -> Void
     @EnvironmentObject var dataManager: DataManager
     
     var body: some View {
@@ -109,26 +138,38 @@ struct GoalRowView: View {
                 Spacer()
                 
                 VStack(alignment: .trailing, spacing: 4) {
-                    Text(goal.goalType.rawValue)
-                        .font(.caption)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.blue.opacity(0.2))
-                        .cornerRadius(8)
-                    
-                    Text(goal.status.rawValue)
-                        .font(.caption)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color(goal.status.color).opacity(0.2))
-                        .cornerRadius(8)
-                    
-                    Text(goal.priority.rawValue)
-                        .font(.caption)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color(goal.priority.color).opacity(0.2))
-                        .cornerRadius(8)
+                    HStack(spacing: 8) {
+                        Button(action: onDelete) {
+                            Image(systemName: "trash")
+                                .font(.caption)
+                                .foregroundColor(Color(.systemRed))
+                                .padding(4)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        VStack(alignment: .trailing, spacing: 2) {
+                            Text(goal.goalType.rawValue)
+                                .font(.caption)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Color.blue.opacity(0.2))
+                                .cornerRadius(8)
+                            
+                            Text(goal.status.rawValue)
+                                .font(.caption)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Color(goal.status.color).opacity(0.2))
+                                .cornerRadius(8)
+                            
+                            Text(goal.priority.rawValue)
+                                .font(.caption)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Color(goal.priority.color).opacity(0.2))
+                                .cornerRadius(8)
+                        }
+                    }
                 }
             }
             
@@ -583,16 +624,27 @@ struct CreatePlanSection: View {
 struct PlanFeatureRow: View {
     let icon: String
     let text: String
+    let isSelected: Bool
+    
+    init(icon: String, text: String, isSelected: Bool = false) {
+        self.icon = icon
+        self.text = text
+        self.isSelected = isSelected
+    }
     
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: icon)
-                .foregroundColor(.blue)
+                .font(.caption)
+                .foregroundColor(isSelected ? .white.opacity(0.8) : .blue)
                 .frame(width: 16)
             
             Text(text)
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundColor(isSelected ? .white.opacity(0.9) : .secondary)
+                .lineLimit(1)
+            
+            Spacer()
         }
     }
 }
@@ -604,36 +656,74 @@ struct BrowseTemplatesSection: View {
     private let previewTemplates = Array(GoalTemplateManager.shared.templates.prefix(3))
     
     var body: some View {
-        Section {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Text("目标模板")
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                    
-                    Spacer()
-                    
-                    Button("查看全部") {
-                        showingTemplates = true
-                    }
-                    .font(.subheadline)
-                    .foregroundColor(.blue)
-                }
-                
-                Text("使用预设模板快速创建学习目标")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
-                        ForEach(previewTemplates) { template in
-                            TemplatePreviewCard(template: template)
+        VStack(spacing: 0) {
+            // 简洁的模板区域设计
+            Button(action: {
+                showingTemplates = true
+            }) {
+                VStack(alignment: .leading, spacing: 12) {
+                        // 标题区域
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("目标模板")
+                                    .font(.title3)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.primary)
+                                
+                                Text("使用预设模板快速创建学习目标")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                            
+                            // 查看全部按钮样式，但实际点击由外层按钮处理
+                            HStack(spacing: 2) {
+                                Text("查看全部")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                
+                                Image(systemName: "chevron.right")
+                                    .font(.caption2)
+                            }
+                            .foregroundColor(.blue)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(
+                                Capsule()
+                                    .fill(.blue.opacity(0.1))
+                            )
                         }
-                    }
-                    .padding(.horizontal, 1)
+                        
+                        // 模板卡片区域
+                        if !previewTemplates.isEmpty {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 12) {
+                                    ForEach(previewTemplates) { template in
+                                        TemplatePreviewCard(template: template)
+                                    }
+                                }
+                                .padding(.horizontal, 2)
+                            }
+                        } else {
+                            // 空状态
+                            VStack(spacing: 8) {
+                                Image(systemName: "doc.text.magnifyingglass")
+                                    .font(.title)
+                                    .foregroundColor(.secondary)
+                                
+                                Text("暂无可用模板")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 20)
+                        }
                 }
             }
-            .padding(.vertical, 8)
+            .buttonStyle(PlainButtonStyle()) // 移除默认按钮样式
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
         }
         .sheet(isPresented: $showingTemplates) {
             GoalTemplateView()
@@ -646,48 +736,47 @@ struct TemplatePreviewCard: View {
     let template: GoalTemplate
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 6) {
+            // 顶部图标和标签
             HStack {
                 Image(systemName: template.icon)
                     .foregroundColor(.blue)
                     .font(.title3)
+                    .frame(width: 18, height: 18)
                 
                 Spacer()
                 
                 Text(template.category.rawValue)
-                    .font(.caption)
+                    .font(.caption2)
+                    .fontWeight(.medium)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
-                    .background(Color.blue.opacity(0.2))
-                    .cornerRadius(4)
+                    .background(
+                        Capsule()
+                            .fill(.blue.opacity(0.15))
+                    )
+                    .foregroundColor(.blue)
             }
             
+            // 标题
             Text(template.name)
-                .font(.subheadline)
-                .fontWeight(.medium)
-                .lineLimit(2)
-            
-            Text(template.description)
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .fontWeight(.semibold)
                 .lineLimit(2)
+                .foregroundColor(.primary)
             
-            HStack {
-                Label("\(template.milestones.count)", systemImage: "flag")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-                
-                Spacer()
-                
-                Label("\(template.keyResults.count)", systemImage: "target")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            }
+            Spacer()
         }
-        .padding(12)
-        .frame(width: 160)
-        .background(Color(.systemGray6))
-        .cornerRadius(8)
+        .padding(10)
+        .frame(width: 120, height: 80)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(.systemGray6))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color(.systemGray4), lineWidth: 0.5)
+                )
+        )
     }
 }
 

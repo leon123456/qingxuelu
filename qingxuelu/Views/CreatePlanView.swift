@@ -42,11 +42,8 @@ struct CreatePlanView: View {
                 // 目标信息预览
                 GoalPreviewSection(goal: goal)
                 
-                // 选择计划方式
+                // 选择计划方式 - 左右排列
                 PlanModeSelectionSection(planMode: $planMode)
-                
-                // 计划方式说明
-                PlanModeDescriptionSection(planMode: planMode)
                 
                 Spacer()
                 
@@ -189,32 +186,112 @@ struct GoalPreviewSection: View {
     }
 }
 
-// MARK: - 计划方式选择区域
+// MARK: - 计划方式选择区域 - 左右排列
 struct PlanModeSelectionSection: View {
     @Binding var planMode: CreatePlanView.PlanMode
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 16) {
             Text("选择制定方式")
                 .font(.headline)
                 .fontWeight(.semibold)
                 .padding(.horizontal)
             
-            VStack(spacing: 12) {
-                ForEach(CreatePlanView.PlanMode.allCases, id: \.self) { mode in
-                    PlanModeCard(
-                        mode: mode,
-                        isSelected: planMode == mode,
-                        onTap: { planMode = mode }
-                    )
-                }
+            // 左右排列的卡片
+            HStack(spacing: 12) {
+                // AI生成卡片
+                PlanModeCardWithDescription(
+                    mode: .ai,
+                    isSelected: planMode == .ai,
+                    onTap: { planMode = .ai }
+                )
+                
+                // 手动填写卡片
+                PlanModeCardWithDescription(
+                    mode: .manual,
+                    isSelected: planMode == .manual,
+                    onTap: { planMode = .manual }
+                )
             }
             .padding(.horizontal)
         }
     }
 }
 
-// MARK: - 计划方式卡片
+// MARK: - 带说明的计划方式卡片
+struct PlanModeCardWithDescription: View {
+    let mode: CreatePlanView.PlanMode
+    let isSelected: Bool
+    let onTap: () -> Void
+    
+    var body: some View {
+        Button(action: onTap) {
+            VStack(alignment: .leading, spacing: 12) {
+                // 顶部：图标和标题
+                HStack {
+                    Image(systemName: mode.icon)
+                        .font(.title2)
+                        .foregroundColor(isSelected ? .white : .blue)
+                        .frame(width: 32, height: 32)
+                        .background(
+                            Circle()
+                                .fill(isSelected ? Color.white.opacity(0.2) : Color.blue.opacity(0.1))
+                        )
+                    
+                    Text(mode.rawValue)
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(isSelected ? .white : .primary)
+                    
+                    Spacer()
+                    
+                    if isSelected {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.white)
+                            .font(.title3)
+                    }
+                }
+                
+                // 中间：描述
+                Text(mode.description)
+                    .font(.subheadline)
+                    .foregroundColor(isSelected ? .white.opacity(0.9) : .secondary)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+                
+                // 底部：功能特点
+                VStack(alignment: .leading, spacing: 6) {
+                    if mode == .ai {
+                        PlanFeatureRow(icon: "brain.head.profile", text: "AI分析目标的关键结果和里程碑", isSelected: isSelected)
+                        PlanFeatureRow(icon: "calendar", text: "自动计算学习时长和进度安排", isSelected: isSelected)
+                        PlanFeatureRow(icon: "target", text: "智能分配每周的学习任务", isSelected: isSelected)
+                        PlanFeatureRow(icon: "clock", text: "生成每日学习计划", isSelected: isSelected)
+                        PlanFeatureRow(icon: "checkmark.circle", text: "一键应用，快速开始学习", isSelected: isSelected)
+                    } else {
+                        PlanFeatureRow(icon: "pencil", text: "完全自定义学习计划", isSelected: isSelected)
+                        PlanFeatureRow(icon: "calendar", text: "手动设置周数和里程碑", isSelected: isSelected)
+                        PlanFeatureRow(icon: "target", text: "自定义每周的关键结果", isSelected: isSelected)
+                        PlanFeatureRow(icon: "clock", text: "灵活安排学习时间", isSelected: isSelected)
+                        PlanFeatureRow(icon: "gear", text: "适合有经验的用户", isSelected: isSelected)
+                    }
+                }
+            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isSelected ? Color.blue : Color(.systemBackground))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(isSelected ? Color.clear : Color(.systemGray4), lineWidth: 1)
+                    )
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+// MARK: - 计划方式卡片（保留原有组件以防其他地方使用）
 struct PlanModeCard: View {
     let mode: CreatePlanView.PlanMode
     let isSelected: Bool
@@ -266,39 +343,6 @@ struct PlanModeCard: View {
     }
 }
 
-// MARK: - 计划方式说明区域
-struct PlanModeDescriptionSection: View {
-    let planMode: CreatePlanView.PlanMode
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("\(planMode.rawValue)说明")
-                .font(.headline)
-                .fontWeight(.semibold)
-                .padding(.horizontal)
-            
-            VStack(alignment: .leading, spacing: 8) {
-                if planMode == .ai {
-                    PlanFeatureRow(icon: "brain.head.profile", text: "AI分析目标的关键结果和里程碑")
-                    PlanFeatureRow(icon: "calendar", text: "自动计算学习时长和进度安排")
-                    PlanFeatureRow(icon: "target", text: "智能分配每周的学习任务")
-                    PlanFeatureRow(icon: "clock", text: "生成每日学习计划")
-                    PlanFeatureRow(icon: "checkmark.circle", text: "一键应用，快速开始学习")
-                } else {
-                    PlanFeatureRow(icon: "pencil", text: "完全自定义学习计划")
-                    PlanFeatureRow(icon: "calendar", text: "手动设置周数和里程碑")
-                    PlanFeatureRow(icon: "target", text: "自定义每周的关键结果")
-                    PlanFeatureRow(icon: "clock", text: "灵活安排学习时间")
-                    PlanFeatureRow(icon: "gear", text: "适合有经验的用户")
-                }
-            }
-            .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(12)
-            .padding(.horizontal)
-        }
-    }
-}
 
 // MARK: - 手动计划页面
 struct ManualPlanView: View {
@@ -438,41 +482,47 @@ struct AIPlanView: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if let plan = generatedPlan {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 20) {
-                            // 计划概览
-                            PlanOverviewSection(plan: plan)
-                            
-                            // 周计划详情
-                            WeeklyPlanDetailSection(plan: plan)
-                            
-                            // 学习资源
-                            if !plan.resources.isEmpty {
-                                CreatePlanResourcesSection(resources: plan.resources)
+                    VStack(spacing: 0) {
+                        // 顶部固定操作区域
+                        VStack(spacing: 12) {
+                            Button("应用此计划") {
+                                dataManager.addPlan(plan)
+                                onPlanApplied() // 调用回调关闭整个CreatePlanView
                             }
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .cornerRadius(12)
                             
-                            // 操作按钮
-                            VStack(spacing: 12) {
-                                Button("应用此计划") {
-                                    dataManager.addPlan(plan)
-                                    onPlanApplied() // 调用回调关闭整个CreatePlanView
-                                }
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue)
-                                .cornerRadius(12)
+                            Button("编辑计划") {
+                                // TODO: 实现计划编辑功能
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(.blue)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue.opacity(0.1))
+                            .cornerRadius(12)
+                        }
+                        .padding()
+                        .background(Color(.systemBackground))
+                        .shadow(color: .black.opacity(0.1), radius: 1, x: 0, y: 1)
+                        
+                        // 计划详情内容
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 20) {
+                                // 计划概览
+                                PlanOverviewSection(plan: plan)
                                 
-                                Button("编辑计划") {
-                                    // TODO: 实现计划编辑功能
+                                // 周计划详情
+                                WeeklyPlanDetailSection(plan: plan)
+                                
+                                // 学习资源
+                                if !plan.resources.isEmpty {
+                                    CreatePlanResourcesSection(resources: plan.resources)
                                 }
-                                .font(.subheadline)
-                                .foregroundColor(.blue)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue.opacity(0.1))
-                                .cornerRadius(12)
                             }
                             .padding()
                         }
@@ -532,7 +582,8 @@ struct AIPlanView: View {
         
         Task {
             do {
-                let plan = try await AIPlanServiceManager.shared.generateLearningPlan(for: goal, totalWeeks: totalWeeks)
+                // 移除硬编码的totalWeeks，让AIPlanServiceManager自己计算正确的周数
+                let plan = try await AIPlanServiceManager.shared.generateLearningPlan(for: goal, dataManager: dataManager)
                 
                 await MainActor.run {
                     generatedPlan = plan

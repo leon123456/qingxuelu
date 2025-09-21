@@ -12,8 +12,27 @@ struct GoalTemplateView: View {
     @EnvironmentObject var dataManager: DataManager
     
     @State private var searchText = ""
-    @State private var selectedCategory: SubjectCategory? = nil
+    @State private var selectedCategoryIndex = 0
     @State private var selectedTemplate: GoalTemplate? = nil
+    
+    // 所有分类，包括"全部"
+    private let allCategories: [(String, SubjectCategory?)] = [
+        ("全部", nil),
+        ("语文", .chinese),
+        ("数学", .math),
+        ("英语", .english),
+        ("物理", .physics),
+        ("化学", .chemistry),
+        ("生物", .biology),
+        ("历史", .history),
+        ("地理", .geography),
+        ("政治", .politics),
+        ("其他", .other)
+    ]
+    
+    private var currentCategory: SubjectCategory? {
+        allCategories[selectedCategoryIndex].1
+    }
     
     private var filteredTemplates: [GoalTemplate] {
         let templates = GoalTemplateManager.shared.templates
@@ -21,7 +40,29 @@ struct GoalTemplateView: View {
         var filtered = templates
         
         // 按类别筛选
-        if let category = selectedCategory {
+        if let category = currentCategory {
+            filtered = filtered.filter { $0.category == category }
+        }
+        
+        // 按搜索文本筛选
+        if !searchText.isEmpty {
+            filtered = filtered.filter { template in
+                template.name.localizedCaseInsensitiveContains(searchText) ||
+                template.description.localizedCaseInsensitiveContains(searchText) ||
+                template.tags.contains { $0.localizedCaseInsensitiveContains(searchText) }
+            }
+        }
+        
+        return filtered
+    }
+    
+    private func getTemplatesForCategory(_ category: SubjectCategory?) -> [GoalTemplate] {
+        let templates = GoalTemplateManager.shared.templates
+        
+        var filtered = templates
+        
+        // 按类别筛选
+        if let category = category {
             filtered = filtered.filter { $0.category == category }
         }
         
@@ -44,20 +85,18 @@ struct GoalTemplateView: View {
                 SearchBar(text: $searchText)
                     .padding(.horizontal)
                 
-                // 类别筛选
+                // 类别筛选按钮
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
-                        CategoryChip(
-                            title: "全部",
-                            isSelected: selectedCategory == nil,
-                            action: { selectedCategory = nil }
-                        )
-                        
-                        ForEach(SubjectCategory.allCases, id: \.self) { category in
+                        ForEach(Array(allCategories.enumerated()), id: \.offset) { index, category in
                             CategoryChip(
-                                title: category.rawValue,
-                                isSelected: selectedCategory == category,
-                                action: { selectedCategory = category }
+                                title: category.0,
+                                isSelected: selectedCategoryIndex == index,
+                                action: { 
+                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                        selectedCategoryIndex = index
+                                    }
+                                }
                             )
                         }
                     }
@@ -65,21 +104,18 @@ struct GoalTemplateView: View {
                 }
                 .padding(.vertical, 8)
                 
-                // 模板列表
-                if filteredTemplates.isEmpty {
-                    EmptyTemplatesView()
-                } else {
-                    ScrollView {
-                        LazyVStack(spacing: 16) {
-                            ForEach(filteredTemplates) { template in
-                                TemplateCardView(template: template) {
-                                    selectedTemplate = template
-                                }
-                            }
-                        }
-                        .padding()
+                // 使用 TabView 实现左右滑动
+                TabView(selection: $selectedCategoryIndex) {
+                    ForEach(Array(allCategories.enumerated()), id: \.offset) { index, category in
+                        TemplateListView(
+                            templates: getTemplatesForCategory(category.1),
+                            selectedTemplate: $selectedTemplate
+                        )
+                        .tag(index)
                     }
                 }
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                .animation(.easeInOut(duration: 0.3), value: selectedCategoryIndex)
             }
             .navigationTitle("目标模板")
             .navigationBarTitleDisplayMode(.large)
@@ -603,6 +639,29 @@ struct EmptyTemplatesView: View {
                 .padding(.horizontal)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+// MARK: - 模板列表视图
+struct TemplateListView: View {
+    let templates: [GoalTemplate]
+    @Binding var selectedTemplate: GoalTemplate?
+    
+    var body: some View {
+        if templates.isEmpty {
+            EmptyTemplatesView()
+        } else {
+            ScrollView {
+                LazyVStack(spacing: 16) {
+                    ForEach(templates) { template in
+                        TemplateCardView(template: template) {
+                            selectedTemplate = template
+                        }
+                    }
+                }
+                .padding()
+            }
+        }
     }
 }
 

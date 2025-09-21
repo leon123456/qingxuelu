@@ -22,6 +22,9 @@ struct AddGoalView: View {
     @State private var showingAddMilestone = false
     @State private var showingAddKeyResult = false
     @State private var showingTemplates = false
+    @State private var showingAIGeneration = false
+    @State private var aiGeneratedContent: AIGeneratedGoalContent?
+    @StateObject private var aiGenerator = AIGoalGenerator.shared
     
     var body: some View {
         NavigationView {
@@ -80,8 +83,13 @@ struct AddGoalView: View {
                     }
                     
                     DatePicker("目标完成时间", selection: $targetDate, displayedComponents: .date)
+                    
                 } header: {
                     Text("目标设置")
+                } footer: {
+                    if !title.isEmpty && !description.isEmpty {
+                        Text("填写完基本信息后，可以使用 AI 智能生成详细的目标内容和执行计划")
+                    }
                 }
                 
                 // SMART目标的里程碑
@@ -92,13 +100,46 @@ struct AddGoalView: View {
                         }
                         .onDelete(perform: deleteMilestones)
                         
-                        Button("添加里程碑") {
+                        // AI 智能生成按钮
+                        Button(action: {
+                            showingAIGeneration = true
+                        }) {
+                            HStack {
+                                Image(systemName: "sparkles")
+                                    .foregroundColor(.blue)
+                                
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("AI 智能生成里程碑")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.primary)
+                                    
+                                    Text("根据目标信息自动生成里程碑")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .disabled(aiGenerator.isLoading || title.isEmpty || description.isEmpty)
+                        
+                        // 手动添加里程碑按钮
+                        Button("手动添加里程碑") {
                             showingAddMilestone = true
                         }
                     } header: {
                         Text("里程碑")
                     } footer: {
-                        Text("将大目标分解为小的里程碑，更容易跟踪进度")
+                        if title.isEmpty || description.isEmpty {
+                            Text("请先填写目标标题和描述，然后可以使用 AI 智能生成或手动添加里程碑")
+                        } else {
+                            Text("将大目标分解为小的里程碑，更容易跟踪进度。可以选择 AI 智能生成或手动添加")
+                        }
                     }
                 }
                 
@@ -110,13 +151,46 @@ struct AddGoalView: View {
                         }
                         .onDelete(perform: deleteKeyResults)
                         
-                        Button("添加关键结果") {
+                        // AI 智能生成按钮
+                        Button(action: {
+                            showingAIGeneration = true
+                        }) {
+                            HStack {
+                                Image(systemName: "sparkles")
+                                    .foregroundColor(.blue)
+                                
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("AI 智能生成关键结果")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.primary)
+                                    
+                                    Text("根据目标信息自动生成关键结果")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .disabled(aiGenerator.isLoading || title.isEmpty || description.isEmpty)
+                        
+                        // 手动添加关键结果按钮
+                        Button("手动添加关键结果") {
                             showingAddKeyResult = true
                         }
                     } header: {
                         Text("关键结果")
                     } footer: {
-                        Text("设定3-5个可量化的关键结果来衡量目标达成")
+                        if title.isEmpty || description.isEmpty {
+                            Text("请先填写目标标题和描述，然后可以使用 AI 智能生成或手动添加关键结果")
+                        } else {
+                            Text("设定3-5个可量化的关键结果来衡量目标达成。可以选择 AI 智能生成或手动添加")
+                        }
                     }
                 }
             }
@@ -150,6 +224,19 @@ struct AddGoalView: View {
         .sheet(isPresented: $showingTemplates) {
             GoalTemplateView()
         }
+        .sheet(isPresented: $showingAIGeneration) {
+            AIGenerationView(
+                title: title,
+                description: description,
+                category: category,
+                goalType: goalType,
+                targetDate: targetDate,
+                priority: priority,
+                onGenerated: { content in
+                    applyAIGeneratedContent(content)
+                }
+            )
+        }
     }
     
     private func saveGoal() {
@@ -174,6 +261,24 @@ struct AddGoalView: View {
     
     private func deleteKeyResults(offsets: IndexSet) {
         keyResults.remove(atOffsets: offsets)
+    }
+    
+    // MARK: - AI 生成内容处理
+    private func applyAIGeneratedContent(_ content: AIGeneratedGoalContent) {
+        // 更新描述
+        if !content.optimizedDescription.isEmpty {
+            description = content.optimizedDescription
+        }
+        
+        // 添加里程碑
+        if !content.milestones.isEmpty {
+            milestones.append(contentsOf: content.milestones)
+        }
+        
+        // 添加关键结果
+        if !content.keyResults.isEmpty {
+            keyResults.append(contentsOf: content.keyResults)
+        }
     }
 }
 
@@ -349,6 +454,9 @@ struct EditGoalView: View {
     @State private var showingAddMilestone = false
     @State private var showingAddKeyResult = false
     @State private var showingTemplates = false
+    @State private var showingAIGeneration = false
+    @State private var aiGeneratedContent: AIGeneratedGoalContent?
+    @StateObject private var aiGenerator = AIGoalGenerator.shared
     
     init(goal: LearningGoal) {
         self.goal = goal
@@ -454,11 +562,46 @@ struct EditGoalView: View {
                         }
                         .onDelete(perform: deleteMilestones)
                         
-                        Button("添加里程碑") {
+                        // AI 智能生成按钮
+                        Button(action: {
+                            showingAIGeneration = true
+                        }) {
+                            HStack {
+                                Image(systemName: "sparkles")
+                                    .foregroundColor(.blue)
+                                
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("AI 智能生成里程碑")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.primary)
+                                    
+                                    Text("根据目标信息自动生成里程碑")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .disabled(aiGenerator.isLoading || title.isEmpty || description.isEmpty)
+                        
+                        // 手动添加里程碑按钮
+                        Button("手动添加里程碑") {
                             showingAddMilestone = true
                         }
                     } header: {
                         Text("里程碑")
+                    } footer: {
+                        if title.isEmpty || description.isEmpty {
+                            Text("请先填写目标标题和描述，然后可以使用 AI 智能生成或手动添加里程碑")
+                        } else {
+                            Text("将大目标分解为小的里程碑，更容易跟踪进度。可以选择 AI 智能生成或手动添加")
+                        }
                     }
                 }
                 
@@ -470,11 +613,46 @@ struct EditGoalView: View {
                         }
                         .onDelete(perform: deleteKeyResults)
                         
-                        Button("添加关键结果") {
+                        // AI 智能生成按钮
+                        Button(action: {
+                            showingAIGeneration = true
+                        }) {
+                            HStack {
+                                Image(systemName: "sparkles")
+                                    .foregroundColor(.blue)
+                                
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("AI 智能生成关键结果")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.primary)
+                                    
+                                    Text("根据目标信息自动生成关键结果")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .disabled(aiGenerator.isLoading || title.isEmpty || description.isEmpty)
+                        
+                        // 手动添加关键结果按钮
+                        Button("手动添加关键结果") {
                             showingAddKeyResult = true
                         }
                     } header: {
                         Text("关键结果")
+                    } footer: {
+                        if title.isEmpty || description.isEmpty {
+                            Text("请先填写目标标题和描述，然后可以使用 AI 智能生成或手动添加关键结果")
+                        } else {
+                            Text("设定3-5个可量化的关键结果来衡量目标达成。可以选择 AI 智能生成或手动添加")
+                        }
                     }
                 }
             }
@@ -508,6 +686,19 @@ struct EditGoalView: View {
         .sheet(isPresented: $showingTemplates) {
             GoalTemplateView()
         }
+        .sheet(isPresented: $showingAIGeneration) {
+            AIGenerationView(
+                title: title,
+                description: description,
+                category: category,
+                goalType: goalType,
+                targetDate: targetDate,
+                priority: priority,
+                onGenerated: { content in
+                    applyAIGeneratedContent(content)
+                }
+            )
+        }
     }
     
     private func saveGoal() {
@@ -534,6 +725,24 @@ struct EditGoalView: View {
     
     private func deleteKeyResults(offsets: IndexSet) {
         keyResults.remove(atOffsets: offsets)
+    }
+    
+    // MARK: - AI 生成内容处理
+    private func applyAIGeneratedContent(_ content: AIGeneratedGoalContent) {
+        // 更新描述
+        if !content.optimizedDescription.isEmpty {
+            description = content.optimizedDescription
+        }
+        
+        // 添加里程碑
+        if !content.milestones.isEmpty {
+            milestones.append(contentsOf: content.milestones)
+        }
+        
+        // 添加关键结果
+        if !content.keyResults.isEmpty {
+            keyResults.append(contentsOf: content.keyResults)
+        }
     }
 }
 

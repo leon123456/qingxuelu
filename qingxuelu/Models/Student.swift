@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 // MARK: - 学生信息模型
 struct Student: Identifiable, Codable {
@@ -25,6 +26,113 @@ struct Student: Identifiable, Codable {
         self.avatar = avatar
         self.createdAt = Date()
         self.updatedAt = Date()
+    }
+}
+
+// MARK: - 番茄钟会话模型
+struct PomodoroSession: Identifiable, Codable {
+    let id: UUID
+    var taskId: UUID?
+    var startTime: Date
+    var endTime: Date?
+    var duration: TimeInterval // 实际学习时长（秒）
+    var plannedDuration: TimeInterval // 计划时长（25分钟 = 1500秒）
+    var sessionType: PomodoroSessionType
+    var status: PomodoroSessionStatus
+    var notes: String?
+    var createdAt: Date
+    var updatedAt: Date
+    
+    init(taskId: UUID? = nil, sessionType: PomodoroSessionType = .work, plannedDuration: TimeInterval = 1500) {
+        self.id = UUID()
+        self.taskId = taskId
+        self.startTime = Date()
+        self.endTime = nil
+        self.duration = 0
+        self.plannedDuration = plannedDuration
+        self.sessionType = sessionType
+        self.status = .active
+        self.notes = nil
+        self.createdAt = Date()
+        self.updatedAt = Date()
+    }
+}
+
+// MARK: - 番茄钟会话类型
+enum PomodoroSessionType: String, CaseIterable, Codable {
+    case work = "工作"
+    case shortBreak = "短休息"
+    case longBreak = "长休息"
+    
+    var duration: TimeInterval {
+        switch self {
+        case .work:
+            return 25 * 60 // 25分钟
+        case .shortBreak:
+            return 5 * 60 // 5分钟
+        case .longBreak:
+            return 15 * 60 // 15分钟
+        }
+    }
+    
+    var icon: String {
+        switch self {
+        case .work:
+            return "timer"
+        case .shortBreak:
+            return "cup.and.saucer"
+        case .longBreak:
+            return "bed.double"
+        }
+    }
+    
+    var color: Color {
+        switch self {
+        case .work:
+            return .red
+        case .shortBreak:
+            return .green
+        case .longBreak:
+            return .blue
+        }
+    }
+}
+
+// MARK: - 番茄钟会话状态
+enum PomodoroSessionStatus: String, CaseIterable, Codable {
+    case active = "进行中"
+    case completed = "已完成"
+    case paused = "已暂停"
+    case cancelled = "已取消"
+    
+    var color: Color {
+        switch self {
+        case .active:
+            return .green
+        case .completed:
+            return .blue
+        case .paused:
+            return .orange
+        case .cancelled:
+            return .red
+        }
+    }
+}
+
+// MARK: - 已删除目标模型（回收站）
+struct DeletedGoal: Identifiable, Codable {
+    let id: UUID
+    var goal: LearningGoal
+    var deletedAt: Date
+    var deletedReason: String?
+    var canRestore: Bool
+    
+    init(goal: LearningGoal, deletedReason: String? = nil) {
+        self.id = UUID()
+        self.goal = goal
+        self.deletedAt = Date()
+        self.deletedReason = deletedReason
+        self.canRestore = true
     }
 }
 
@@ -141,6 +249,53 @@ struct Milestone: Identifiable, Codable, Hashable {
     }
 }
 
+// MARK: - 任务类型枚举
+enum TaskType: String, CaseIterable, Codable {
+    case manual = "手动创建"
+    case planGenerated = "计划生成"
+    case goalRelated = "目标相关"
+    case recurring = "重复任务"
+    
+    var description: String {
+        switch self {
+        case .manual:
+            return "用户手动创建的任务"
+        case .planGenerated:
+            return "由AI学习计划自动生成的任务"
+        case .goalRelated:
+            return "与学习目标直接相关的任务"
+        case .recurring:
+            return "定期重复的任务"
+        }
+    }
+    
+    var icon: String {
+        switch self {
+        case .manual: return "plus.circle"
+        case .planGenerated: return "brain.head.profile"
+        case .goalRelated: return "target"
+        case .recurring: return "repeat"
+        }
+    }
+}
+
+// MARK: - 重复模式枚举
+enum RecurringPattern: String, CaseIterable, Codable {
+    case daily = "每日"
+    case weekly = "每周"
+    case monthly = "每月"
+    case custom = "自定义"
+    
+    var description: String {
+        switch self {
+        case .daily: return "每天重复"
+        case .weekly: return "每周重复"
+        case .monthly: return "每月重复"
+        case .custom: return "自定义重复模式"
+        }
+    }
+}
+
 // MARK: - 学习任务模型
 struct LearningTask: Identifiable, Codable, Hashable {
     let id: UUID
@@ -150,15 +305,27 @@ struct LearningTask: Identifiable, Codable, Hashable {
     var category: SubjectCategory
     var priority: Priority
     var status: TaskStatus
+    var taskType: TaskType // 新增：任务类型
     var estimatedDuration: TimeInterval // 预估学习时间（分钟）
     var actualDuration: TimeInterval? // 实际学习时间
     var dueDate: Date?
     var completedDate: Date?
     var goalId: UUID? // 关联的学习目标
+    var planId: UUID? // 关联的学习计划
+    var weeklyPlanId: UUID? // 关联的周计划
     var createdAt: Date
     var updatedAt: Date
     
-    init(id: UUID = UUID(), userId: UUID = UUID(), title: String, description: String, category: SubjectCategory, priority: Priority, estimatedDuration: TimeInterval, goalId: UUID? = nil) {
+    // 新增：时间安排功能（借鉴Structured设计）
+    var scheduledStartTime: Date? // 计划开始时间
+    var scheduledEndTime: Date? // 计划结束时间
+    var isTimeBlocked: Bool = false // 是否已安排具体时间
+    
+    // 新增：重复任务相关
+    var isRecurring: Bool = false // 是否为重复任务
+    var recurringPattern: RecurringPattern? // 重复模式
+    
+    init(id: UUID = UUID(), userId: UUID = UUID(), title: String, description: String, category: SubjectCategory, priority: Priority, estimatedDuration: TimeInterval, taskType: TaskType = .manual, goalId: UUID? = nil, planId: UUID? = nil, weeklyPlanId: UUID? = nil, scheduledStartTime: Date? = nil, scheduledEndTime: Date? = nil, isRecurring: Bool = false, recurringPattern: RecurringPattern? = nil) {
         self.id = id
         self.userId = userId
         self.title = title
@@ -166,10 +333,18 @@ struct LearningTask: Identifiable, Codable, Hashable {
         self.category = category
         self.priority = priority
         self.status = .pending
+        self.taskType = taskType
         self.estimatedDuration = estimatedDuration
         self.goalId = goalId
+        self.planId = planId
+        self.weeklyPlanId = weeklyPlanId
         self.createdAt = Date()
         self.updatedAt = Date()
+        self.scheduledStartTime = scheduledStartTime
+        self.scheduledEndTime = scheduledEndTime
+        self.isTimeBlocked = scheduledStartTime != nil && scheduledEndTime != nil
+        self.isRecurring = isRecurring
+        self.recurringPattern = recurringPattern
     }
 }
 
@@ -316,7 +491,7 @@ struct WeeklyTask: Identifiable, Codable {
     var description: String
     var quantity: String // 具体数量，如"20个单词"、"5道题"
     var duration: String // 预估时长，如"30分钟"、"2小时"
-    var difficulty: String // 难度等级，如"简单"、"中等"、"困难"
+    var difficulty: TaskDifficulty // 使用GoalTemplate中的TaskDifficulty枚举
     var isCompleted: Bool
     var startedDate: Date? // 实际开始时间
     var completedDate: Date? // 实际完成时间
@@ -325,7 +500,13 @@ struct WeeklyTask: Identifiable, Codable {
     var completionRating: Int? // 完成质量评分 1-5
     var completionProgress: Double? // 完成度 0.0-1.0
     
-    init(id: UUID = UUID(), title: String, description: String = "", quantity: String = "", duration: String = "", difficulty: String = "中等", isCompleted: Bool = false, startedDate: Date? = nil, completedDate: Date? = nil, actualDuration: TimeInterval? = nil, completionNotes: String? = nil, completionRating: Int? = nil, completionProgress: Double? = nil) {
+    // 新增：调度相关字段
+    var estimatedDuration: TimeInterval // 预估时长（小时）
+    var preferredDays: [Weekday]? // 偏好学习日期
+    var preferredTimeSlots: [SchedulingTimeSlot]? // 偏好时间段
+    var dependencies: [UUID]? // 依赖的其他任务
+    
+    init(id: UUID = UUID(), title: String, description: String = "", quantity: String = "", duration: String = "", difficulty: TaskDifficulty = .medium, isCompleted: Bool = false, startedDate: Date? = nil, completedDate: Date? = nil, actualDuration: TimeInterval? = nil, completionNotes: String? = nil, completionRating: Int? = nil, completionProgress: Double? = nil, estimatedDuration: TimeInterval = 1.0, preferredDays: [Weekday]? = nil, preferredTimeSlots: [SchedulingTimeSlot]? = nil, dependencies: [UUID]? = nil) {
         self.id = id
         self.title = title
         self.description = description
@@ -339,6 +520,10 @@ struct WeeklyTask: Identifiable, Codable {
         self.completionNotes = completionNotes
         self.completionRating = completionRating
         self.completionProgress = completionProgress
+        self.estimatedDuration = estimatedDuration
+        self.preferredDays = preferredDays
+        self.preferredTimeSlots = preferredTimeSlots
+        self.dependencies = dependencies
     }
 }
 
