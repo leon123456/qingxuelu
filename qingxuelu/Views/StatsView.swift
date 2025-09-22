@@ -34,13 +34,6 @@ struct StatsView: View {
                 .padding()
             }
             .navigationTitle("复盘")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showingReflection = true }) {
-                        Image(systemName: "plus")
-                    }
-                }
-            }
         }
         .sheet(isPresented: $showingReflection) {
             AddReflectionView()

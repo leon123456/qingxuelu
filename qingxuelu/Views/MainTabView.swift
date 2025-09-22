@@ -21,19 +21,19 @@ struct MainTabView: View {
                 }
                 .tag(0)
             
-            // Goals - 学习目标
-            GoalsView()
-                .tabItem {
-                    Image(systemName: "target")
-                    Text("目标")
-                }
-                .tag(1)
-            
             // Plan - 学习计划
             PlanView()
                 .tabItem {
                     Image(systemName: "calendar.badge.clock")
                     Text("计划")
+                }
+                .tag(1)
+            
+            // Goals - 学习目标
+            GoalsView()
+                .tabItem {
+                    Image(systemName: "target")
+                    Text("目标")
                 }
                 .tag(2)
             

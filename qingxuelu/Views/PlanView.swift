@@ -43,13 +43,6 @@ struct PlanView: View {
                 }
             }
             .navigationTitle("计划")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showingAddPlan = true }) {
-                        Image(systemName: "plus")
-                    }
-                }
-            }
         }
         .sheet(isPresented: $showingAddPlan) {
             AddGoalView()
