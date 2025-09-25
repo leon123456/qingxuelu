@@ -3,57 +3,69 @@
     {
       "id": "english_speaking_improvement",
       "name": "英语口语提升",
-      "description": "通过日常练习和对话，提升英语口语表达能力",
+      "description": "在一个学期内显著提升英语口语能力，能够在日常交流和课堂展示中自信表达。",
       "category": "english",
       "goalType": "smart",
       "priority": "high",
-      "duration": 90,
+      "duration": 120,
       "icon": "speaker.wave.2",
       "tags": ["口语", "英语", "日常对话"],
       "milestones": [
         {
           "title": "基础发音练习",
-          "description": "掌握基本音标和发音规则",
+          "description": "第1个月：掌握 80 个口语词汇，完成 8 次口语练习（含 2 次录音自检）",
           "duration": 14,
           "order": 1
         },
         {
           "title": "日常对话练习",
-          "description": "能够进行基本的日常对话",
+          "description": "第2个月：累计 160 个词汇，完成 16 次练习（含 5 次录音自检），完成 1 次模拟对话",
           "duration": 30,
           "order": 2
         },
         {
           "title": "话题讨论",
-          "description": "能够就常见话题进行深入讨论",
+          "description": "第3个月：累计 240 个词汇，完成 24 次练习，完成 3 次模拟对话",
           "duration": 60,
           "order": 3
         },
         {
           "title": "流利表达",
-          "description": "能够流利地表达复杂观点",
+          "description": "第4个月：掌握 300+ 词汇，完成 30 次练习，完成 5 次模拟对话/演讲",
           "duration": 90,
           "order": 4
         }
       ],
       "keyResults": [
         {
-          "title": "每日练习时长",
-          "description": "每天至少练习30分钟",
-          "targetValue": 30,
-          "unit": "分钟"
+          "title": "词汇掌握",
+          "description": "掌握并能运用 300 个口语常用词汇与 50 个高频表达",
+          "targetValue": 300,
+          "unit": "个"
         },
         {
-          "title": "对话次数",
-          "description": "每周进行至少3次英语对话",
-          "targetValue": 3,
+          "title": "练习次数",
+          "description": "完成 30 次口语练习（每周约 2 次）",
+          "targetValue": 30,
           "unit": "次"
         },
         {
-          "title": "词汇量增长",
-          "description": "掌握500个新词汇",
-          "targetValue": 500,
-          "unit": "个"
+          "title": "语速达标",
+          "description": "录音语速达到 120 词/分钟",
+          "targetValue": 120,
+          "unit": "词/分钟"
+        },
+        {
+          "title": "发音准确率",
+          "description": "95% 的句子发音可被 AI/老师正确识别",
+          "targetValue": 95,
+          "unit": "%"
+        },
+        {
+          "title": "模拟对话",
+          "description": "完成 5 次模拟对话/演讲（课堂或课外）",
+          "targetValue": 5,
+          "unit": "次"
         }
       ],
       "suggestedTasks": [
@@ -163,7 +175,7 @@
     {
       "id": "advanced_math_review",
       "name": "高等数学复习",
-      "description": "系统复习高等数学知识，准备考试",
+      "description": "在 2 个月内系统复习高数，考试成绩提升至 ≥85 分。",
       "category": "math",
       "goalType": "okr",
       "priority": "medium",
@@ -173,25 +185,25 @@
       "milestones": [
         {
           "title": "微积分基础",
-          "description": "复习微积分基本概念",
+          "description": "第1-2周：完成极限与微积分部分复习",
           "duration": 7,
           "order": 1
         },
         {
           "title": "积分计算",
-          "description": "掌握各种积分计算方法",
+          "description": "第3-4周：完成积分与级数部分复习，完成 200 道练习题",
           "duration": 14,
           "order": 2
         },
         {
           "title": "级数理论",
-          "description": "学习级数收敛性判断",
+          "description": "第5-6周：完成多元函数部分复习，累计练习 400 道题",
           "duration": 21,
           "order": 3
         },
         {
           "title": "综合练习",
-          "description": "进行综合题型练习",
+          "description": "第7-8周：完成综合复习与 ≥3 次模拟考试",
           "duration": 30,
           "order": 4
         }
@@ -199,19 +211,19 @@
       "keyResults": [
         {
           "title": "章节完成",
-          "description": "完成8个主要章节",
-          "targetValue": 8,
+          "description": "完成指定教材 10 章复习",
+          "targetValue": 10,
           "unit": "章"
         },
         {
           "title": "练习题",
-          "description": "完成200道练习题",
-          "targetValue": 200,
+          "description": "完成 ≥500 道练习题，正确率 ≥80%",
+          "targetValue": 500,
           "unit": "题"
         },
         {
           "title": "模拟考试",
-          "description": "完成5次模拟考试",
+          "description": "完成 ≥5 次模拟考试，平均分 ≥85",
           "targetValue": 5,
           "unit": "次"
         }
@@ -243,7 +255,7 @@
     {
       "id": "classical_literature_reading",
       "name": "经典文学阅读",
-      "description": "阅读经典文学作品，提升文学素养",
+      "description": "通过阅读经典文学作品提升文学素养与写作能力。",
       "category": "chinese",
       "goalType": "hybrid",
       "priority": "medium",
@@ -253,19 +265,19 @@
       "milestones": [
         {
           "title": "选书规划",
-          "description": "选择并规划阅读书目",
+          "description": "第1-2个月：完成前 2 本书的阅读与 4 篇读书笔记",
           "duration": 3,
           "order": 1
         },
         {
           "title": "第一本书",
-          "description": "完成第一本经典作品阅读",
+          "description": "第3-4个月：完成第 3-4 本书的阅读与 4 篇笔记",
           "duration": 15,
           "order": 2
         },
         {
           "title": "第二本书",
-          "description": "完成第二本经典作品阅读",
+          "description": "第5-6个月：完成第 5 本书并整理所有笔记",
           "duration": 30,
           "order": 3
         },
@@ -279,19 +291,19 @@
       "keyResults": [
         {
           "title": "阅读数量",
-          "description": "完成3本经典作品",
-          "targetValue": 3,
+          "description": "完成 ≥5 本经典文学书籍阅读",
+          "targetValue": 5,
           "unit": "本"
         },
         {
           "title": "读书笔记",
-          "description": "写10篇读书笔记",
+          "description": "撰写 ≥10 篇读书笔记",
           "targetValue": 10,
           "unit": "篇"
         },
         {
           "title": "阅读时长",
-          "description": "累计阅读30小时",
+          "description": "累计阅读 ≥30 小时",
           "targetValue": 30,
           "unit": "小时"
         }
@@ -323,7 +335,7 @@
     {
       "id": "time_management_skills",
       "name": "时间管理技能",
-      "description": "学习并实践时间管理技巧，提高工作效率",
+      "description": "通过实践提升时间管理能力，提高效率。",
       "category": "other",
       "goalType": "smart",
       "priority": "high",
@@ -333,47 +345,53 @@
       "milestones": [
         {
           "title": "理论学习",
-          "description": "学习时间管理基本理论",
+          "description": "第1周：建立时间日志记录习惯",
           "duration": 3,
           "order": 1
         },
         {
           "title": "工具实践",
-          "description": "使用时间管理工具",
+          "description": "第2-3周：完成初步的时间使用分析",
           "duration": 7,
           "order": 2
         },
         {
           "title": "习惯养成",
-          "description": "养成良好时间管理习惯",
+          "description": "第4周：完成时间管理优化方案",
           "duration": 14,
           "order": 3
         },
         {
           "title": "效果评估",
-          "description": "评估时间管理效果",
+          "description": "第5-6周：应用优化方案并评估效果",
           "duration": 21,
           "order": 4
         }
       ],
       "keyResults": [
         {
-          "title": "任务完成率",
-          "description": "每日任务完成率达到90%",
-          "targetValue": 90,
-          "unit": "%"
-        },
-        {
-          "title": "效率提升",
-          "description": "工作效率提升30%",
+          "title": "时间日志",
+          "description": "连续 30 天坚持使用时间日志",
           "targetValue": 30,
+          "unit": "天"
+        },
+        {
+          "title": "分析报告",
+          "description": "形成一份完整的时间日志分析报告",
+          "targetValue": 1,
+          "unit": "份"
+        },
+        {
+          "title": "任务完成率",
+          "description": "任务完成率 ≥85%",
+          "targetValue": 85,
           "unit": "%"
         },
         {
-          "title": "工具使用",
-          "description": "熟练使用3种时间管理工具",
-          "targetValue": 3,
-          "unit": "种"
+          "title": "专注学习",
+          "description": "平均每日专注学习 ≥2 小时",
+          "targetValue": 2,
+          "unit": "小时"
         }
       ],
       "suggestedTasks": [
@@ -403,7 +421,7 @@
     {
       "id": "middle_school_english_improvement",
       "name": "提升初中英语成绩",
-      "description": "在本学期结束时，英语成绩提升至班级前 10 名，期末考试 ≥ 90 分，并养成稳定的学习习惯。",
+      "description": "期末英语成绩达到班级前 10 名，成绩 ≥ 90 分。",
       "category": "english",
       "goalType": "okr",
       "priority": "high",
@@ -413,19 +431,19 @@
       "milestones": [
         {
           "title": "词汇积累",
-          "description": "掌握并熟练运用 800 个核心单词，每周新增 ≥50 单词",
+          "description": "第1-2个月：完成 400 个核心单词学习；完成 4 篇阅读理解，正确率 ≥75%",
           "duration": 30,
           "order": 1
         },
         {
           "title": "阅读理解",
-          "description": "完成 12 篇英语阅读理解练习，阅读正确率 ≥80%",
+          "description": "第3-4个月：累计 600 个单词；完成 8 篇作文，至少 3 篇得分 ≥85 分",
           "duration": 45,
           "order": 2
         },
         {
           "title": "写作能力",
-          "description": "完成 15 篇英语作文，至少 5 篇作文得分 ≥85/100",
+          "description": "第5-6个月：累计 800 个单词；完成全部 6 套模拟试卷；听力和口语达标",
           "duration": 60,
           "order": 3
         },
@@ -639,7 +657,7 @@
     {
       "id": "classical_chinese_learning",
       "name": "文言文学习",
-      "description": "系统学习文言文基础知识，掌握常见文言实词、虚词和句式，提升文言文阅读和理解能力",
+      "description": "掌握文言实词、虚词用法，提升篇章阅读能力。",
       "category": "chinese",
       "goalType": "okr",
       "priority": "high",
@@ -649,19 +667,19 @@
       "milestones": [
         {
           "title": "实词积累",
-          "description": "掌握200个常用文言实词",
+          "description": "第1个月：完成 10 篇浅易文言文阅读，掌握 80 个实词",
           "duration": 10,
           "order": 1
         },
         {
           "title": "虚词理解",
-          "description": "掌握20个常用文言虚词",
+          "description": "第2个月：完成 20 篇中等难度阅读，掌握 150 个实词和 10 个虚词",
           "duration": 18,
           "order": 2
         },
         {
           "title": "句式分析",
-          "description": "掌握常见文言句式",
+          "description": "第3个月：累计完成 30 篇进阶阅读，掌握 200 实词和 20 虚词",
           "duration": 28,
           "order": 3
         },
@@ -675,7 +693,7 @@
       "keyResults": [
         {
           "title": "实词掌握",
-          "description": "掌握200个常用文言实词",
+          "description": "掌握 200 个文言实词，20 个虚词",
           "targetValue": 200,
           "unit": "个"
         },
@@ -687,13 +705,13 @@
         },
         {
           "title": "篇章阅读",
-          "description": "完成30篇文言文阅读",
+          "description": "完成 30 篇文言文阅读练习，正确率 ≥85%",
           "targetValue": 30,
           "unit": "篇"
         },
         {
           "title": "翻译准确率",
-          "description": "文言文翻译准确率达到85%",
+          "description": "能独立翻译课本指定篇章",
           "targetValue": 85,
           "unit": "%"
         }
@@ -725,7 +743,7 @@
     {
       "id": "writing_skills_improvement",
       "name": "写作能力提升",
-      "description": "全面提升写作能力，包括记叙文、议论文、说明文等不同文体的写作技巧，提升语言表达和逻辑思维能力",
+      "description": "提升写作水平，掌握不同文体表达能力。",
       "category": "chinese",
       "goalType": "hybrid",
       "priority": "high",
@@ -735,19 +753,19 @@
       "milestones": [
         {
           "title": "记叙文写作",
-          "description": "掌握记叙文的基本写作技巧",
+          "description": "第1个月：完成 3 篇记叙文、2 篇议论文，至少 1 篇得分 ≥85 分",
           "duration": 20,
           "order": 1
         },
         {
           "title": "议论文写作",
-          "description": "学会议论文的论证方法和结构",
+          "description": "第2-3个月：累计完成 7 篇记叙文、6 篇议论文、2 篇说明文",
           "duration": 40,
           "order": 2
         },
         {
           "title": "说明文写作",
-          "description": "掌握说明文的写作要点",
+          "description": "第4-5个月：累计完成 10 篇记叙文、10 篇议论文、5 篇说明文，并通过质量检测",
           "duration": 55,
           "order": 3
         },
@@ -761,20 +779,20 @@
       "keyResults": [
         {
           "title": "记叙文",
-          "description": "完成10篇记叙文",
+          "description": "完成 ≥10 篇记叙文，≥3 篇得分 ≥85 分",
           "targetValue": 10,
           "unit": "篇"
         },
         {
           "title": "议论文",
-          "description": "完成8篇议论文",
-          "targetValue": 8,
+          "description": "完成 ≥10 篇议论文，≥3 篇得分 ≥85 分",
+          "targetValue": 10,
           "unit": "篇"
         },
         {
           "title": "说明文",
-          "description": "完成6篇说明文",
-          "targetValue": 6,
+          "description": "完成 ≥5 篇说明文，≥2 篇得分 ≥85 分",
+          "targetValue": 5,
           "unit": "篇"
         },
         {

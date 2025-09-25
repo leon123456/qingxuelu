@@ -15,6 +15,8 @@ class AITestService: ObservableObject {
     @Published var testResult: String?
     @Published var testError: String?
     
+    private let preferencesManager = UserPreferencesManager.shared
+    
     private init() {}
     
     // MARK: - 测试API连接
@@ -26,7 +28,8 @@ class AITestService: ObservableObject {
         }
         
         do {
-            let response = try await callTestAPI()
+            let config = preferencesManager.getCurrentAIConfig()
+            let response = try await callTestAPI(config: config)
             await MainActor.run {
                 testResult = response
                 isTesting = false
@@ -40,29 +43,25 @@ class AITestService: ObservableObject {
     }
     
     // MARK: - 调用测试API
-    private func callTestAPI() async throws -> String {
-        guard let url = URL(string: APIConfig.chatCompletionsEndpoint) else {
+    private func callTestAPI(config: AIServiceConfig) async throws -> String {
+        guard let url = URL(string: "\(config.baseURL)/chat/completions") else {
             throw AIServiceError.invalidURL
         }
         
         let requestBody = OpenAICompatibleRequest(
-            model: APIConfig.model,
+            model: config.model.rawValue,
             messages: [
                 OpenAIMessage(role: "user", content: "请简单介绍一下你自己，用一句话回答即可。")
             ],
-            temperature: APIConfig.temperature,
+            temperature: config.temperature,
             maxTokens: 100,
-            topP: APIConfig.topP
+            topP: config.topP
         )
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        
-        // 使用配置的请求头
-        for (key, value) in APIConfig.defaultHeaders {
-            request.setValue(value, forHTTPHeaderField: key)
-        }
-        
+        request.setValue("Bearer \(config.apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(requestBody)
         
         // 设置超时时间

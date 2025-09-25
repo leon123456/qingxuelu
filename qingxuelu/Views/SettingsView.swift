@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject var dataManager: DataManager
     @StateObject private var aiTestService = AITestService.shared
+    @StateObject private var preferencesManager = UserPreferencesManager.shared
     @State private var showingAddStudent = false
     @State private var showingEditStudent = false
     @State private var showingStudentProfile = false
@@ -48,6 +49,29 @@ struct SettingsView: View {
                 
                 // AI服务测试区域
                 Section {
+                    // AI模型选择 - iOS标准样式
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("AI模型选择")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        
+                        // 使用iOS标准的Picker
+                        Picker("选择AI模型", selection: $preferencesManager.selectedAIModel) {
+                            ForEach(AIModel.allCases, id: \.self) { model in
+                                HStack {
+                                    Image(systemName: model.icon)
+                                        .foregroundColor(Color(model.color))
+                                    Text(model.displayName)
+                                }
+                                .tag(model)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                    }
+                    .padding(.vertical, 8)
+                    
+                    Divider()
+                    
                     Button(action: {
                         Task {
                             await aiTestService.testAPIConnection()
@@ -94,7 +118,7 @@ struct SettingsView: View {
                 } header: {
                     Text("AI服务")
                 } footer: {
-                    Text("测试阿里云Qwen Plus API连接状态")
+                    Text("选择AI模型并测试连接状态")
                 }
                 
                 // 回收站区域

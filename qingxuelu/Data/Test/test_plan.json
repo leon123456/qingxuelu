@@ -1,0 +1,269 @@
+{
+    "title": "文言文学习7周计划",
+    "description": "通过7周系统学习，掌握200个文言实词、20个虚词，完成30篇中等难度以上文言篇章阅读，翻译准确率达到85%。",
+    "totalWeeks": 7,
+    "weeklyPlans": [
+      {
+        "weekNumber": 1,
+        "milestones": ["开始实词积累", "建立基础文言语感"],
+        "taskCount": 4,
+        "estimatedHours": 10,
+        "tasks": [
+          {
+            "title": "学习并记忆50个高频文言实词",
+            "quantity": "50个实词",
+            "duration": "3小时",
+            "difficulty": "初级"
+          },
+          {
+            "title": "阅读5篇浅易文言文（每篇200字内）",
+            "quantity": "5篇",
+            "duration": "3小时",
+            "difficulty": "初级"
+          },
+          {
+            "title": "完成每篇文言文的逐句翻译练习",
+            "quantity": "5篇翻译",
+            "duration": "2小时",
+            "difficulty": "初级"
+          },
+          {
+            "title": "复习本周所学实词并自测",
+            "quantity": "1次测试",
+            "duration": "2小时",
+            "difficulty": "初级"
+          }
+        ]
+      },
+      {
+        "weekNumber": 2,
+        "milestones": ["累计掌握80个实词", "完成10篇浅易文言文阅读"],
+        "taskCount": 4,
+        "estimatedHours": 10,
+        "tasks": [
+          {
+            "title": "学习并记忆30个新实词（衔接上周）",
+            "quantity": "30个实词",
+            "duration": "3小时",
+            "difficulty": "初级"
+          },
+          {
+            "title": "阅读5篇浅易文言文（每篇200-300字）",
+            "quantity": "5篇",
+            "duration": "3小时",
+            "difficulty": "初级"
+          },
+          {
+            "title": "完成5篇文言文翻译并对照标准答案修改",
+            "quantity": "5篇翻译",
+            "duration": "2.5小时",
+            "difficulty": "初级"
+          },
+          {
+            "title": "进行实词掌握情况小测验",
+            "quantity": "1次测验（80词）",
+            "duration": "1.5小时",
+            "difficulty": "初级"
+          }
+        ]
+      },
+      {
+        "weekNumber": 3,
+        "milestones": ["引入虚词学习", "提升阅读难度"],
+        "taskCount": 5,
+        "estimatedHours": 11,
+        "tasks": [
+          {
+            "title": "学习5个核心文言虚词（之、其、而、以、于）",
+            "quantity": "5个虚词",
+            "duration": "3小时",
+            "difficulty": "中级"
+          },
+          {
+            "title": "阅读5篇中等难度文言文（每篇300-400字）",
+            "quantity": "5篇",
+            "duration": "4小时",
+            "difficulty": "中级"
+          },
+          {
+            "title": "完成其中3篇全文翻译",
+            "quantity": "3篇翻译",
+            "duration": "2.5小时",
+            "difficulty": "中级"
+          },
+          {
+            "title": "标注文中虚词用法并整理笔记",
+            "quantity": "5篇标注",
+            "duration": "1小时",
+            "difficulty": "中级"
+          },
+          {
+            "title": "复习实词+虚词，完成周总结",
+            "quantity": "1次复习",
+            "duration": "0.5小时",
+            "difficulty": "初级"
+          }
+        ]
+      },
+      {
+        "weekNumber": 4,
+        "milestones": ["累计掌握100个实词", "掌握5个虚词", "完成20篇阅读"],
+        "taskCount": 5,
+        "estimatedHours": 11,
+        "tasks": [
+          {
+            "title": "学习5个新虚词（者、也、焉、乎、为）",
+            "quantity": "5个虚词",
+            "duration": "3小时",
+            "difficulty": "中级"
+          },
+          {
+            "title": "阅读5篇中等难度文言文（每篇400字左右）",
+            "quantity": "5篇",
+            "duration": "4小时",
+            "difficulty": "中级"
+          },
+          {
+            "title": "完成4篇全文翻译",
+            "quantity": "4篇翻译",
+            "duration": "2.5小时",
+            "difficulty": "中级"
+          },
+          {
+            "title": "分析文中重点句式结构（判断句、省略句等）",
+            "quantity": "5篇分析",
+            "duration": "1小时",
+            "difficulty": "中级"
+          },
+          {
+            "title": "综合测验：实词100+虚词10",
+            "quantity": "1次测验",
+            "duration": "0.5小时",
+            "difficulty": "中级"
+          }
+        ]
+      },
+      {
+        "weekNumber": 5,
+        "milestones": ["累计掌握150个实词", "掌握10个虚词", "进入进阶阅读阶段"],
+        "taskCount": 4,
+        "estimatedHours": 12,
+        "tasks": [
+          {
+            "title": "学习50个进阶文言实词",
+            "quantity": "50个实词",
+            "duration": "4小时",
+            "difficulty": "中级"
+          },
+          {
+            "title": "阅读5篇进阶文言文（每篇400-500字，含典故）",
+            "quantity": "5篇",
+            "duration": "4小时",
+            "difficulty": "中高级"
+          },
+          {
+            "title": "完成5篇全文翻译（重点标注虚词和句式）",
+            "quantity": "5篇翻译",
+            "duration": "3小时",
+            "difficulty": "中高级"
+          },
+          {
+            "title": "撰写2篇文意概括与主旨分析",
+            "quantity": "2篇分析",
+            "duration": "1小时",
+            "difficulty": "中级"
+          }
+        ]
+      },
+      {
+        "weekNumber": 6,
+        "milestones": ["累计掌握200个实词", "掌握20个虚词", "完成25篇阅读"],
+        "taskCount": 4,
+        "estimatedHours": 12,
+        "tasks": [
+          {
+            "title": "学习50个补充实词（结合语境记忆）",
+            "quantity": "50个实词",
+            "duration": "4小时",
+            "difficulty": "中级"
+          },
+          {
+            "title": "阅读5篇进阶文言文（主题多样，含议论文、记叙文）",
+            "quantity": "5篇",
+            "duration": "4小时",
+            "difficulty": "中高级"
+          },
+          {
+            "title": "完成5篇翻译并确保准确率不低于80%",
+            "quantity": "5篇翻译",
+            "duration": "3小时",
+            "difficulty": "中高级"
+          },
+          {
+            "title": "整理20个虚词用法表并背诵",
+            "quantity": "1张表格+背诵",
+            "duration": "1小时",
+            "difficulty": "中级"
+          }
+        ]
+      },
+      {
+        "weekNumber": 7,
+        "milestones": ["完成30篇文言文阅读", "翻译准确率达85%", "独立阅读能力达标"],
+        "taskCount": 4,
+        "estimatedHours": 10,
+        "tasks": [
+          {
+            "title": "阅读5篇模拟考试级文言文（无注释）",
+            "quantity": "5篇",
+            "duration": "4小时",
+            "difficulty": "高级"
+          },
+          {
+            "title": "完成5篇独立翻译并自我评分",
+            "quantity": "5篇翻译",
+            "duration": "3小时",
+            "difficulty": "高级"
+          },
+          {
+            "title": "进行最终综合测试（实词200+虚词20+篇章理解）",
+            "quantity": "1次测试",
+            "duration": "2小时",
+            "difficulty": "高级"
+          },
+          {
+            "title": "总结学习成果，查漏补缺",
+            "quantity": "1份总结报告",
+            "duration": "1小时",
+            "difficulty": "初级"
+          }
+        ]
+      }
+    ],
+    "resources": [
+      {
+        "title": "《古汉语常用字字典》",
+        "type": "工具书",
+        "url": "https://book.douban.com/subject/1151482/",
+        "description": "权威实词查询工具，适合文言词汇积累"
+      },
+      {
+        "title": "中学文言文精讲视频（B站）",
+        "type": "视频课程",
+        "url": "https://www.bilibili.com/video/BV1XJ411P7cG",
+        "description": "系统讲解文言实词、虚词及句式，适合初学者"
+      },
+      {
+        "title": "文言文阅读训练100篇（PDF）",
+        "type": "练习资料",
+        "url": "https://www.knowchina.net/jiaoxue/100wenyanwen.pdf",
+        "description": "包含分级文言文阅读材料及翻译参考"
+      },
+      {
+        "title": "Anki记忆卡模板 - 文言实词虚词",
+        "type": "记忆工具",
+        "url": "https://ankiweb.net/shared/info/1946271877",
+        "description": "可导入的文言词汇记忆卡片，支持间隔重复"
+      }
+    ]
+  }

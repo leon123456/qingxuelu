@@ -237,6 +237,28 @@ struct GeneratePlanView: View {
                 AIPlanPreviewView(plan: plan, goal: goal) {
                     // 应用计划
                     dataManager.addPlan(plan)
+                    
+                    // 在后台进行任务调度
+                    Task {
+                        do {
+                            let scheduledPlan = try await AIPlanServiceManager.shared.schedulePlanTasks(plan, dataManager: dataManager)
+                            
+                            await MainActor.run {
+                                // 保存调度后的任务
+                                for task in scheduledPlan.scheduledTasks {
+                                    dataManager.addTask(task)
+                                    print("📅 调度任务已保存: \(task.title) - \(task.scheduledStartTime?.formatted() ?? "未安排时间")")
+                                }
+                                
+                                print("✅ 计划「\(plan.title)」及其 \(scheduledPlan.scheduledTasks.count) 个任务已保存")
+                            }
+                        } catch {
+                            await MainActor.run {
+                                print("❌ 任务调度失败: \(error)")
+                            }
+                        }
+                    }
+                    
                     showingAIPlan = false
                 }
             }
@@ -831,7 +853,7 @@ struct WeeklyTimelineView: View {
             
             LazyVStack(spacing: 12) {
                 ForEach(plan.weeklyPlans) { week in
-                    WeeklyTimelineCard(week: week)
+                    WeeklyTimelineCard(week: week, allWeeklyPlans: plan.weeklyPlans)
                 }
             }
         }
@@ -844,6 +866,7 @@ struct WeeklyTimelineView: View {
 // MARK: - 周时间线卡片
 struct WeeklyTimelineCard: View {
     let week: WeeklyPlan
+    let allWeeklyPlans: [WeeklyPlan]
     @State private var isPressed = false
     @State private var showingWeekDetail = false
     
@@ -935,7 +958,7 @@ struct WeeklyTimelineCard: View {
             }
         }
         .sheet(isPresented: $showingWeekDetail) {
-            WeeklyPlanDetailView(weeklyPlan: week)
+            WeeklyPlanDetailView(weeklyPlan: week, allWeeklyPlans: allWeeklyPlans)
         }
     }
 }
@@ -1019,28 +1042,73 @@ struct WeeklyPlanDetailView: View {
     @EnvironmentObject var dataManager: DataManager
     @State private var isEditing = false
     @State private var editedPlan: WeeklyPlan
+    @State private var currentWeekIndex: Int
+    @State private var allWeeklyPlans: [WeeklyPlan]
     
-    init(weeklyPlan: WeeklyPlan) {
+    init(weeklyPlan: WeeklyPlan, allWeeklyPlans: [WeeklyPlan]) {
         self.weeklyPlan = weeklyPlan
         self._editedPlan = State(initialValue: weeklyPlan)
+        
+        // 找到当前周的索引
+        let currentIndex = allWeeklyPlans.firstIndex(where: { $0.id == weeklyPlan.id }) ?? 0
+        
+        self._allWeeklyPlans = State(initialValue: allWeeklyPlans)
+        self._currentWeekIndex = State(initialValue: currentIndex)
     }
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // 周计划基本信息
-                    WeeklyPlanInfoSection(plan: editedPlan)
-                    
-                    // 本周任务列表
-                    WeeklyTasksSection(plan: $editedPlan, isEditing: $isEditing, onTaskChange: updateTaskCounts)
-                    
-                    // 本周里程碑
-                    WeeklyMilestonesSection(plan: $editedPlan, isEditing: $isEditing)
+            TabView(selection: $currentWeekIndex) {
+                ForEach(Array(allWeeklyPlans.enumerated()), id: \.element.id) { index, weekPlan in
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            // 周计划基本信息
+                            WeeklyPlanInfoSection(plan: weekPlan)
+                            
+                            // 本周任务列表
+                            WeeklyTasksSection(plan: Binding(
+                                get: { weekPlan },
+                                set: { _ in }
+                            ), isEditing: $isEditing, onTaskChange: updateTaskCounts)
+                            
+                            // 本周里程碑
+                            WeeklyMilestonesSection(plan: Binding(
+                                get: { weekPlan },
+                                set: { _ in }
+                            ), isEditing: $isEditing)
+                        }
+                        .padding()
+                    }
+                    .tag(index)
                 }
-                .padding()
             }
-            .navigationTitle("第\(weeklyPlan.weekNumber)周")
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+            .onChange(of: currentWeekIndex) { _, newIndex in
+                if newIndex < allWeeklyPlans.count {
+                    editedPlan = allWeeklyPlans[newIndex]
+                }
+            }
+            .navigationTitle("第\(allWeeklyPlans.isEmpty ? weeklyPlan.weekNumber : allWeeklyPlans[currentWeekIndex].weekNumber)周")
+            .overlay(
+                // 添加滑动提示
+                VStack {
+                    Spacer()
+                    if allWeeklyPlans.count > 1 {
+                        HStack {
+                            Spacer()
+                            Text("左右滑动查看更多周")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(12)
+                            Spacer()
+                        }
+                        .padding(.bottom, 20)
+                    }
+                }
+            )
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {

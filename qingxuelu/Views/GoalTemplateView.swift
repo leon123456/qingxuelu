@@ -323,14 +323,14 @@ struct TemplateDetailView: View {
                     // 模板基本信息
                     TemplateInfoSection(template: template)
                     
-                    // 里程碑
-                    if !template.milestones.isEmpty {
-                        TemplateMilestonesSection(template: template)
-                    }
-                    
                     // 关键结果
                     if !template.keyResults.isEmpty {
                         KeyResultsSection(template: template)
+                    }
+                    
+                    // 里程碑
+                    if !template.milestones.isEmpty {
+                        TemplateMilestonesSection(template: template)
                     }
                     
                     // 建议任务

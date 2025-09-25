@@ -150,6 +150,9 @@ struct TaskInfoSection: View {
                 .fontWeight(.semibold)
             
             VStack(alignment: .leading, spacing: 8) {
+                // 任务名称
+                InfoRow(title: "任务名称", value: task.title, icon: "doc.text")
+                
                 InfoRow(title: "科目", value: task.category.rawValue, icon: task.category.icon)
                 InfoRow(title: "优先级", value: task.priority.rawValue, icon: "exclamationmark.triangle")
                 InfoRow(title: "状态", value: task.status.rawValue, icon: "circle.fill")

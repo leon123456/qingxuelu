@@ -72,10 +72,9 @@ class AIPlanServiceManager: ObservableObject {
             // 解析响应
             let plan = try parsePlanResponse(response, goal: goal, totalWeeks: weeks)
             
-            // 自动调度任务到具体日期和时间
-            let scheduledPlan = try await schedulePlanTasks(plan, dataManager: dataManager)
-            
-            return scheduledPlan
+            // 不进行任务调度，只返回基础计划
+            // 任务调度将在用户确认后进行
+            return plan
         } catch let error as URLError {
             switch error.code {
             case .timedOut:
@@ -359,12 +358,21 @@ class AIPlanServiceManager: ObservableObject {
         // 解析任务列表
         var tasks: [WeeklyTask] = []
         if let tasksArray = weekDict["tasks"] as? [[String: Any]] {
-            for taskDict in tasksArray {
+            print("🔍 第\(weekNumber)周任务数组长度: \(tasksArray.count)")
+            for (index, taskDict) in tasksArray.enumerated() {
+                print("🔍 第\(weekNumber)周任务\(index + 1): \(taskDict)")
                 if let task = parseWeeklyTask(from: taskDict) {
                     tasks.append(task)
+                    print("✅ 第\(weekNumber)周任务\(index + 1)解析成功: \(task.title)")
+                } else {
+                    print("❌ 第\(weekNumber)周任务\(index + 1)解析失败")
                 }
             }
+        } else {
+            print("❌ 第\(weekNumber)周没有找到tasks数组")
         }
+        
+        print("🔍 第\(weekNumber)周最终任务数量: \(tasks.count)")
         
         // 计算周的开始和结束日期
         let calendar = Calendar.current
@@ -426,17 +434,29 @@ class AIPlanServiceManager: ObservableObject {
     
     // MARK: - 解析时长字符串
     private func parseDurationFromString(_ durationString: String) -> TimeInterval {
-        // 解析类似"30分钟"、"2小时"的字符串
-        let components = durationString.components(separatedBy: CharacterSet.decimalDigits.inverted)
-        let numbers = components.compactMap { Double($0) }
+        // 解析类似"30分钟"、"2小时"、"1.5小时"的字符串
+        let trimmedString = durationString.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        if durationString.contains("小时") || durationString.contains("hour") {
-            return numbers.first ?? 1.0
-        } else if durationString.contains("分钟") || durationString.contains("minute") {
-            return (numbers.first ?? 30.0) / 60.0 // 转换为小时
-        } else {
-            return 1.0 // 默认1小时
+        // 使用正则表达式提取数字和小数
+        let pattern = "([0-9]+\\.?[0-9]*)"
+        let regex = try? NSRegularExpression(pattern: pattern)
+        let range = NSRange(location: 0, length: trimmedString.utf16.count)
+        
+        if let match = regex?.firstMatch(in: trimmedString, range: range) {
+            let numberString = String(trimmedString[Range(match.range, in: trimmedString)!])
+            if let number = Double(numberString) {
+                if trimmedString.contains("小时") || trimmedString.contains("hour") {
+                    return number * 3600 // 转换为秒
+                } else if trimmedString.contains("分钟") || trimmedString.contains("minute") {
+                    return number * 60 // 转换为秒
+                } else {
+                    return number * 3600 // 默认按小时处理
+                }
+            }
         }
+        
+        // 如果解析失败，返回默认值
+        return 3600 // 默认1小时 = 3600秒
     }
     
     // MARK: - 解析学习资源
@@ -528,8 +548,8 @@ class AIPlanServiceManager: ObservableObject {
     }
     
     // MARK: - 任务调度
-    private func schedulePlanTasks(_ plan: LearningPlan, dataManager: DataManager?) async throws -> LearningPlan {
-        let scheduledPlan = plan
+    func schedulePlanTasks(_ plan: LearningPlan, dataManager: DataManager?) async throws -> LearningPlan {
+        var scheduledPlan = plan
         var allScheduledTasks: [LearningTask] = []
         
         // 为每个周计划调度任务
@@ -543,20 +563,11 @@ class AIPlanServiceManager: ObservableObject {
             allScheduledTasks.append(contentsOf: scheduledTasks)
         }
         
-        // 将调度的任务存储到DataManager
-        for task in allScheduledTasks {
-            if let dataManager = dataManager {
-                // 确保在主线程更新DataManager
-                await MainActor.run {
-                    dataManager.addTask(task)
-                }
-                print("📅 调度任务已保存: \(task.title) - \(task.scheduledStartTime?.formatted() ?? "未安排时间")")
-            } else {
-                print("⚠️ 调度任务未保存（DataManager为空）: \(task.title) - \(task.scheduledStartTime?.formatted() ?? "未安排时间")")
-            }
-        }
+        // 将调度的任务添加到计划中，但不保存到DataManager
+        scheduledPlan.scheduledTasks = allScheduledTasks
         
         print("✅ 任务调度完成！共调度了 \(allScheduledTasks.count) 个任务")
+        print("📝 任务已添加到计划中，等待用户确认后保存")
         
         return scheduledPlan
     }

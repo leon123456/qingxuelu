@@ -72,7 +72,7 @@ struct AIPlanningView: View {
                             case .studentInfo:
                                 StudentInfoStep(studentInfo: $studentInfo)
                             case .aiGeneration:
-                                AIGenerationStep(isLoading: isLoading, errorMessage: errorMessage)
+                                AIGenerationStep(isLoading: isLoading, errorMessage: errorMessage, generatedTemplate: generatedTemplate)
                             case .goalConfirmation:
                                 GoalConfirmationStep(template: generatedTemplate)
                             case .planPreview:
@@ -173,6 +173,8 @@ struct AIPlanningView: View {
                 await MainActor.run {
                     generatedTemplate = template
                     isLoading = false
+                    // AI生成完成后自动进入下一步
+                    handleNextStep()
                 }
             } catch {
                 await MainActor.run {
@@ -234,7 +236,28 @@ struct AIPlanningView: View {
                 learningGoal.keyResults.append(keyResult)
             }
             
+            // 添加目标
             dataManager.addGoal(learningGoal)
+            
+            // 为每个目标生成对应的学习计划（使用AI生成，不包含调度任务）
+            Task {
+                do {
+                    let plan = try await AIPlanServiceManager.shared.generateLearningPlan(for: learningGoal, dataManager: nil)
+                    
+                    await MainActor.run {
+                        dataManager.addPlan(plan)
+                        print("✅ 已为目标「\(learningGoal.title)」生成AI学习计划")
+                    }
+                } catch {
+                    await MainActor.run {
+                        print("❌ 为目标「\(learningGoal.title)」生成AI计划失败: \(error)")
+                        // 如果AI生成失败，使用基础计划作为备选
+                        let basicPlan = dataManager.generatePlanFromGoal(learningGoal)
+                        dataManager.addPlan(basicPlan)
+                        print("✅ 已为目标「\(learningGoal.title)」生成基础学习计划")
+                    }
+                }
+            }
         }
         
         // 应用模板中的任务
@@ -421,6 +444,7 @@ struct StudentInfoStep: View {
 struct AIGenerationStep: View {
     let isLoading: Bool
     let errorMessage: String?
+    let generatedTemplate: LearningTemplate?
     
     var body: some View {
         VStack(spacing: 24) {
@@ -451,7 +475,7 @@ struct AIGenerationStep: View {
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
                 }
-            } else {
+            } else if generatedTemplate != nil {
                 VStack(spacing: 16) {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.system(size: 50))
@@ -461,6 +485,20 @@ struct AIGenerationStep: View {
                         .font(.headline)
                     
                     Text("已为您生成个性化的学习计划")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+            } else {
+                VStack(spacing: 16) {
+                    Image(systemName: "questionmark.circle")
+                        .font(.system(size: 50))
+                        .foregroundColor(Color(.systemOrange))
+                    
+                    Text("等待AI分析...")
+                        .font(.headline)
+                    
+                    Text("请稍候")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)

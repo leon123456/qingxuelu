@@ -468,8 +468,9 @@ struct LearningPlan: Identifiable, Codable {
     var isActive: Bool
     var createdAt: Date
     var userId: UUID = UUID() // 默认值，第一版暂不使用
+    var scheduledTasks: [LearningTask] = [] // 新增：调度的任务列表
     
-    init(id: UUID, title: String, description: String, startDate: Date, endDate: Date, totalWeeks: Int, weeklyPlans: [WeeklyPlan] = [], resources: [LearningResource] = [], isActive: Bool = true, userId: UUID = UUID()) {
+    init(id: UUID, title: String, description: String, startDate: Date, endDate: Date, totalWeeks: Int, weeklyPlans: [WeeklyPlan] = [], resources: [LearningResource] = [], isActive: Bool = true, userId: UUID = UUID(), scheduledTasks: [LearningTask] = []) {
         self.id = id  // 使用目标的ID
         self.title = title
         self.description = description
@@ -481,6 +482,7 @@ struct LearningPlan: Identifiable, Codable {
         self.isActive = isActive
         self.createdAt = Date()
         self.userId = userId
+        self.scheduledTasks = scheduledTasks
     }
 }
 

@@ -15,8 +15,7 @@ class AIServiceManager: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     
-    private let apiKey = AppEnvironment.current.apiKey
-    private let baseURL = AppEnvironment.current.baseURL
+    private let preferencesManager = UserPreferencesManager.shared
     
     private init() {}
     
@@ -26,7 +25,8 @@ class AIServiceManager: ObservableObject {
         defer { isLoading = false }
         
         let prompt = buildPrompt(for: profile)
-        let response = try await callQwenAPI(prompt: prompt)
+        let config = preferencesManager.getCurrentAIConfig()
+        let response = try await callAIAPI(prompt: prompt, config: config)
         
         return try parseTemplateResponse(response, profile: profile)
     }
@@ -34,7 +34,8 @@ class AIServiceManager: ObservableObject {
     // MARK: - 测试AI响应（调试用）
     func testAIResponse(for profile: StudentProfile) async throws -> String {
         let prompt = buildPrompt(for: profile)
-        return try await callQwenAPI(prompt: prompt)
+        let config = preferencesManager.getCurrentAIConfig()
+        return try await callAIAPI(prompt: prompt, config: config)
     }
     
     // MARK: - 构建AI提示词
@@ -74,25 +75,25 @@ class AIServiceManager: ObservableObject {
         """
     }
     
-    // MARK: - 调用Qwen API
-    private func callQwenAPI(prompt: String) async throws -> String {
-        guard let url = URL(string: "\(baseURL)/chat/completions") else {
+    // MARK: - 调用AI API（支持多个提供商）
+    private func callAIAPI(prompt: String, config: AIServiceConfig) async throws -> String {
+        guard let url = URL(string: "\(config.baseURL)/chat/completions") else {
             throw AIServiceError.invalidURL
         }
         
         let requestBody = OpenAICompatibleRequest(
-            model: APIConfig.model,
+            model: config.model.rawValue,
             messages: [
                 OpenAIMessage(role: "user", content: prompt)
             ],
-            temperature: APIConfig.temperature,
-            maxTokens: APIConfig.maxTokens,
-            topP: APIConfig.topP
+            temperature: config.temperature,
+            maxTokens: config.maxTokens,
+            topP: config.topP
         )
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(config.apiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(requestBody)
         
@@ -359,6 +360,16 @@ struct OpenAICompatibleRequest: Codable {
     let temperature: Double
     let maxTokens: Int
     let topP: Double
+    let stream: Bool?
+    
+    init(model: String, messages: [OpenAIMessage], temperature: Double, maxTokens: Int, topP: Double, stream: Bool? = nil) {
+        self.model = model
+        self.messages = messages
+        self.temperature = temperature
+        self.maxTokens = maxTokens
+        self.topP = topP
+        self.stream = stream
+    }
     
     enum CodingKeys: String, CodingKey {
         case model
@@ -366,6 +377,7 @@ struct OpenAICompatibleRequest: Codable {
         case temperature
         case maxTokens = "max_tokens"
         case topP = "top_p"
+        case stream
     }
 }
 

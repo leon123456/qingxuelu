@@ -487,6 +487,28 @@ struct AIPlanView: View {
                         VStack(spacing: 12) {
                             Button("应用此计划") {
                                 dataManager.addPlan(plan)
+                                
+                                // 在后台进行任务调度
+                                Task {
+                                    do {
+                                        let scheduledPlan = try await AIPlanServiceManager.shared.schedulePlanTasks(plan, dataManager: dataManager)
+                                        
+                                        await MainActor.run {
+                                            // 保存调度后的任务
+                                            for task in scheduledPlan.scheduledTasks {
+                                                dataManager.addTask(task)
+                                                print("📅 调度任务已保存: \(task.title) - \(task.scheduledStartTime?.formatted() ?? "未安排时间")")
+                                            }
+                                            
+                                            print("✅ 计划「\(plan.title)」及其 \(scheduledPlan.scheduledTasks.count) 个任务已保存")
+                                        }
+                                    } catch {
+                                        await MainActor.run {
+                                            print("❌ 任务调度失败: \(error)")
+                                        }
+                                    }
+                                }
+                                
                                 onPlanApplied() // 调用回调关闭整个CreatePlanView
                             }
                             .font(.headline)
