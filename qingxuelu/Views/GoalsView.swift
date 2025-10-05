@@ -273,6 +273,9 @@ struct GoalDetailView: View {
                 // 进度信息
                 ProgressSection(goal: goal)
                 
+                // 关键结果
+                GoalKeyResultsSection(goal: goal)
+                
                 // 里程碑
                 MilestonesSection(goal: goal)
                 
@@ -303,6 +306,15 @@ struct GoalDetailView: View {
 struct GoalInfoSection: View {
     let goal: LearningGoal
     
+    // 计算目标的持续天数
+    private var goalDurationInDays: Int {
+        let calendar = Calendar.current
+        // 计算从开始日期到目标日期的天数差，+1确保包含结束日期
+        // 例如：明天到今天 = 1天，而非0天
+        let components = calendar.dateComponents([.day], from: goal.startDate, to: goal.targetDate)
+        return max((components.day ?? 0) + 1, 1) // +1确保包含最后一天
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("目标信息")
@@ -313,6 +325,7 @@ struct GoalInfoSection: View {
                 InfoRow(title: "科目", value: goal.category.rawValue, icon: goal.category.icon)
                 InfoRow(title: "优先级", value: goal.priority.rawValue, icon: "exclamationmark.triangle")
                 InfoRow(title: "状态", value: goal.status.rawValue, icon: "circle.fill")
+                InfoRow(title: "持续天数", value: goalDurationInDays, unit: "天", icon: "calendar.badge.clock")
                 InfoRow(title: "开始时间", value: goal.startDate, formatter: dateFormatter, icon: "calendar")
                 InfoRow(title: "目标时间", value: goal.targetDate, formatter: dateFormatter, icon: "target")
             }
@@ -464,6 +477,78 @@ struct MilestoneRowView: View {
     }
 }
 
+// MARK: - 关键结果区域
+struct GoalKeyResultsSection: View {
+    let goal: LearningGoal
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("关键结果")
+                .font(.headline)
+                .fontWeight(.semibold)
+            
+            if goal.keyResults.isEmpty {
+                Text("暂无关键结果")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding()
+            } else {
+                ForEach(goal.keyResults) { keyResult in
+                    GoalKeyResultRowView(keyResult: keyResult)
+                }
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+    }
+}
+
+// MARK: - 关键结果行视图
+struct GoalKeyResultRowView: View {
+    let keyResult: KeyResult
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: keyResult.isCompleted ? "checkmark.circle.fill" : "circle")
+                    .foregroundColor(keyResult.isCompleted ? .green : .gray)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(keyResult.title)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .strikethrough(keyResult.isCompleted)
+                    
+                    Text(keyResult.description)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+                
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text("\(Int(keyResult.currentValue))/\(Int(keyResult.targetValue)) \(keyResult.unit)")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .strikethrough(keyResult.isCompleted)
+                    
+                    Text("\(Int(keyResult.progress * 100))%")
+                        .font(.caption)
+                        .foregroundColor(keyResult.isCompleted ? .green : .blue)
+                        .fontWeight(.bold)
+                }
+            }
+            
+            // 进度条
+            ProgressView(value: keyResult.progress)
+                .progressViewStyle(LinearProgressViewStyle(tint: keyResult.isCompleted ? .green : .blue))
+        }
+        .padding(.vertical, 4)
+    }
+}
+
 // MARK: - 相关任务区域
 struct RelatedTasksSection: View {
     let goal: LearningGoal
@@ -510,6 +595,18 @@ struct InfoRow: View {
     init(title: String, value: Date, formatter: DateFormatter, icon: String) {
         self.title = title
         self.value = formatter.string(from: value)
+        self.icon = icon
+    }
+    
+    init(title: String, value: Int, icon: String) {
+        self.title = title
+        self.value = "\(value)" // 纯数字显示，不带单位后缀
+        self.icon = icon
+    }
+    
+    init(title: String, value: Int, unit: String, icon: String) {
+        self.title = title
+        self.value = "\(value)\(unit)"
         self.icon = icon
     }
     

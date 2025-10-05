@@ -23,6 +23,8 @@ struct AddGoalView: View {
     @State private var showingAddKeyResult = false
     @State private var showingTemplates = false
     @State private var showingAIGeneration = false
+    @State private var editingMilestone: Milestone?
+    @State private var editingKeyResult: KeyResult?
     @State private var aiGeneratedContent: AIGeneratedGoalContent?
     @StateObject private var aiGenerator = AIGoalGenerator.shared
     
@@ -96,7 +98,12 @@ struct AddGoalView: View {
                 if goalType == .smart || goalType == .hybrid {
                     Section {
                         ForEach(milestones) { milestone in
-                            MilestoneRowView(milestone: milestone)
+                            Button(action: {
+                                editingMilestone = milestone
+                            }) {
+                                MilestoneRowView(milestone: milestone)
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
                         .onDelete(perform: deleteMilestones)
                         
@@ -147,7 +154,12 @@ struct AddGoalView: View {
                 if goalType == .okr || goalType == .hybrid {
                     Section {
                         ForEach(keyResults) { keyResult in
-                            KeyResultRowView(keyResult: keyResult)
+                            Button(action: {
+                                editingKeyResult = keyResult
+                            }) {
+                                KeyResultRowView(keyResult: keyResult)
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
                         .onDelete(perform: deleteKeyResults)
                         
@@ -224,6 +236,22 @@ struct AddGoalView: View {
         .sheet(isPresented: $showingTemplates) {
             GoalTemplateView()
         }
+        .sheet(item: $editingMilestone) { milestone in
+            AddMilestoneView(milestone: milestone) { updatedMilestone in
+                if let index = milestones.firstIndex(where: { $0.id == updatedMilestone.id }) {
+                    milestones[index] = updatedMilestone
+                }
+                editingMilestone = nil
+            }
+        }
+        .sheet(item: $editingKeyResult) { keyResult in
+            AddKeyResultView(keyResult: keyResult) { updatedKeyResult in
+                if let index = keyResults.firstIndex(where: { $0.id == updatedKeyResult.id }) {
+                    keyResults[index] = updatedKeyResult
+                }
+                editingKeyResult = nil
+            }
+        }
         .sheet(isPresented: $showingAIGeneration) {
             AIGenerationView(
                 title: title,
@@ -282,16 +310,29 @@ struct AddGoalView: View {
     }
 }
 
-// MARK: - 添加关键结果视图
+// MARK: - 添加/编辑关键结果视图
 struct AddKeyResultView: View {
     @Environment(\.dismiss) private var dismiss
     
+    let keyResult: KeyResult?
     let onSave: (KeyResult) -> Void
     
     @State private var title = ""
     @State private var description = ""
     @State private var targetValue: Double = 100
     @State private var unit = "分"
+    @State private var currentValue: Double = 0
+    
+    // 初始化器
+    init(keyResult: KeyResult? = nil, onSave: @escaping (KeyResult) -> Void) {
+        self.keyResult = keyResult
+        self.onSave = onSave
+        self._title = State(initialValue: keyResult?.title ?? "")
+        self._description = State(initialValue: keyResult?.description ?? "")
+        self._targetValue = State(initialValue: keyResult?.targetValue ?? 100)
+        self._unit = State(initialValue: keyResult?.unit ?? "分")
+        self._currentValue = State(initialValue: keyResult?.currentValue ?? 0)
+    }
     
     var body: some View {
         NavigationView {
@@ -321,6 +362,16 @@ struct AddKeyResultView: View {
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                                 .frame(width: 80)
                         }
+                        
+                        if keyResult != nil {
+                            HStack {
+                                Text("当前值")
+                                Spacer()
+                                TextField("当前值", value: $currentValue, format: .number)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .frame(width: 80)
+                            }
+                        }
                     }
                 } header: {
                     Text("量化指标")
@@ -328,7 +379,7 @@ struct AddKeyResultView: View {
                     Text("例如：目标值100，单位\"分\"，表示目标达到100分")
                 }
             }
-            .navigationTitle("添加关键结果")
+            .navigationTitle(keyResult == nil ? "添加关键结果" : "编辑关键结果")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -339,13 +390,31 @@ struct AddKeyResultView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("保存") {
-                        let keyResult = KeyResult(
-                            title: title,
-                            description: description,
-                            targetValue: targetValue,
-                            unit: unit
-                        )
-                        onSave(keyResult)
+                        let keyResultToSave: KeyResult
+                        if let existingKeyResult = keyResult {
+                            // 编辑模式：手动创建一个新的KeyResult实例
+                            var newKeyResult = KeyResult(
+                                id: existingKeyResult.id,
+                                title: title,
+                                description: description,
+                                targetValue: targetValue,
+                                unit: unit
+                            )
+                            // 手动更新字段
+                            newKeyResult.currentValue = currentValue
+                            newKeyResult.isCompleted = existingKeyResult.isCompleted
+                            newKeyResult.createdAt = existingKeyResult.createdAt
+                            keyResultToSave = newKeyResult
+                        } else {
+                            // 新建模式：创建新的关键结果
+                            keyResultToSave = KeyResult(
+                                title: title,
+                                description: description,
+                                targetValue: targetValue,
+                                unit: unit
+                            )
+                        }
+                        onSave(keyResultToSave)
                         dismiss()
                     }
                     .disabled(title.isEmpty)
@@ -387,15 +456,25 @@ struct KeyResultRowView: View {
     }
 }
 
-// MARK: - 添加里程碑视图
+// MARK: - 添加/编辑里程碑视图
 struct AddMilestoneView: View {
     @Environment(\.dismiss) private var dismiss
     
+    let milestone: Milestone?
     let onSave: (Milestone) -> Void
     
     @State private var title = ""
     @State private var description = ""
     @State private var targetDate = Date().addingTimeInterval(7 * 24 * 3600) // 7天后
+    
+    // 初始化器
+    init(milestone: Milestone? = nil, onSave: @escaping (Milestone) -> Void) {
+        self.milestone = milestone
+        self.onSave = onSave
+        self._title = State(initialValue: milestone?.title ?? "")
+        self._description = State(initialValue: milestone?.description ?? "")
+        self._targetDate = State(initialValue: milestone?.targetDate ?? Date().addingTimeInterval(7 * 24 * 3600))
+    }
     
     var body: some View {
         NavigationView {
@@ -409,7 +488,7 @@ struct AddMilestoneView: View {
                     Text("里程碑信息")
                 }
             }
-            .navigationTitle("添加里程碑")
+            .navigationTitle(milestone == nil ? "添加里程碑" : "编辑里程碑")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -420,12 +499,24 @@ struct AddMilestoneView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("保存") {
-                        let milestone = Milestone(
-                            title: title,
-                            description: description,
-                            targetDate: targetDate
-                        )
-                        onSave(milestone)
+                        let milestoneToSave: Milestone
+                        if let existingMilestone = milestone {
+                            // 编辑模式：创建新Milestone实例并手动更新字段
+                            milestoneToSave = Milestone(
+                                id: existingMilestone.id,
+                                title: title,
+                                description: description,
+                                targetDate: targetDate
+                            )
+                        } else {
+                            // 新建模式：创建新的里程碑
+                            milestoneToSave = Milestone(
+                                title: title,
+                                description: description,
+                                targetDate: targetDate
+                            )
+                        }
+                        onSave(milestoneToSave)
                         dismiss()
                     }
                     .disabled(title.isEmpty)
@@ -446,6 +537,8 @@ struct EditGoalView: View {
     @State private var category: SubjectCategory
     @State private var priority: Priority
     @State private var targetDate: Date
+    @State private var startDate: Date
+    @State private var durationDays: Int
     @State private var status: GoalStatus
     @State private var progress: Double
     @State private var milestones: [Milestone]
@@ -455,6 +548,8 @@ struct EditGoalView: View {
     @State private var showingAddKeyResult = false
     @State private var showingTemplates = false
     @State private var showingAIGeneration = false
+    @State private var editingMilestone: Milestone?
+    @State private var editingKeyResult: KeyResult?
     @State private var aiGeneratedContent: AIGeneratedGoalContent?
     @StateObject private var aiGenerator = AIGoalGenerator.shared
     
@@ -465,6 +560,13 @@ struct EditGoalView: View {
         self._category = State(initialValue: goal.category)
         self._priority = State(initialValue: goal.priority)
         self._targetDate = State(initialValue: goal.targetDate)
+        
+        // 添加开始时间和持续天数的字段
+        self._startDate = State(initialValue: goal.startDate)
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.day], from: goal.startDate, to: goal.targetDate)
+        self._durationDays = State(initialValue: max((components.day ?? 0) + 1, 1))
+        
         self._status = State(initialValue: goal.status)
         self._progress = State(initialValue: goal.progress)
         self._milestones = State(initialValue: goal.milestones)
@@ -535,7 +637,24 @@ struct EditGoalView: View {
                         }
                     }
                     
-                    DatePicker("目标完成时间", selection: $targetDate, displayedComponents: .date)
+                    DatePicker("目标开始时间", selection: $startDate, displayedComponents: .date)
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Text("持续天数")
+                            Spacer()
+                            Text("\(durationDays)天")
+                        }
+                        
+                        Slider(value: Binding(
+                            get: { Double(durationDays) },
+                            set: { 
+                                durationDays = Int($0)
+                                // 自动更新目标完成时间
+                                targetDate = Calendar.current.date(byAdding: .day, value: durationDays - 1, to: startDate) ?? startDate
+                            }
+                        ), in: 1...365, step: 1)
+                    }
                 } header: {
                     Text("目标设置")
                 }
@@ -558,7 +677,12 @@ struct EditGoalView: View {
                 if goalType == .smart || goalType == .hybrid {
                     Section {
                         ForEach(milestones) { milestone in
-                            MilestoneRowView(milestone: milestone)
+                            Button(action: {
+                                editingMilestone = milestone
+                            }) {
+                                MilestoneRowView(milestone: milestone)
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
                         .onDelete(perform: deleteMilestones)
                         
@@ -609,7 +733,12 @@ struct EditGoalView: View {
                 if goalType == .okr || goalType == .hybrid {
                     Section {
                         ForEach(keyResults) { keyResult in
-                            KeyResultRowView(keyResult: keyResult)
+                            Button(action: {
+                                editingKeyResult = keyResult
+                            }) {
+                                KeyResultRowView(keyResult: keyResult)
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
                         .onDelete(perform: deleteKeyResults)
                         
@@ -699,6 +828,22 @@ struct EditGoalView: View {
                 }
             )
         }
+        .sheet(item: $editingMilestone) { milestone in
+            AddMilestoneView(milestone: milestone) { updatedMilestone in
+                if let index = milestones.firstIndex(where: { $0.id == updatedMilestone.id }) {
+                    milestones[index] = updatedMilestone
+                }
+                editingMilestone = nil
+            }
+        }
+        .sheet(item: $editingKeyResult) { keyResult in
+            AddKeyResultView(keyResult: keyResult) { updatedKeyResult in
+                if let index = keyResults.firstIndex(where: { $0.id == updatedKeyResult.id }) {
+                    keyResults[index] = updatedKeyResult
+                }
+                editingKeyResult = nil
+            }
+        }
     }
     
     private func saveGoal() {
@@ -708,6 +853,7 @@ struct EditGoalView: View {
         updatedGoal.category = category
         updatedGoal.priority = priority
         updatedGoal.targetDate = targetDate
+        updatedGoal.startDate = startDate
         updatedGoal.status = status
         updatedGoal.progress = progress
         updatedGoal.milestones = milestones
