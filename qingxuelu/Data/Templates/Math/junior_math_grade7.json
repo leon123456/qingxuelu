@@ -1,0 +1,299 @@
+{
+  "id": "junior_math_grade7",
+  "name": "七年级数学学习（上册）",
+  "description": "通过系统学习七年级数学上册的四个单元内容，夯实基础，培养逻辑思维和问题解决能力，期末成绩达到班级前20%，并能独立解决实际问题。",
+  "category": "数学",
+  "goalType": "okr",
+  "priority": "high",
+  "duration": 120,
+  "icon": "function",
+  "tags": ["数学", "初中", "逻辑思维", "计算能力"],
+  "milestones": [
+    {
+      "title": "第一章 有理数",
+      "description": "理解正负数的意义，掌握有理数的加减乘除及乘方运算；能够在实际问题中灵活运用。",
+      "duration": 30,
+      "order": 1
+    },
+    {
+      "title": "第二章 整式的加减",
+      "description": "掌握整式的概念、项、系数和次数；能熟练进行整式的加减运算。",
+      "duration": 50,
+      "order": 2
+    },
+    {
+      "title": "第三章 一元一次方程",
+      "description": "理解方程的意义与结构，能熟练解一元一次方程，解决实际问题。",
+      "duration": 80,
+      "order": 3
+    },
+    {
+      "title": "第四章 几何图形初步",
+      "description": "认识基本几何图形，理解直线、射线、角等几何概念，并能进行简单的测量与绘制。",
+      "duration": 100,
+      "order": 4
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "概念掌握",
+      "description": "准确理解并掌握 30 个核心数学概念（有理数、整式、方程、几何要素等）",
+      "targetValue": 30,
+      "unit": "个"
+    },
+    {
+      "title": "题目练习",
+      "description": "完成 600 道课本与拓展练习题，正确率 ≥85%",
+      "targetValue": 600,
+      "unit": "题"
+    },
+    {
+      "title": "阶段测验",
+      "description": "完成 4 次单元测验，平均分 ≥85 分",
+      "targetValue": 4,
+      "unit": "次"
+    },
+    {
+      "title": "期末成绩",
+      "description": "期末数学成绩 ≥90 分，班级排名前 20%",
+      "targetValue": 90,
+      "unit": "分"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "每日练习题",
+      "description": "每天完成10道计算或应用题，并记录错题",
+      "estimatedDuration": 30,
+      "difficulty": "easy",
+      "tags": ["练习", "巩固"]
+    },
+    {
+      "title": "章节测验",
+      "description": "每章学习结束后完成一次章节测验并分析错题",
+      "estimatedDuration": 60,
+      "difficulty": "medium",
+      "tags": ["测验", "总结"]
+    },
+    {
+      "title": "应用题训练",
+      "description": "每周完成2道生活场景类数学应用题",
+      "estimatedDuration": 40,
+      "difficulty": "hard",
+      "tags": ["应用", "思维"]
+    }
+  ],
+  "learningPath": [
+    {
+      "title": "第一章 有理数",
+      "description": "学习正负数、有理数的概念及加减乘除运算，能解决涉及温度变化、海拔高度等问题。",
+      "estimatedDuration": 30,
+      "order": 1,
+      "keyResults": [
+        {
+          "title": "运算正确率",
+          "description": "有理数四则运算正确率 ≥90%",
+          "targetValue": 90,
+          "unit": "%"
+        },
+        {
+          "title": "应用题完成数",
+          "description": "完成 20 道有理数应用题",
+          "targetValue": 20,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "正负数运算练习",
+          "description": "完成正负数及加减乘除题型练习",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["计算", "基础"]
+        },
+        {
+          "title": "生活中的负数",
+          "description": "探讨气温、债务、海拔等负数概念实例",
+          "estimatedDuration": 20,
+          "difficulty": "easy",
+          "tags": ["应用", "理解"]
+        }
+      ]
+    },
+    {
+      "title": "第二章 整式的加减",
+      "description": "理解整式的定义，掌握合并同类项、去括号的运算规则。",
+      "estimatedDuration": 50,
+      "order": 2,
+      "keyResults": [
+        {
+          "title": "运算熟练度",
+          "description": "整式加减运算正确率 ≥85%",
+          "targetValue": 85,
+          "unit": "%"
+        },
+        {
+          "title": "典型题完成数",
+          "description": "完成 30 道整式运算题",
+          "targetValue": 30,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "合并同类项练习",
+          "description": "每日练习 5 题合并同类项",
+          "estimatedDuration": 15,
+          "difficulty": "easy",
+          "tags": ["整式", "计算"]
+        },
+        {
+          "title": "去括号技巧总结",
+          "description": "整理去括号运算规则笔记",
+          "estimatedDuration": 20,
+          "difficulty": "medium",
+          "tags": ["笔记", "总结"]
+        }
+      ]
+    },
+    {
+      "title": "第三章 一元一次方程",
+      "description": "掌握一元一次方程的建立与解法，能够解决实际问题。",
+      "estimatedDuration": 80,
+      "order": 3,
+      "keyResults": [
+        {
+          "title": "解方程正确率",
+          "description": "一元一次方程解题正确率 ≥85%",
+          "targetValue": 85,
+          "unit": "%"
+        },
+        {
+          "title": "实际问题数量",
+          "description": "完成 20 道应用型方程题",
+          "targetValue": 20,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "方程解法练习",
+          "description": "每日练习3题合并同类项、移项、去括号的方程",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["方程", "计算"]
+        },
+        {
+          "title": "生活中的方程",
+          "description": "将生活问题转化为方程求解",
+          "estimatedDuration": 40,
+          "difficulty": "hard",
+          "tags": ["应用", "建模"]
+        }
+      ]
+    },
+    {
+      "title": "第四章 几何图形初步",
+      "description": "认识基本几何元素（点、线、角），会测量角度并绘制简单图形。",
+      "estimatedDuration": 100,
+      "order": 4,
+      "keyResults": [
+        {
+          "title": "绘图准确率",
+          "description": "几何绘图正确率 ≥90%",
+          "targetValue": 90,
+          "unit": "%"
+        },
+        {
+          "title": "角度测量任务",
+          "description": "完成 20 个角度测量与绘图任务",
+          "targetValue": 20,
+          "unit": "个"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "角的测量练习",
+          "description": "使用量角器测量不同角度",
+          "estimatedDuration": 25,
+          "difficulty": "easy",
+          "tags": ["几何", "测量"]
+        },
+        {
+          "title": "手工几何作图",
+          "description": "绘制三角形、平行线等基本图形",
+          "estimatedDuration": 40,
+          "difficulty": "medium",
+          "tags": ["绘图", "实践"]
+        }
+      ]
+    }
+  ],
+  "contentContext": "本模板针对七年级数学上册设计，通过系统化的学习路径和AI个性化练习，帮助学生掌握有理数、整式、方程和几何图形等核心内容，培养逻辑思维和问题解决能力。适用于初中一年级学生。",
+  "aiContentGenerationConfig": {
+    "enableVocabularyGeneration": false,
+    "enableExerciseGeneration": true,
+    "enableDialogueGeneration": false,
+    "enableReadingMaterialGeneration": true,
+    "enableWritingPromptGeneration": false,
+    "enableListeningMaterialGeneration": false,
+    "enableSpeakingPromptGeneration": false,
+    "enableAssessmentGeneration": true,
+    "generationLanguage": "zh-CN",
+    "difficultyLevel": "medium"
+  },
+  "learningResources": [
+    {
+      "title": "人教版七年级数学上册教材",
+      "url": null,
+      "type": "book",
+      "description": "课程主教材，系统讲解各章节知识点。"
+    },
+    {
+      "title": "学而思初中数学视频课",
+      "url": null,
+      "type": "video",
+      "description": "配合章节讲解，帮助理解难点。"
+    },
+    {
+      "title": "可汗学院初中数学课程",
+      "url": "https://www.khanacademy.org/math/",
+      "type": "website",
+      "description": "免费在线数学课程和练习题。"
+    }
+  ],
+  "assessmentCriteria": [
+    {
+      "title": "概念理解",
+      "description": "评估对数学概念、定义、公式的掌握程度",
+      "evaluationMethod": "课堂测验/AI测试",
+      "passingScore": 80
+    },
+    {
+      "title": "计算准确率",
+      "description": "评估基本运算与方程解法的正确性",
+      "evaluationMethod": "练习统计/AI自动批改",
+      "passingScore": 85
+    },
+    {
+      "title": "应用能力",
+      "description": "评估在生活问题和综合题中的数学建模能力",
+      "evaluationMethod": "综合测验/项目作业",
+      "passingScore": 80
+    }
+  ],
+  "adaptiveAdjustmentRules": [
+    {
+      "condition": "如果章节测验分数低于70分",
+      "action": "增加该章节练习题数量并延长学习时间"
+    },
+    {
+      "condition": "如果连续两次运算错误率高于20%",
+      "action": "推荐复习基础运算法则并安排专项练习"
+    },
+    {
+      "condition": "如果期中考试成绩未达预期",
+      "action": "生成个性化错题集并制定强化训练计划"
+    }
+  ]
+}

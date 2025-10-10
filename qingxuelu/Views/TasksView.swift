@@ -10,46 +10,58 @@ import SwiftUI
 struct TasksView: View {
     @EnvironmentObject var dataManager: DataManager
     @State private var showingAddTask = false
-    @State private var selectedStatus: TaskStatus? = nil
+    @State private var selectedTask: LearningTask?
+    @State private var showingTaskDetail = false
+    @State private var showingTimer = false
     
     var body: some View {
         NavigationView {
-            VStack {
-                if let currentStudent = dataManager.currentStudent {
-                    let tasks = filteredTasks(for: currentStudent.id)
-                    
-                    if tasks.isEmpty {
-                        EmptyTasksView()
-                    } else {
-                        List {
-                            ForEach(tasks) { task in
-                                NavigationLink(destination: TaskDetailView(task: task)) {
-                                    SimpleTaskRowView(task: task)
-                                }
+            VStack(spacing: 0) {
+                // 任务列表
+                List {
+                    ForEach(dataManager.tasks) { task in
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(task.title)
+                                .font(.headline)
+                            Text(task.description)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            HStack {
+                                Text(task.category.rawValue)
+                                    .font(.caption)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(Color.blue.opacity(0.1))
+                                    .cornerRadius(8)
+                                
+                                Spacer()
+                                
+                                Text(task.status.rawValue)
+                                    .font(.caption)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(statusColor(for: task.status))
+                                    .foregroundColor(.white)
+                                    .cornerRadius(8)
                             }
-                            .onDelete(perform: deleteTasks)
+                        }
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
+                        .onTapGesture {
+                            selectedTask = task
+                            showingTaskDetail = true
                         }
                     }
-                } else {
-                    EmptyStudentView()
+                    .onDelete(perform: deleteTasks)
                 }
+                .listStyle(PlainListStyle())
             }
-            .navigationTitle("学习任务")
+            .navigationTitle("任务")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { showingAddTask = true }) {
                         Image(systemName: "plus")
-                    }
-                }
-                
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Menu {
-                        Button("全部") { selectedStatus = nil }
-                        ForEach(TaskStatus.allCases, id: \.self) { status in
-                            Button(status.rawValue) { selectedStatus = status }
-                        }
-                    } label: {
-                        Image(systemName: "line.3.horizontal.decrease.circle")
                     }
                 }
             }
@@ -57,45 +69,36 @@ struct TasksView: View {
         .sheet(isPresented: $showingAddTask) {
             AddTaskView()
         }
-    }
-    
-    private func filteredTasks(for studentId: UUID) -> [LearningTask] {
-        let tasks = dataManager.getTasksForStudent(studentId)
-        if let status = selectedStatus {
-            return tasks.filter { $0.status == status }
+        .sheet(isPresented: $showingTaskDetail) {
+            if let task = selectedTask {
+                TaskDetailView(task: task)
+            }
         }
-        return tasks
+        .sheet(isPresented: $showingTimer) {
+            PomodoroView(task: selectedTask)
+        }
     }
     
     private func deleteTasks(offsets: IndexSet) {
-        guard let currentStudent = dataManager.currentStudent else { return }
-        let tasks = dataManager.getTasksForStudent(currentStudent.id)
-        for index in offsets {
-            dataManager.deleteTask(tasks[index])
+        let tasksToDelete = offsets.map { dataManager.tasks[$0] }
+        for task in tasksToDelete {
+            dataManager.deleteTask(task)
         }
     }
-}
-
-// MARK: - 空任务视图
-struct EmptyTasksView: View {
-    var body: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "checklist")
-                .font(.system(size: 60))
-                .foregroundColor(.gray)
-            
-            Text("还没有学习任务")
-                .font(.title2)
-                .fontWeight(.semibold)
-                .foregroundColor(.secondary)
-            
-            Text("创建学习任务，让学习更有计划")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
+    
+    private func statusColor(for status: TaskStatus) -> Color {
+        switch status {
+        case .pending:
+            return .gray
+        case .inProgress:
+            return .blue
+        case .completed:
+            return .green
+        case .overdue:
+            return .red
+        case .cancelled:
+            return .orange
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
@@ -103,247 +106,40 @@ struct EmptyTasksView: View {
 struct TaskDetailView: View {
     let task: LearningTask
     @EnvironmentObject var dataManager: DataManager
-    @State private var showingEditTask = false
+    @Environment(\.dismiss) private var dismiss
     @State private var showingTimer = false
+    @State private var showingTaskCompletion = false
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                // 任务基本信息
-                TaskInfoSection(task: task)
-                
-                // 学习记录
-                LearningRecordsSection(task: task)
-                
-                // 操作按钮
-                ActionButtonsSection(task: task, showingTimer: $showingTimer)
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    // 任务基本信息
+                    TaskInfoSection(task: task)
+                    
+                    // 学习记录
+                    LearningRecordsSection(task: task)
+                    
+                    // 操作按钮
+                    ActionButtonsSection(task: task, showingTimer: $showingTimer)
+                }
+                .padding()
             }
-            .padding()
-        }
-        .navigationTitle(task.title)
-        .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("编辑") {
-                    showingEditTask = true
+            .navigationTitle(task.title)
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("关闭") {
+                        dismiss()
+                    }
                 }
             }
-        }
-        .sheet(isPresented: $showingEditTask) {
-            EditTaskView(task: task)
         }
         .sheet(isPresented: $showingTimer) {
             PomodoroView(task: task)
         }
-    }
-}
-
-// MARK: - 任务信息区域
-struct TaskInfoSection: View {
-    let task: LearningTask
-    @EnvironmentObject var dataManager: DataManager
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("任务信息")
-                .font(.headline)
-                .fontWeight(.semibold)
-            
-            VStack(alignment: .leading, spacing: 8) {
-                // 任务名称
-                InfoRow(title: "任务名称", value: task.title, icon: "doc.text")
-                
-                InfoRow(title: "科目", value: task.category.rawValue, icon: task.category.icon)
-                InfoRow(title: "优先级", value: task.priority.rawValue, icon: "exclamationmark.triangle")
-                InfoRow(title: "状态", value: task.status.rawValue, icon: "circle.fill")
-                InfoRow(title: "预估时间", value: formatDuration(task.estimatedDuration), icon: "clock")
-                
-                // 显示关联的目标信息
-                if let goalId = task.goalId {
-                    if let goal = dataManager.goals.first(where: { $0.id == goalId }) {
-                        InfoRow(title: "关联目标", value: goal.title, icon: "target")
-                    }
-                }
-                
-                // 显示关联的计划信息
-                if let planId = task.planId {
-                    if let plan = dataManager.plans.first(where: { $0.id == planId }) {
-                        InfoRow(title: "关联计划", value: plan.title, icon: "calendar")
-                    }
-                }
-                
-                if let actualDuration = task.actualDuration {
-                    InfoRow(title: "实际时间", value: formatDuration(actualDuration), icon: "clock.fill")
-                }
-                
-                if let dueDate = task.dueDate {
-                    InfoRow(title: "截止时间", value: dueDate, formatter: dateTimeFormatter, icon: "calendar")
-                }
-                
-                if let completedDate = task.completedDate {
-                    InfoRow(title: "完成时间", value: completedDate, formatter: dateTimeFormatter, icon: "checkmark.circle")
-                }
-            }
-            
-            if !task.description.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("描述")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                    
-                    Text(task.description)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-            }
-        }
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(12)
-    }
-}
-
-// MARK: - 学习记录区域
-struct LearningRecordsSection: View {
-    let task: LearningTask
-    @EnvironmentObject var dataManager: DataManager
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("学习记录")
-                .font(.headline)
-                .fontWeight(.semibold)
-            
-            let records = dataManager.getRecordsForTask(task.id)
-            
-            if records.isEmpty {
-                Text("暂无学习记录")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding()
-            } else {
-                ForEach(records) { record in
-                    LearningRecordRowView(record: record)
-                }
-            }
-        }
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(12)
-    }
-}
-
-// MARK: - 学习记录行视图
-struct LearningRecordRowView: View {
-    let record: LearningRecord
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text(record.startTime, formatter: dateTimeFormatter)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                
-                Spacer()
-                
-                Text(formatDuration(record.duration))
-                    .font(.subheadline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.blue)
-            }
-            
-            if let rating = record.rating {
-                HStack {
-                    Text("学习质量:")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    
-                    ForEach(1...5, id: \.self) { star in
-                        Image(systemName: star <= rating ? "star.fill" : "star")
-                            .foregroundColor(.yellow)
-                            .font(.caption)
-                    }
-                }
-            }
-            
-            if let notes = record.notes, !notes.isEmpty {
-                Text(notes)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .padding(.top, 4)
-            }
-        }
-        .padding(.vertical, 4)
-    }
-}
-
-// MARK: - 操作按钮区域
-struct ActionButtonsSection: View {
-    let task: LearningTask
-    @Binding var showingTimer: Bool
-    @EnvironmentObject var dataManager: DataManager
-    @State private var showingCompletionAlert = false
-    
-    var body: some View {
-        VStack(spacing: 12) {
-            // 任务完成状态显示
-            if task.status == .completed {
-                TaskCompletionStatusView(task: task)
-            } else {
-                // 未完成任务的操作按钮
-                if task.status != .completed {
-                    Button(action: { showingTimer = true }) {
-                        HStack {
-                            Image(systemName: "play.circle.fill")
-                            Text("开始学习")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
-                    }
-                }
-                
-                HStack(spacing: 12) {
-                    if task.status == .pending {
-                        Button(action: { markTaskAsInProgress() }) {
-                            HStack {
-                                Image(systemName: "play.fill")
-                                Text("开始")
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.green)
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
-                        }
-                    }
-                    
-                    if task.status == .inProgress {
-                        Button(action: { showingCompletionAlert = true }) {
-                            HStack {
-                                Image(systemName: "checkmark")
-                                Text("完成")
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.green)
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
-                        }
-                    }
-                }
-            }
-        }
-        .alert("完成任务", isPresented: $showingCompletionAlert) {
-            Button("取消", role: .cancel) { }
-            Button("完成", role: .destructive) {
-                markTaskAsCompleted()
-            }
-        } message: {
-            Text("确定要标记「\(task.title)」为已完成吗？")
+        .sheet(isPresented: $showingTaskCompletion) {
+            TaskCompletionView(task: task)
         }
     }
     
@@ -353,117 +149,325 @@ struct ActionButtonsSection: View {
         updatedTask.updatedAt = Date()
         dataManager.updateTask(updatedTask)
     }
-    
-    private func markTaskAsCompleted() {
-        var updatedTask = task
-        updatedTask.status = .completed
-        updatedTask.completedDate = Date()
-        updatedTask.updatedAt = Date()
-        dataManager.updateTask(updatedTask)
-    }
 }
 
-// MARK: - 任务完成状态视图
-struct TaskCompletionStatusView: View {
+// MARK: - 任务信息区域
+struct TaskInfoSection: View {
     let task: LearningTask
-    @EnvironmentObject var dataManager: DataManager
-    @State private var showingReopenAlert = false
     
     var body: some View {
-        VStack(spacing: 16) {
-            // 完成状态图标和文字
-            HStack(spacing: 12) {
-                ZStack {
-                    Circle()
-                        .fill(Color.green)
-                        .frame(width: 50, height: 50)
-                    
-                    Image(systemName: "checkmark")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                }
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("任务已完成")
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.green)
-                    
-                    if let completedDate = task.completedDate {
-                        Text("完成时间: \(completedDate, formatter: dateTimeFormatter)")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                
-                Spacer()
-            }
+        VStack(alignment: .leading, spacing: 16) {
+            Text("任务信息")
+                .font(.headline)
+                .fontWeight(.semibold)
             
-            // 重新打开按钮
-            Button(action: { showingReopenAlert = true }) {
-                HStack {
-                    Image(systemName: "arrow.uturn.backward")
-                    Text("重新打开")
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.orange.opacity(0.1))
-                .foregroundColor(.orange)
-                .cornerRadius(12)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.orange.opacity(0.3), lineWidth: 1)
+            VStack(spacing: 12) {
+                TaskInfoRow(
+                    title: "任务描述",
+                    value: task.description,
+                    icon: "doc.text"
                 )
+                
+                TaskInfoRow(
+                    title: "任务类型",
+                    value: task.category.rawValue,
+                    icon: task.category.icon
+                )
+                
+                TaskInfoRow(
+                    title: "优先级",
+                    value: task.priority.rawValue,
+                    icon: "exclamationmark.triangle"
+                )
+                
+                TaskInfoRow(
+                    title: "预估时长",
+                    value: "\(Int(task.estimatedDuration / 60)) 分钟",
+                    icon: "clock"
+                )
+                
+                if let dueDate = task.dueDate {
+                    TaskInfoRow(
+                        title: "截止时间",
+                        value: dueDate.formatted(date: .abbreviated, time: .shortened),
+                        icon: "calendar.badge.exclamationmark"
+                    )
+                }
+                
+                if let scheduledTime = task.scheduledStartTime {
+                    TaskInfoRow(
+                        title: "安排时间",
+                        value: scheduledTime.formatted(date: .omitted, time: .shortened),
+                        icon: "calendar.badge.clock"
+                    )
+                }
             }
         }
         .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color.green.opacity(0.05))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color.green.opacity(0.2), lineWidth: 1)
-                )
-        )
-        .alert("重新打开任务", isPresented: $showingReopenAlert) {
-            Button("取消", role: .cancel) { }
-            Button("重新打开", role: .destructive) {
-                reopenTask()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+    }
+}
+
+// MARK: - 任务信息行
+struct TaskInfoRow: View {
+    let title: String
+    let value: String
+    let icon: String
+    
+    var body: some View {
+        HStack {
+            Image(systemName: icon)
+                .foregroundColor(.blue)
+                .frame(width: 20)
+            
+            Text(title)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            
+            Spacer()
+            
+            Text(value)
+                .font(.subheadline)
+                .fontWeight(.medium)
+        }
+    }
+}
+
+// MARK: - 学习记录区域
+struct LearningRecordsSection: View {
+    let task: LearningTask
+    @EnvironmentObject var dataManager: DataManager
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("学习记录")
+                .font(.headline)
+                .fontWeight(.semibold)
+            
+            let taskRecords = dataManager.records.filter { $0.taskId == task.id }
+            
+            if taskRecords.isEmpty {
+                Text("暂无学习记录")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding()
+            } else {
+                ForEach(taskRecords) { record in
+                    LearningRecordRow(record: record)
+                }
             }
-        } message: {
-            Text("确定要重新打开「\(task.title)」吗？任务状态将变为进行中。")
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+    }
+}
+
+// MARK: - 学习记录行
+struct LearningRecordRow: View {
+    let record: LearningRecord
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(record.endTime.formatted(date: .abbreviated, time: .shortened))
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                
+                Spacer()
+                
+                Text("\(Int(record.duration / 60)) 分钟")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            if let notes = record.notes, !notes.isEmpty {
+                Text(notes)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            if let rating = record.rating {
+                HStack {
+                    Text("质量评分:")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    ForEach(1...5, id: \.self) { star in
+                        Image(systemName: star <= rating ? "star.fill" : "star")
+                            .font(.caption)
+                            .foregroundColor(.yellow)
+                    }
+                }
+            }
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .cornerRadius(8)
+    }
+}
+
+// MARK: - 操作按钮区域
+struct ActionButtonsSection: View {
+    let task: LearningTask
+    @Binding var showingTimer: Bool
+    @EnvironmentObject var dataManager: DataManager
+    @State private var showingTaskCompletion = false
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            // 启动任务钟按钮
+            Button(action: { showingTimer = true }) {
+                HStack {
+                    Image(systemName: "timer")
+                    Text("启动任务钟")
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(Color(.systemBackground))
+                .cornerRadius(12)
+            }
+            
+            // 手动操作按钮
+            HStack(spacing: 12) {
+                if task.status == .pending {
+                    Button(action: { markTaskAsInProgress() }) {
+                        HStack {
+                            Image(systemName: "play.fill")
+                            Text("手动开始")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .foregroundColor(Color(.systemBackground))
+                        .cornerRadius(12)
+                    }
+                }
+                
+                if task.status == .inProgress {
+                    Button(action: { showingTaskCompletion = true }) {
+                        HStack {
+                            Image(systemName: "checkmark")
+                            Text("完成任务")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.orange)
+                        .foregroundColor(Color(.systemBackground))
+                        .cornerRadius(12)
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $showingTaskCompletion) {
+            TaskCompletionView(task: task)
         }
     }
     
-    private func reopenTask() {
+    private func markTaskAsInProgress() {
         var updatedTask = task
         updatedTask.status = .inProgress
-        updatedTask.completedDate = nil
         updatedTask.updatedAt = Date()
         dataManager.updateTask(updatedTask)
     }
 }
 
-// MARK: - 辅助函数
-private func formatDuration(_ duration: TimeInterval) -> String {
-    let hours = Int(duration) / 3600
-    let minutes = Int(duration) % 3600 / 60
+// MARK: - 任务状态指示器
+struct TaskStatusIndicator: View {
+    let task: LearningTask
     
-    if hours > 0 {
-        return "\(hours)小时\(minutes)分钟"
-    } else {
-        return "\(minutes)分钟"
+    var body: some View {
+        HStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(statusColor)
+                    .frame(width: 40, height: 40)
+                
+                Image(systemName: statusIcon)
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .foregroundColor(Color(.systemBackground))
+            }
+            
+            // 状态文字
+            VStack(alignment: .leading, spacing: 4) {
+                Text(statusText)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(statusColor)
+                
+                Text(statusDescription)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+        }
+    }
+    
+    private var statusColor: Color {
+        switch task.status {
+        case .pending:
+            return .gray
+        case .inProgress:
+            return .blue
+        case .completed:
+            return .green
+        case .overdue:
+            return .red
+        case .cancelled:
+            return .orange
+        }
+    }
+    
+    private var statusIcon: String {
+        switch task.status {
+        case .pending:
+            return "clock"
+        case .inProgress:
+            return "play.fill"
+        case .completed:
+            return "checkmark"
+        case .overdue:
+            return "exclamationmark.triangle"
+        case .cancelled:
+            return "xmark"
+        }
+    }
+    
+    private var statusText: String {
+        switch task.status {
+        case .pending:
+            return "待开始"
+        case .inProgress:
+            return "进行中"
+        case .completed:
+            return "已完成"
+        case .overdue:
+            return "已逾期"
+        case .cancelled:
+            return "已取消"
+        }
+    }
+    
+    private var statusDescription: String {
+        switch task.status {
+        case .pending:
+            return "任务等待开始"
+        case .inProgress:
+            return "任务正在进行中，完成后点击完成任务"
+        case .completed:
+            return "任务已完成"
+        case .overdue:
+            return "任务已超过截止时间"
+        case .cancelled:
+            return "任务已被取消"
+        }
     }
 }
-
-
-private let dateTimeFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .short
-    return formatter
-}()
 
 #Preview {
     TasksView()

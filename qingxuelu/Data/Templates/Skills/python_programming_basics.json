@@ -1,0 +1,80 @@
+{
+  "id": "python_programming_basics",
+  "name": "Python编程入门",
+  "description": "从零开始学习Python编程，掌握基础语法和常用库",
+  "category": "其他",
+  "goalType": "smart",
+  "priority": "high",
+  "duration": 60,
+  "icon": "laptopcomputer",
+  "tags": ["编程", "Python", "入门"],
+  "milestones": [
+    {
+      "title": "基础语法",
+      "description": "掌握Python基本语法和数据类型",
+      "duration": 14,
+      "order": 1
+    },
+    {
+      "title": "控制结构",
+      "description": "学会使用条件语句和循环",
+      "duration": 21,
+      "order": 2
+    },
+    {
+      "title": "函数和模块",
+      "description": "理解函数定义和模块使用",
+      "duration": 35,
+      "order": 3
+    },
+    {
+      "title": "项目实战",
+      "description": "完成一个完整的Python项目",
+      "duration": 60,
+      "order": 4
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "代码练习",
+      "description": "完成100道编程练习题",
+      "targetValue": 100,
+      "unit": "题"
+    },
+    {
+      "title": "项目数量",
+      "description": "完成3个实际项目",
+      "targetValue": 3,
+      "unit": "个"
+    },
+    {
+      "title": "学习时长",
+      "description": "累计学习60小时",
+      "targetValue": 60,
+      "unit": "小时"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "语法学习",
+      "description": "学习Python基础语法",
+      "estimatedDuration": 60,
+      "difficulty": "easy",
+      "tags": ["语法", "基础"]
+    },
+    {
+      "title": "编程练习",
+      "description": "完成编程练习题",
+      "estimatedDuration": 45,
+      "difficulty": "medium",
+      "tags": ["练习", "实战"]
+    },
+    {
+      "title": "项目开发",
+      "description": "开发一个完整的项目",
+      "estimatedDuration": 120,
+      "difficulty": "hard",
+      "tags": ["项目", "综合"]
+    }
+  ]
+}

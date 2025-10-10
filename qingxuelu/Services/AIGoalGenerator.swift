@@ -152,7 +152,7 @@ class AIGoalGenerator: ObservableObject {
         urlRequest.httpMethod = "POST"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        urlRequest.timeoutInterval = 30
+        urlRequest.timeoutInterval = 300.0 // 5分钟超时，与AIPlanServiceManager保持一致
         
         do {
             urlRequest.httpBody = try JSONEncoder().encode(request)

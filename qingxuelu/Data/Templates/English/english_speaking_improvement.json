@@ -1,0 +1,237 @@
+{
+  "id": "english_speaking_improvement",
+  "name": "英语口语提升",
+  "description": "在一个学期内显著提升英语口语能力，能够在日常交流和课堂展示中自信表达。",
+  "category": "英语",
+  "goalType": "smart",
+  "priority": "high",
+  "duration": 120,
+  "icon": "speaker.wave.2",
+  "tags": ["口语", "英语", "日常对话"],
+  "milestones": [
+    {
+      "title": "基础发音练习",
+      "description": "第1个月：掌握 80 个口语词汇，完成 8 次口语练习（含 2 次录音自检）",
+      "duration": 14,
+      "order": 1
+    },
+    {
+      "title": "日常对话练习",
+      "description": "第2个月：累计 160 个词汇，完成 16 次练习（含 5 次录音自检），完成 1 次模拟对话",
+      "duration": 30,
+      "order": 2
+    },
+    {
+      "title": "话题讨论",
+      "description": "第3个月：累计 240 个词汇，完成 24 次练习，完成 3 次模拟对话",
+      "duration": 60,
+      "order": 3
+    },
+    {
+      "title": "流利表达",
+      "description": "第4个月：掌握 300+ 词汇，完成 30 次练习，完成 5 次模拟对话/演讲",
+      "duration": 90,
+      "order": 4
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "词汇掌握",
+      "description": "掌握并能运用 300 个口语常用词汇与 50 个高频表达",
+      "targetValue": 300,
+      "unit": "个"
+    },
+    {
+      "title": "练习次数",
+      "description": "完成 30 次口语练习（每周约 2 次）",
+      "targetValue": 30,
+      "unit": "次"
+    },
+    {
+      "title": "语速达标",
+      "description": "录音语速达到 120 词/分钟",
+      "targetValue": 120,
+      "unit": "词/分钟"
+    },
+    {
+      "title": "发音准确率",
+      "description": "95% 的句子发音可被 AI/老师正确识别",
+      "targetValue": 95,
+      "unit": "%"
+    },
+    {
+      "title": "模拟对话",
+      "description": "完成 5 次模拟对话/演讲（课堂或课外）",
+      "targetValue": 5,
+      "unit": "次"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "音标练习",
+      "description": "练习英语音标发音",
+      "estimatedDuration": 15,
+      "difficulty": "easy",
+      "tags": ["发音", "基础"]
+    },
+    {
+      "title": "跟读练习",
+      "description": "跟着录音进行跟读练习",
+      "estimatedDuration": 20,
+      "difficulty": "medium",
+      "tags": ["跟读", "听力"]
+    },
+    {
+      "title": "话题讨论",
+      "description": "就指定话题进行英语讨论",
+      "estimatedDuration": 30,
+      "difficulty": "hard",
+      "tags": ["讨论", "表达"]
+    }
+  ],
+  "learningPath": [
+    {
+      "title": "基础发音与音标",
+      "description": "掌握国际音标，纠正常见发音错误，建立口语基础。",
+      "estimatedDuration": 14,
+      "order": 1,
+      "keyResults": [
+        {
+          "title": "音标掌握率",
+          "description": "正确识别和发出所有48个音标",
+          "targetValue": 95,
+          "unit": "%"
+        },
+        {
+          "title": "基础词汇发音",
+          "description": "掌握100个基础词汇的正确发音",
+          "targetValue": 100,
+          "unit": "个"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "音标跟读练习",
+          "description": "使用AI发音纠正工具练习音标",
+          "estimatedDuration": 20,
+          "difficulty": "easy",
+          "tags": ["发音", "基础"]
+        },
+        {
+          "title": "基础词汇朗读",
+          "description": "朗读100个高频词汇并录音自查",
+          "estimatedDuration": 30,
+          "difficulty": "easy",
+          "tags": ["词汇", "朗读"]
+        }
+      ],
+      "requiredSkills": ["听力理解", "模仿能力"],
+      "outputDeliverables": ["音标发音录音", "词汇朗读录音"]
+    },
+    {
+      "title": "日常对话与情景模拟",
+      "description": "学习日常交流中的常用句型和表达，进行情景对话练习。",
+      "estimatedDuration": 30,
+      "order": 2,
+      "keyResults": [
+        {
+          "title": "日常对话流利度",
+          "description": "能在日常情景中进行5分钟不间断对话",
+          "targetValue": 5,
+          "unit": "分钟"
+        },
+        {
+          "title": "常用句型掌握",
+          "description": "掌握50个日常对话常用句型",
+          "targetValue": 50,
+          "unit": "个"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "AI情景对话",
+          "description": "与AI进行模拟购物、问路等情景对话",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["对话", "情景"]
+        },
+        {
+          "title": "口语跟读模仿",
+          "description": "模仿电影或剧集中的日常对话片段",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["模仿", "听力"]
+        }
+      ],
+      "requiredSkills": ["口语表达", "听力理解", "反应速度"],
+      "outputDeliverables": ["情景对话录音", "常用句型笔记"]
+    }
+  ],
+  "contentContext": "本模板旨在帮助学生系统提升英语口语能力，从基础发音到流利表达，并融入AI辅助学习，提供个性化内容和即时反馈。适用于希望在短期内显著提高口语水平的学生。",
+  "aiContentGenerationConfig": {
+    "enableVocabularyGeneration": true,
+    "enableExerciseGeneration": true,
+    "enableDialogueGeneration": true,
+    "enableReadingMaterialGeneration": true,
+    "enableWritingPromptGeneration": true,
+    "enableListeningMaterialGeneration": true,
+    "enableSpeakingPromptGeneration": true,
+    "enableAssessmentGeneration": true,
+    "generationLanguage": "en-US",
+    "difficultyLevel": "medium"
+  },
+  "learningResources": [
+    {
+      "title": "BBC Learning English",
+      "url": "https://www.bbc.co.uk/learningenglish/",
+      "type": "website",
+      "description": "提供丰富的英语学习材料和练习。"
+    },
+    {
+      "title": "Duolingo App",
+      "url": null,
+      "type": "app",
+      "description": "通过游戏化方式学习语言。"
+    },
+    {
+      "title": "《赖世雄美语从头学》",
+      "url": null,
+      "type": "book",
+      "description": "经典的美语学习教材。"
+    }
+  ],
+  "assessmentCriteria": [
+    {
+      "title": "发音准确性",
+      "description": "根据国际音标标准评估发音准确度",
+      "evaluationMethod": "AI语音分析/教师评估",
+      "passingScore": 85
+    },
+    {
+      "title": "流利度与连贯性",
+      "description": "评估口语表达的流畅性和逻辑连贯性",
+      "evaluationMethod": "AI语音分析/教师评估",
+      "passingScore": 70
+    },
+    {
+      "title": "词汇与语法",
+      "description": "评估词汇使用的丰富性和语法结构的准确性",
+      "evaluationMethod": "AI文本分析/教师评估",
+      "passingScore": 80
+    }
+  ],
+  "adaptiveAdjustmentRules": [
+    {
+      "condition": "如果AI语音分析显示发音准确率低于80%",
+      "action": "推荐额外的发音纠正练习和音标课程"
+    },
+    {
+      "condition": "如果连续3次对话练习流利度评分低于平均水平",
+      "action": "增加情景对话练习的频率，并推荐相关口语技巧课程"
+    },
+    {
+      "condition": "如果阶段性评估未达标",
+      "action": "自动延长当前学习步骤的持续时间，并推荐复习材料"
+    }
+  ]
+}

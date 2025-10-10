@@ -60,14 +60,14 @@ struct AddTaskView: View {
                     // 任务名称输入
                     TextField("新任务", text: $title)
                         .font(.system(size: 24, weight: .bold, design: .default))
-                        .foregroundColor(.white)
+                        .foregroundColor(.primary)
                         .multilineTextAlignment(.center)
                         .background(Color.clear)
                     
                     // 任务描述输入
                     TextField("任务描述（可选）", text: $description, axis: .vertical)
                         .font(.system(size: 16, weight: .regular, design: .default))
-                        .foregroundColor(.white.opacity(0.9))
+                        .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
                         .lineLimit(2...4)
                         .background(Color.clear)
@@ -75,13 +75,7 @@ struct AddTaskView: View {
                 .padding(.horizontal, 24)
                 .padding(.vertical, 32)
                 .frame(maxWidth: .infinity)
-                .background(
-                    LinearGradient(
-                        gradient: Gradient(colors: [Color.pink, Color.pink.opacity(0.8)]),
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
+                .background(Color(.systemBackground))
                 .cornerRadius(20, corners: [.bottomLeft, .bottomRight])
                 
                 // 主要内容区域
@@ -124,17 +118,14 @@ struct AddTaskView: View {
                                         }) {
                                             Text(timeSlot)
                                                 .font(.system(size: 14, weight: .medium))
-                                                .foregroundColor(selectedTimeSlot == timeSlot ? .white : .primary)
+                                                .foregroundColor(selectedTimeSlot == timeSlot ? .blue : .primary)
                                                 .padding(.horizontal, 16)
                                                 .padding(.vertical, 8)
-                                                .background(
-                                                    selectedTimeSlot == timeSlot ? 
-                                                    Color.pink : Color.white
-                                                )
+                                                .background(Color.white)
                                                 .cornerRadius(20)
                                                 .overlay(
                                                     RoundedRectangle(cornerRadius: 20)
-                                                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                                                        .stroke(selectedTimeSlot == timeSlot ? Color.blue : Color.gray.opacity(0.3), lineWidth: selectedTimeSlot == timeSlot ? 2 : 1)
                                                 )
                                         }
                                     }
@@ -159,17 +150,14 @@ struct AddTaskView: View {
                                         }) {
                                             Text(duration)
                                                 .font(.system(size: 14, weight: .medium))
-                                                .foregroundColor(selectedDuration == duration ? .white : .primary)
+                                                .foregroundColor(selectedDuration == duration ? .purple : .primary)
                                                 .padding(.horizontal, 16)
                                                 .padding(.vertical, 8)
-                                                .background(
-                                                    selectedDuration == duration ? 
-                                                    Color.red : Color.white
-                                                )
+                                                .background(Color.white)
                                                 .cornerRadius(20)
                                                 .overlay(
                                                     RoundedRectangle(cornerRadius: 20)
-                                                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                                                        .stroke(selectedDuration == duration ? Color.purple : Color.gray.opacity(0.3), lineWidth: selectedDuration == duration ? 2 : 1)
                                                 )
                                         }
                                     }
@@ -192,17 +180,14 @@ struct AddTaskView: View {
                                     }) {
                                         Text(priorityOption.rawValue)
                                             .font(.system(size: 14, weight: .medium))
-                                            .foregroundColor(priority == priorityOption ? .white : .primary)
+                                            .foregroundColor(priority == priorityOption ? .blue : .primary)
                                             .padding(.horizontal, 16)
                                             .padding(.vertical, 8)
-                                            .background(
-                                                priority == priorityOption ? 
-                                                Color.blue : Color.white
-                                            )
+                                            .background(Color.white)
                                             .cornerRadius(20)
                                             .overlay(
                                                 RoundedRectangle(cornerRadius: 20)
-                                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                                                    .stroke(priority == priorityOption ? Color.blue : Color.gray.opacity(0.3), lineWidth: priority == priorityOption ? 2 : 1)
                                             )
                                     }
                                 }
@@ -282,17 +267,15 @@ struct AddTaskView: View {
                     }) {
                         Text("继续")
                             .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(.white)
+                            .foregroundColor(.blue)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
-                            .background(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [Color.pink, Color.pink.opacity(0.8)]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
+                            .background(Color.white)
                             .cornerRadius(25)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 25)
+                                    .stroke(Color.blue, lineWidth: 2)
+                            )
                     }
                     .disabled(title.isEmpty)
                     .opacity(title.isEmpty ? 0.6 : 1.0)
@@ -312,6 +295,10 @@ struct AddTaskView: View {
                             .foregroundColor(.gray)
                     }
                 }
+            }
+            .onAppear {
+                // 初始化智能时间默认值
+                selectedTimeSlot = getCurrentRoundedTimeSlot()
             }
         }
     }
@@ -338,6 +325,35 @@ struct AddTaskView: View {
         default:
             estimatedDuration = 60
         }
+    }
+    
+    // MARK: - 计算当前时间并向上取整到最近的15分钟
+    private func getCurrentRoundedTimeSlot() -> String {
+        let calendar = Calendar.current
+        let now = Date()
+        let currentMinute = calendar.component(.minute, from: now)
+        let currentHour = calendar.component(.hour, from: now)
+        
+        // 向上取整到最近的15分钟
+        // 逻辑：0-14分钟 → 15分钟，15-29分钟 → 30分钟，30-44分钟 → 45分钟，45-59分钟 → 下一小时
+        let roundedMinute: Int
+        let finalHour: Int
+        
+        if currentMinute < 15 {
+            roundedMinute = 15
+            finalHour = currentHour
+        } else if currentMinute < 30 {
+            roundedMinute = 30
+            finalHour = currentHour
+        } else if currentMinute < 45 {
+            roundedMinute = 45
+            finalHour = currentHour
+        } else {
+            roundedMinute = 0
+            finalHour = (currentHour + 1) % 24
+        }
+        
+        return String(format: "%02d:%02d", finalHour, roundedMinute)
     }
     
     private func saveTask() {

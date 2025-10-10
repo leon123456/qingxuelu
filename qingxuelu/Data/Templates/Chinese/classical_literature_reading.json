@@ -1,0 +1,80 @@
+{
+  "id": "classical_literature_reading",
+  "name": "经典文学阅读",
+  "description": "通过阅读经典文学作品提升文学素养与写作能力。",
+  "category": "语文",
+  "goalType": "hybrid",
+  "priority": "medium",
+  "duration": 45,
+  "icon": "book",
+  "tags": ["阅读", "文学", "经典"],
+  "milestones": [
+    {
+      "title": "选书规划",
+      "description": "第1-2个月：完成前 2 本书的阅读与 4 篇读书笔记",
+      "duration": 3,
+      "order": 1
+    },
+    {
+      "title": "第一本书",
+      "description": "第3-4个月：完成第 3-4 本书的阅读与 4 篇笔记",
+      "duration": 15,
+      "order": 2
+    },
+    {
+      "title": "第二本书",
+      "description": "第5-6个月：完成第 5 本书并整理所有笔记",
+      "duration": 30,
+      "order": 3
+    },
+    {
+      "title": "读书笔记",
+      "description": "整理读书笔记和感悟",
+      "duration": 45,
+      "order": 4
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "阅读数量",
+      "description": "完成 ≥5 本经典文学书籍阅读",
+      "targetValue": 5,
+      "unit": "本"
+    },
+    {
+      "title": "读书笔记",
+      "description": "撰写 ≥10 篇读书笔记",
+      "targetValue": 10,
+      "unit": "篇"
+    },
+    {
+      "title": "阅读时长",
+      "description": "累计阅读 ≥30 小时",
+      "targetValue": 30,
+      "unit": "小时"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "选书阅读",
+      "description": "阅读指定章节",
+      "estimatedDuration": 60,
+      "difficulty": "easy",
+      "tags": ["阅读", "理解"]
+    },
+    {
+      "title": "读书笔记",
+      "description": "写读书笔记和感悟",
+      "estimatedDuration": 30,
+      "difficulty": "medium",
+      "tags": ["笔记", "思考"]
+    },
+    {
+      "title": "作品分析",
+      "description": "分析作品主题和技巧",
+      "estimatedDuration": 45,
+      "difficulty": "hard",
+      "tags": ["分析", "文学"]
+    }
+  ]
+}

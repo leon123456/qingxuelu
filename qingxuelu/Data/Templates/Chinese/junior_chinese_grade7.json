@@ -1,0 +1,407 @@
+{
+  "id": "junior_chinese_grade7",
+  "name": "七年级语文学习（上册）",
+  "description": "通过系统学习七年级语文上册的六个单元内容，培养语言文字运用能力、阅读理解能力和写作表达能力，期末成绩达到班级前20%，并能运用语文知识解决实际问题。",
+  "category": "语文",
+  "goalType": "okr",
+  "priority": "high",
+  "duration": 120,
+  "icon": "text.book.closed",
+  "tags": ["语文", "初中", "阅读", "写作", "古诗词"],
+  "milestones": [
+    {
+      "title": "第一单元 四季美景",
+      "description": "学习描写四季景色的文章，掌握景物描写的方法，培养观察能力和表达能力。",
+      "duration": 20,
+      "order": 1
+    },
+    {
+      "title": "第二单元 至爱亲情",
+      "description": "阅读亲情主题的文章，理解亲情的珍贵，学习情感表达的方法。",
+      "duration": 20,
+      "order": 2
+    },
+    {
+      "title": "第三单元 学习生活",
+      "description": "学习关于学习生活的文章，掌握学习方法，培养良好的学习习惯。",
+      "duration": 20,
+      "order": 3
+    },
+    {
+      "title": "第四单元 人生之舟",
+      "description": "阅读人生哲理类文章，理解人生意义，培养正确的人生观和价值观。",
+      "duration": 20,
+      "order": 4
+    },
+    {
+      "title": "第五单元 动物与人",
+      "description": "学习动物主题的文章，了解人与动物的关系，培养环保意识。",
+      "duration": 20,
+      "order": 5
+    },
+    {
+      "title": "第六单元 想象之翼",
+      "description": "阅读想象类文章，培养想象力和创造力，学习想象作文的写作方法。",
+      "duration": 20,
+      "order": 6
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "课文背诵",
+      "description": "熟练背诵 20 篇经典课文和古诗词",
+      "targetValue": 20,
+      "unit": "篇"
+    },
+    {
+      "title": "阅读理解",
+      "description": "完成 100 篇阅读理解练习，正确率 ≥80%",
+      "targetValue": 100,
+      "unit": "篇"
+    },
+    {
+      "title": "作文练习",
+      "description": "完成 30 篇作文练习，包括记叙文、说明文、议论文",
+      "targetValue": 30,
+      "unit": "篇"
+    },
+    {
+      "title": "古诗词积累",
+      "description": "掌握 50 首古诗词，能够默写和理解诗意",
+      "targetValue": 50,
+      "unit": "首"
+    },
+    {
+      "title": "期末成绩",
+      "description": "期末语文成绩 ≥85 分，班级排名前 20%",
+      "targetValue": 85,
+      "unit": "分"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "每日阅读",
+      "description": "每天阅读一篇课文或课外文章，做好读书笔记",
+      "estimatedDuration": 30,
+      "difficulty": "easy",
+      "tags": ["阅读", "积累"]
+    },
+    {
+      "title": "古诗词背诵",
+      "description": "每周背诵2首古诗词，理解诗意并能够默写",
+      "estimatedDuration": 20,
+      "difficulty": "medium",
+      "tags": ["背诵", "古诗词"]
+    },
+    {
+      "title": "作文练习",
+      "description": "每周完成1篇作文，包括记叙文、说明文等不同文体",
+      "estimatedDuration": 45,
+      "difficulty": "medium",
+      "tags": ["写作", "表达"]
+    },
+    {
+      "title": "阅读理解训练",
+      "description": "每周完成5篇阅读理解练习，提高阅读能力",
+      "estimatedDuration": 40,
+      "difficulty": "medium",
+      "tags": ["阅读", "理解"]
+    }
+  ],
+  "learningPath": [
+    {
+      "title": "第一单元 四季美景",
+      "description": "学习描写四季景色的文章，掌握景物描写的方法，培养观察能力和表达能力。",
+      "estimatedDuration": 20,
+      "order": 1,
+      "keyResults": [
+        {
+          "title": "课文背诵",
+          "description": "背诵本单元 3 篇重点课文",
+          "targetValue": 3,
+          "unit": "篇"
+        },
+        {
+          "title": "景物描写练习",
+          "description": "完成 5 篇景物描写练习",
+          "targetValue": 5,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "课文朗读",
+          "description": "有感情地朗读课文，注意语音语调",
+          "estimatedDuration": 15,
+          "difficulty": "easy",
+          "tags": ["朗读", "语音"]
+        },
+        {
+          "title": "景物描写训练",
+          "description": "观察身边景物，练习景物描写",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["描写", "观察"]
+        }
+      ]
+    },
+    {
+      "title": "第二单元 至爱亲情",
+      "description": "阅读亲情主题的文章，理解亲情的珍贵，学习情感表达的方法。",
+      "estimatedDuration": 20,
+      "order": 2,
+      "keyResults": [
+        {
+          "title": "课文理解",
+          "description": "深入理解本单元课文的思想感情",
+          "targetValue": 100,
+          "unit": "%"
+        },
+        {
+          "title": "亲情作文",
+          "description": "完成 3 篇亲情主题作文",
+          "targetValue": 3,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "课文分析",
+          "description": "分析课文中的情感表达方法",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["分析", "情感"]
+        },
+        {
+          "title": "亲情故事写作",
+          "description": "写一篇关于亲情的记叙文",
+          "estimatedDuration": 40,
+          "difficulty": "medium",
+          "tags": ["写作", "亲情"]
+        }
+      ]
+    },
+    {
+      "title": "第三单元 学习生活",
+      "description": "学习关于学习生活的文章，掌握学习方法，培养良好的学习习惯。",
+      "estimatedDuration": 20,
+      "order": 3,
+      "keyResults": [
+        {
+          "title": "学习方法总结",
+          "description": "总结 5 种有效的学习方法",
+          "targetValue": 5,
+          "unit": "种"
+        },
+        {
+          "title": "学习心得作文",
+          "description": "完成 2 篇学习心得作文",
+          "targetValue": 2,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "学习方法讨论",
+          "description": "与同学讨论有效的学习方法",
+          "estimatedDuration": 20,
+          "difficulty": "easy",
+          "tags": ["讨论", "方法"]
+        },
+        {
+          "title": "学习计划制定",
+          "description": "制定个人学习计划",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["计划", "学习"]
+        }
+      ]
+    },
+    {
+      "title": "第四单元 人生之舟",
+      "description": "阅读人生哲理类文章，理解人生意义，培养正确的人生观和价值观。",
+      "estimatedDuration": 20,
+      "order": 4,
+      "keyResults": [
+        {
+          "title": "哲理理解",
+          "description": "理解本单元课文的人生哲理",
+          "targetValue": 100,
+          "unit": "%"
+        },
+        {
+          "title": "人生感悟作文",
+          "description": "完成 2 篇人生感悟作文",
+          "targetValue": 2,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "哲理分析",
+          "description": "分析课文中的哲理思想",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["分析", "哲理"]
+        },
+        {
+          "title": "人生思考写作",
+          "description": "写一篇关于人生思考的文章",
+          "estimatedDuration": 45,
+          "difficulty": "hard",
+          "tags": ["写作", "思考"]
+        }
+      ]
+    },
+    {
+      "title": "第五单元 动物与人",
+      "description": "学习动物主题的文章，了解人与动物的关系，培养环保意识。",
+      "estimatedDuration": 20,
+      "order": 5,
+      "keyResults": [
+        {
+          "title": "环保意识培养",
+          "description": "通过课文学习培养环保意识",
+          "targetValue": 100,
+          "unit": "%"
+        },
+        {
+          "title": "动物主题作文",
+          "description": "完成 3 篇动物主题作文",
+          "targetValue": 3,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "动物观察",
+          "description": "观察身边的动物，记录观察结果",
+          "estimatedDuration": 20,
+          "difficulty": "easy",
+          "tags": ["观察", "动物"]
+        },
+        {
+          "title": "环保倡议书",
+          "description": "写一篇环保倡议书",
+          "estimatedDuration": 35,
+          "difficulty": "medium",
+          "tags": ["写作", "环保"]
+        }
+      ]
+    },
+    {
+      "title": "第六单元 想象之翼",
+      "description": "阅读想象类文章，培养想象力和创造力，学习想象作文的写作方法。",
+      "estimatedDuration": 20,
+      "order": 6,
+      "keyResults": [
+        {
+          "title": "想象力培养",
+          "description": "通过课文学习培养想象力",
+          "targetValue": 100,
+          "unit": "%"
+        },
+        {
+          "title": "想象作文",
+          "description": "完成 3 篇想象作文",
+          "targetValue": 3,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "想象训练",
+          "description": "进行想象力训练练习",
+          "estimatedDuration": 20,
+          "difficulty": "easy",
+          "tags": ["想象", "训练"]
+        },
+        {
+          "title": "科幻故事写作",
+          "description": "写一篇科幻故事",
+          "estimatedDuration": 45,
+          "difficulty": "hard",
+          "tags": ["写作", "科幻"]
+        }
+      ]
+    }
+  ],
+  "contentContext": "本模板针对七年级语文上册设计，通过系统化的学习路径和AI个性化练习，帮助学生掌握阅读、写作、古诗词等核心内容，培养语言文字运用能力和文学素养。适用于初中一年级学生。",
+  "aiContentGenerationConfig": {
+    "enableVocabularyGeneration": true,
+    "enableExerciseGeneration": true,
+    "enableDialogueGeneration": false,
+    "enableReadingMaterialGeneration": true,
+    "enableWritingPromptGeneration": true,
+    "enableListeningMaterialGeneration": false,
+    "enableSpeakingPromptGeneration": false,
+    "enableAssessmentGeneration": true,
+    "generationLanguage": "zh-CN",
+    "difficultyLevel": "medium"
+  },
+  "learningResources": [
+    {
+      "title": "人教版七年级语文上册教材",
+      "url": null,
+      "type": "book",
+      "description": "课程主教材，系统讲解各单元知识点。"
+    },
+    {
+      "title": "古诗词三百首",
+      "url": null,
+      "type": "book",
+      "description": "经典古诗词选集，提高文学素养。"
+    },
+    {
+      "title": "初中语文阅读理解训练",
+      "url": null,
+      "type": "book",
+      "description": "阅读理解专项训练材料。"
+    }
+  ],
+  "assessmentCriteria": [
+    {
+      "title": "课文背诵",
+      "description": "评估课文和古诗词的背诵熟练程度",
+      "evaluationMethod": "背诵测试/默写测试",
+      "passingScore": 80
+    },
+    {
+      "title": "阅读理解",
+      "description": "评估阅读理解能力和文本分析能力",
+      "evaluationMethod": "阅读理解测试/AI自动批改",
+      "passingScore": 75
+    },
+    {
+      "title": "写作表达",
+      "description": "评估写作能力和语言表达能力",
+      "evaluationMethod": "作文评分/写作测试",
+      "passingScore": 75
+    },
+    {
+      "title": "语言运用",
+      "description": "评估语言文字的运用能力和语文基础知识",
+      "evaluationMethod": "基础知识测试/语言运用测试",
+      "passingScore": 80
+    }
+  ],
+  "adaptiveAdjustmentRules": [
+    {
+      "condition": "如果课文背诵正确率低于70%",
+      "action": "增加背诵练习时间并采用多种背诵方法"
+    },
+    {
+      "condition": "如果阅读理解正确率低于60%",
+      "action": "推荐阅读技巧训练并安排专项阅读理解练习"
+    },
+    {
+      "condition": "如果作文得分低于70分",
+      "action": "推荐写作技巧指导并安排专项写作训练"
+    },
+    {
+      "condition": "如果期中考试成绩未达预期",
+      "action": "生成个性化学习计划并制定强化训练方案"
+    }
+  ]
+}
+

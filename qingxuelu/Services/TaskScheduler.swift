@@ -14,7 +14,7 @@ class TaskScheduler: ObservableObject {
     private init() {}
     
     // MARK: - 将周计划任务分配到具体日期
-    func scheduleWeeklyTasks(_ weeklyPlan: WeeklyPlan, for weekStartDate: Date, goalId: UUID? = nil, planId: UUID? = nil) -> [LearningTask] {
+    func scheduleWeeklyTasks(_ weeklyPlan: WeeklyPlan, for weekStartDate: Date, goalId: UUID? = nil, planId: UUID? = nil, settings: ScheduleSettings? = nil) -> [LearningTask] {
         var scheduledTasks: [LearningTask] = []
         let calendar = Calendar.current
         
@@ -23,14 +23,20 @@ class TaskScheduler: ObservableObject {
         print("🔍 任务调度调试 - 周计划任务详情: \(weeklyPlan.tasks.map { "\($0.title): \(Int($0.estimatedDuration / 60))分钟" })")
         
         // 智能拆分任务到一周
-        let distributedTasks = distributeTasksAcrossWeek(weeklyPlan.tasks, weekStartDate: weekStartDate)
+        let distributedTasks = distributeTasksAcrossWeek(weeklyPlan.tasks, weekStartDate: weekStartDate, settings: settings)
         
         print("🔍 任务调度调试 - 分配后的任务: \(distributedTasks.map { "第\($0.key)天: \($0.value.count)个任务" })")
         
-        // 只为工作日分配任务（周一到周五）
-        for dayOffset in 0..<5 {
+        // 为选中的日期分配任务
+        for dayOffset in 0..<7 {
             let currentDate = calendar.date(byAdding: .day, value: dayOffset, to: weekStartDate) ?? weekStartDate
             let weekday = calendar.component(.weekday, from: currentDate)
+            
+            // 检查这一天是否被选中
+            let isSelected = settings?.selectedWeekdays.contains(weekday) ?? (weekday >= 2 && weekday <= 6)
+            if !isSelected {
+                continue
+            }
             
             // 获取当天的任务
             let dayTasks = distributedTasks[dayOffset] ?? []
@@ -38,7 +44,7 @@ class TaskScheduler: ObservableObject {
             print("🔍 任务调度调试 - 第\(dayOffset + 1)天任务数量: \(dayTasks.count)")
             
             // 获取当天的可用时间槽
-            let timeSlots = generateTimeSlots(for: currentDate, weekday: weekday)
+            let timeSlots = generateTimeSlots(for: currentDate, weekday: weekday, settings: settings)
             
             print("🔍 任务调度调试 - 第\(dayOffset + 1)天时间槽数量: \(timeSlots.count)")
             
@@ -61,14 +67,18 @@ class TaskScheduler: ObservableObject {
     }
     
     // MARK: - 智能拆分任务到一周
-    private func distributeTasksAcrossWeek(_ tasks: [WeeklyTask], weekStartDate: Date) -> [Int: [WeeklyTask]] {
+    private func distributeTasksAcrossWeek(_ tasks: [WeeklyTask], weekStartDate: Date, settings: ScheduleSettings? = nil) -> [Int: [WeeklyTask]] {
         var distributedTasks: [Int: [WeeklyTask]] = [:]
         let calendar = Calendar.current
         
-        // 只初始化工作日（周一到周五）的任务数组
-        for dayOffset in 0..<5 {
+        // 初始化所有7天的任务数组
+        for dayOffset in 0..<7 {
             distributedTasks[dayOffset] = []
         }
+        
+        // 获取用户选择的可用日期
+        let availableDays = getAvailableDays(settings: settings)
+        print("🔍 任务调度调试 - 可用日期: \(availableDays)")
         
         // 按任务类型和时长分组
         let taskGroups = groupTasksByType(tasks)
@@ -76,14 +86,14 @@ class TaskScheduler: ObservableObject {
         for (taskType, taskGroup) in taskGroups {
             switch taskType {
             case .daily:
-                // 每日任务：分配到工作日
-                distributeDailyTasks(taskGroup, to: &distributedTasks)
+                // 每日任务：分配到所有可用日期
+                distributeDailyTasks(taskGroup, to: &distributedTasks, availableDays: availableDays)
             case .weekly:
                 // 周任务：智能分配到2-3天
-                distributeWeeklyTasks(taskGroup, to: &distributedTasks)
+                distributeWeeklyTasks(taskGroup, to: &distributedTasks, availableDays: availableDays)
             case .intensive:
-                // 集中任务：分配到周末
-                distributeIntensiveTasks(taskGroup, to: &distributedTasks)
+                // 集中任务：分配到多个可用日期
+                distributeIntensiveTasks(taskGroup, to: &distributedTasks, availableDays: availableDays)
             }
         }
         
@@ -125,46 +135,69 @@ class TaskScheduler: ObservableObject {
         }
     }
     
+    // MARK: - 获取可用日期
+    private func getAvailableDays(settings: ScheduleSettings?) -> [Int] {
+        let calendar = Calendar.current
+        let selectedWeekdays = settings?.selectedWeekdays ?? [2, 3, 4, 5, 6] // 默认周一到周五
+        
+        // 将Calendar的weekday转换为dayOffset（0-6）
+        // 注意：Calendar的weekday: 1=周日, 2=周一, 3=周二, 4=周三, 5=周四, 6=周五, 7=周六
+        var availableDays: [Int] = []
+        for dayOffset in 0..<7 {
+            // dayOffset 0-6 对应 周日-周六
+            // Calendar的weekday: 1=周日, 2=周一, 3=周二, 4=周三, 5=周四, 6=周五, 7=周六
+            let weekday = (dayOffset == 0) ? 1 : dayOffset + 1
+            if selectedWeekdays.contains(weekday) {
+                availableDays.append(dayOffset)
+            }
+        }
+        
+        return availableDays
+    }
+    
     // MARK: - 分配每日任务
-    private func distributeDailyTasks(_ tasks: [WeeklyTask], to distributedTasks: inout [Int: [WeeklyTask]]) {
-        // 每日任务分配到工作日（周一到周五）
-        for dayOffset in 0..<5 {
+    private func distributeDailyTasks(_ tasks: [WeeklyTask], to distributedTasks: inout [Int: [WeeklyTask]], availableDays: [Int]) {
+        // 每日任务分配到所有可用日期
+        for dayOffset in availableDays {
             for task in tasks {
                 // 将任务拆分为更小的子任务
-                let subTasks = splitTaskIntoSubTasks(task, days: 5)
-                if dayOffset < subTasks.count {
-                    distributedTasks[dayOffset]?.append(subTasks[dayOffset])
+                let subTasks = splitTaskIntoSubTasks(task, days: availableDays.count)
+                let taskIndex = availableDays.firstIndex(of: dayOffset) ?? 0
+                if taskIndex < subTasks.count {
+                    distributedTasks[dayOffset]?.append(subTasks[taskIndex])
                 }
             }
         }
     }
     
     // MARK: - 分配周任务
-    private func distributeWeeklyTasks(_ tasks: [WeeklyTask], to distributedTasks: inout [Int: [WeeklyTask]]) {
+    private func distributeWeeklyTasks(_ tasks: [WeeklyTask], to distributedTasks: inout [Int: [WeeklyTask]], availableDays: [Int]) {
         for task in tasks {
-            let days = calculateOptimalDays(for: task)
+            let days = min(calculateOptimalDays(for: task), availableDays.count)
             let subTasks = splitTaskIntoSubTasks(task, days: days)
             
-            // 只分配到工作日（周一到周五）
+            // 分配到可用日期
             for (index, subTask) in subTasks.enumerated() {
-                if index < 5 { // 只分配到工作日
-                    distributedTasks[index]?.append(subTask)
+                if index < availableDays.count {
+                    let dayOffset = availableDays[index]
+                    distributedTasks[dayOffset]?.append(subTask)
                 }
             }
         }
     }
     
     // MARK: - 分配集中任务
-    private func distributeIntensiveTasks(_ tasks: [WeeklyTask], to distributedTasks: inout [Int: [WeeklyTask]]) {
+    private func distributeIntensiveTasks(_ tasks: [WeeklyTask], to distributedTasks: inout [Int: [WeeklyTask]], availableDays: [Int]) {
         for task in tasks {
-            // 集中任务分配到3-5个工作日
-            let days = calculateOptimalDays(for: task)
+            // 集中任务分配到多个可用日期
+            let days = min(calculateOptimalDays(for: task), availableDays.count)
             let subTasks = splitTaskIntoSubTasks(task, days: days)
             
-            // 只分配到工作日（周一到周五）
+            // 分配到可用日期
             for (index, subTask) in subTasks.enumerated() {
-                if index < 5 { // 确保不超出工作日范围
-                    distributedTasks[index]?.append(subTask)
+                if index < availableDays.count {
+                    let dayOffset = availableDays[index]
+                    distributedTasks[dayOffset]?.append(subTask)
                 }
             }
         }
@@ -260,23 +293,17 @@ class TaskScheduler: ObservableObject {
     }
     
     // MARK: - 生成时间槽
-    private func generateTimeSlots(for date: Date, weekday: Int) -> [SchedulingTimeSlot] {
+    private func generateTimeSlots(for date: Date, weekday: Int, settings: ScheduleSettings? = nil) -> [SchedulingTimeSlot] {
         let calendar = Calendar.current
         var timeSlots: [SchedulingTimeSlot] = []
         
-        // 只在工作日安排任务，周末不安排
-        let isWeekend = (weekday == 1 || weekday == 7) // 周日=1, 周六=7
+        // 使用设置中的时间约束
+        let startHour = settings?.schoolEndTime.hour ?? 18
+        let endHour = settings?.latestStudyTime.hour ?? 22
         
-        if isWeekend {
-            // 周末不安排任务，返回空时间槽
-            return []
-        }
-        
-        // 工作日：紧凑的时间安排
+        // 生成时间槽：从设置的最早开始时间到最晚结束时间
         let studyPeriods: [(start: Int, end: Int)] = [
-            (start: 8, end: 12),   // 上午学习时间
-            (start: 14, end: 18),  // 下午学习时间
-            (start: 19, end: 22)   // 晚上学习时间
+            (start: startHour, end: endHour)
         ]
         
         for period in studyPeriods {

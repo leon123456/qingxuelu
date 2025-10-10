@@ -1,0 +1,452 @@
+{
+  "id": "junior_english_grade9",
+  "name": "九年级英语学习（上册）",
+  "description": "通过系统学习九年级英语上册的十个单元内容，全面提升英语综合能力，为中考做好充分准备，期末成绩达到班级前15%，并能进行流利的英语交流和表达。",
+  "category": "英语",
+  "goalType": "okr",
+  "priority": "high",
+  "duration": 120,
+  "icon": "globe",
+  "tags": ["英语", "初中", "语法", "词汇", "听说读写", "中考"],
+  "milestones": [
+    {
+      "title": "Unit 1-2 学习方法与习惯",
+      "description": "学习学习方法和习惯的表达，掌握现在完成时的用法。",
+      "duration": 12,
+      "order": 1
+    },
+    {
+      "title": "Unit 3-4 节日与传统",
+      "description": "学习节日和传统文化的表达，掌握宾语从句的用法。",
+      "duration": 12,
+      "order": 2
+    },
+    {
+      "title": "Unit 5-6 发明与创造",
+      "description": "学习发明创造话题的表达，掌握定语从句的用法。",
+      "duration": 12,
+      "order": 3
+    },
+    {
+      "title": "Unit 7-8 规则与建议",
+      "description": "学习规则和建议的表达方式，掌握情态动词的用法。",
+      "duration": 12,
+      "order": 4
+    },
+    {
+      "title": "Unit 9-10 音乐与电影",
+      "description": "学习音乐和电影话题的表达，掌握被动语态的用法。",
+      "duration": 12,
+      "order": 5
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "词汇掌握",
+      "description": "掌握 1200 个英语单词，能够正确拼写和运用",
+      "targetValue": 1200,
+      "unit": "个"
+    },
+    {
+      "title": "语法练习",
+      "description": "完成 400 道语法练习题，正确率 ≥80%",
+      "targetValue": 400,
+      "unit": "题"
+    },
+    {
+      "title": "听力训练",
+      "description": "完成 200 次听力练习，提高英语听力理解能力",
+      "targetValue": 200,
+      "unit": "次"
+    },
+    {
+      "title": "口语练习",
+      "description": "完成 100 次口语练习，提高英语口语表达能力",
+      "targetValue": 100,
+      "unit": "次"
+    },
+    {
+      "title": "阅读理解",
+      "description": "完成 150 篇阅读理解练习，正确率 ≥75%",
+      "targetValue": 150,
+      "unit": "篇"
+    },
+    {
+      "title": "写作练习",
+      "description": "完成 50 篇英语写作练习，包括日记、书信、短文、议论文等",
+      "targetValue": 50,
+      "unit": "篇"
+    },
+    {
+      "title": "中考真题",
+      "description": "完成 200 道中考英语真题，熟悉考试题型",
+      "targetValue": 200,
+      "unit": "题"
+    },
+    {
+      "title": "期末成绩",
+      "description": "期末英语成绩 ≥85 分，班级排名前 15%",
+      "targetValue": 85,
+      "unit": "分"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "每日单词",
+      "description": "每天学习20个新单词，复习已学单词",
+      "estimatedDuration": 30,
+      "difficulty": "easy",
+      "tags": ["词汇", "记忆"]
+    },
+    {
+      "title": "语法练习",
+      "description": "每天完成10道语法练习题，巩固语法知识",
+      "estimatedDuration": 25,
+      "difficulty": "medium",
+      "tags": ["语法", "练习"]
+    },
+    {
+      "title": "听力训练",
+      "description": "每天进行20分钟英语听力练习",
+      "estimatedDuration": 20,
+      "difficulty": "medium",
+      "tags": ["听力", "理解"]
+    },
+    {
+      "title": "口语练习",
+      "description": "每天进行15分钟英语口语练习",
+      "estimatedDuration": 15,
+      "difficulty": "medium",
+      "tags": ["口语", "表达"]
+    },
+    {
+      "title": "阅读理解",
+      "description": "每周完成10篇阅读理解练习",
+      "estimatedDuration": 50,
+      "difficulty": "medium",
+      "tags": ["阅读", "理解"]
+    },
+    {
+      "title": "英语写作",
+      "description": "每周完成3篇英语写作练习",
+      "estimatedDuration": 45,
+      "difficulty": "hard",
+      "tags": ["写作", "表达"]
+    },
+    {
+      "title": "中考真题训练",
+      "description": "每周完成20道中考真题，熟悉考试模式",
+      "estimatedDuration": 40,
+      "difficulty": "medium",
+      "tags": ["中考", "真题"]
+    }
+  ],
+  "learningPath": [
+    {
+      "title": "Unit 1-2 学习方法与习惯",
+      "description": "学习学习方法和习惯的表达，掌握现在完成时的用法。",
+      "estimatedDuration": 12,
+      "order": 1,
+      "keyResults": [
+        {
+          "title": "词汇掌握",
+          "description": "掌握本单元 100 个基础词汇",
+          "targetValue": 100,
+          "unit": "个"
+        },
+        {
+          "title": "现在完成时练习",
+          "description": "完成 40 道现在完成时练习题",
+          "targetValue": 40,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "学习方法讨论",
+          "description": "练习用英语讨论学习方法和习惯",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["口语", "学习"]
+        },
+        {
+          "title": "现在完成时训练",
+          "description": "练习现在完成时的构成和使用方法",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["语法", "时态"]
+        }
+      ]
+    },
+    {
+      "title": "Unit 3-4 节日与传统",
+      "description": "学习节日和传统文化的表达，掌握宾语从句的用法。",
+      "estimatedDuration": 12,
+      "order": 2,
+      "keyResults": [
+        {
+          "title": "词汇掌握",
+          "description": "掌握本单元 120 个基础词汇",
+          "targetValue": 120,
+          "unit": "个"
+        },
+        {
+          "title": "宾语从句练习",
+          "description": "完成 35 道宾语从句练习题",
+          "targetValue": 35,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "节日文化介绍",
+          "description": "练习用英语介绍节日和传统文化",
+          "estimatedDuration": 30,
+          "difficulty": "hard",
+          "tags": ["口语", "文化"]
+        },
+        {
+          "title": "宾语从句训练",
+          "description": "练习宾语从句的构成和使用方法",
+          "estimatedDuration": 35,
+          "difficulty": "hard",
+          "tags": ["语法", "从句"]
+        }
+      ]
+    },
+    {
+      "title": "Unit 5-6 发明与创造",
+      "description": "学习发明创造话题的表达，掌握定语从句的用法。",
+      "estimatedDuration": 12,
+      "order": 3,
+      "keyResults": [
+        {
+          "title": "词汇掌握",
+          "description": "掌握本单元 140 个基础词汇",
+          "targetValue": 140,
+          "unit": "个"
+        },
+        {
+          "title": "定语从句练习",
+          "description": "完成 40 道定语从句练习题",
+          "targetValue": 40,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "发明创造讨论",
+          "description": "练习用英语讨论发明创造话题",
+          "estimatedDuration": 30,
+          "difficulty": "hard",
+          "tags": ["口语", "科技"]
+        },
+        {
+          "title": "定语从句训练",
+          "description": "练习定语从句的构成和使用方法",
+          "estimatedDuration": 40,
+          "difficulty": "hard",
+          "tags": ["语法", "从句"]
+        }
+      ]
+    },
+    {
+      "title": "Unit 7-8 规则与建议",
+      "description": "学习规则和建议的表达方式，掌握情态动词的用法。",
+      "estimatedDuration": 12,
+      "order": 4,
+      "keyResults": [
+        {
+          "title": "词汇掌握",
+          "description": "掌握本单元 160 个基础词汇",
+          "targetValue": 160,
+          "unit": "个"
+        },
+        {
+          "title": "情态动词练习",
+          "description": "完成 35 道情态动词练习题",
+          "targetValue": 35,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "规则建议表达",
+          "description": "练习用英语表达规则和建议",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["口语", "交际"]
+        },
+        {
+          "title": "情态动词训练",
+          "description": "练习情态动词的用法和区别",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["语法", "情态动词"]
+        }
+      ]
+    },
+    {
+      "title": "Unit 9-10 音乐与电影",
+      "description": "学习音乐和电影话题的表达，掌握被动语态的用法。",
+      "estimatedDuration": 12,
+      "order": 5,
+      "keyResults": [
+        {
+          "title": "词汇掌握",
+          "description": "掌握本单元 180 个基础词汇",
+          "targetValue": 180,
+          "unit": "个"
+        },
+        {
+          "title": "被动语态练习",
+          "description": "完成 40 道被动语态练习题",
+          "targetValue": 40,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "音乐电影讨论",
+          "description": "练习用英语讨论音乐和电影话题",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["口语", "娱乐"]
+        },
+        {
+          "title": "被动语态训练",
+          "description": "练习被动语态的构成和使用方法",
+          "estimatedDuration": 35,
+          "difficulty": "hard",
+          "tags": ["语法", "语态"]
+        }
+      ]
+    }
+  ],
+  "contentContext": "本模板针对九年级英语上册设计，通过系统化的学习路径和AI个性化练习，帮助学生全面提升英语综合能力，为中考做好充分准备。适用于初中三年级学生。",
+  "aiContentGenerationConfig": {
+    "enableVocabularyGeneration": true,
+    "enableExerciseGeneration": true,
+    "enableDialogueGeneration": true,
+    "enableReadingMaterialGeneration": true,
+    "enableWritingPromptGeneration": true,
+    "enableListeningMaterialGeneration": true,
+    "enableSpeakingPromptGeneration": true,
+    "enableAssessmentGeneration": true,
+    "generationLanguage": "en-US",
+    "difficultyLevel": "hard"
+  },
+  "learningResources": [
+    {
+      "title": "人教版九年级英语上册教材",
+      "url": null,
+      "type": "book",
+      "description": "课程主教材，系统讲解各单元知识点。"
+    },
+    {
+      "title": "初中英语词汇手册",
+      "url": null,
+      "type": "book",
+      "description": "英语词汇学习参考书。"
+    },
+    {
+      "title": "英语语法练习册",
+      "url": null,
+      "type": "book",
+      "description": "英语语法专项练习材料。"
+    },
+    {
+      "title": "英语听力训练",
+      "url": null,
+      "type": "audio",
+      "description": "英语听力练习音频材料。"
+    },
+    {
+      "title": "英语口语练习",
+      "url": null,
+      "type": "audio",
+      "description": "英语口语练习材料。"
+    },
+    {
+      "title": "中考英语真题集",
+      "url": null,
+      "type": "book",
+      "description": "历年中考英语真题，熟悉考试题型。"
+    }
+  ],
+  "assessmentCriteria": [
+    {
+      "title": "词汇掌握",
+      "description": "评估英语词汇的掌握程度和运用能力",
+      "evaluationMethod": "词汇测试/拼写测试",
+      "passingScore": 80
+    },
+    {
+      "title": "语法理解",
+      "description": "评估英语语法的理解和运用能力",
+      "evaluationMethod": "语法测试/AI自动批改",
+      "passingScore": 75
+    },
+    {
+      "title": "听力理解",
+      "description": "评估英语听力理解能力",
+      "evaluationMethod": "听力测试/口语对话",
+      "passingScore": 70
+    },
+    {
+      "title": "口语表达",
+      "description": "评估英语口语表达能力",
+      "evaluationMethod": "口语测试/对话练习",
+      "passingScore": 70
+    },
+    {
+      "title": "阅读理解",
+      "description": "评估英语阅读理解能力",
+      "evaluationMethod": "阅读理解测试/AI自动批改",
+      "passingScore": 75
+    },
+    {
+      "title": "写作表达",
+      "description": "评估英语写作表达能力",
+      "evaluationMethod": "写作测试/作文评分",
+      "passingScore": 70
+    },
+    {
+      "title": "中考适应性",
+      "description": "评估中考题型的适应性和解题能力",
+      "evaluationMethod": "中考真题测试/模拟考试",
+      "passingScore": 80
+    }
+  ],
+  "adaptiveAdjustmentRules": [
+    {
+      "condition": "如果词汇测试正确率低于70%",
+      "action": "增加词汇学习时间并采用多种记忆方法"
+    },
+    {
+      "condition": "如果语法练习正确率低于60%",
+      "action": "推荐语法基础知识复习并安排专项语法训练"
+    },
+    {
+      "condition": "如果听力理解正确率低于60%",
+      "action": "推荐听力技巧训练并安排专项听力练习"
+    },
+    {
+      "condition": "如果口语表达得分低于60分",
+      "action": "推荐口语练习方法并安排专项口语训练"
+    },
+    {
+      "condition": "如果阅读理解正确率低于60%",
+      "action": "推荐阅读技巧训练并安排专项阅读理解练习"
+    },
+    {
+      "condition": "如果中考真题正确率低于70%",
+      "action": "推荐中考题型训练并安排专项中考练习"
+    },
+    {
+      "condition": "如果期中考试成绩未达预期",
+      "action": "生成个性化学习计划并制定强化训练方案"
+    }
+  ]
+}
+

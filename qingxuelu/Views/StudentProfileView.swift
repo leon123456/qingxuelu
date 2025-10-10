@@ -436,7 +436,7 @@ struct AITemplateView: View {
                             .fontWeight(.semibold)
                         
                         ForEach(template.tasks) { task in
-                            TaskCard(task: task)
+                            TemplateTaskCard(task: task)
                         }
                     }
                     
@@ -546,8 +546,8 @@ struct GoalCard: View {
     }
 }
 
-// MARK: - 任务卡片
-struct TaskCard: View {
+// MARK: - 模板任务卡片
+struct TemplateTaskCard: View {
     let task: TemplateTask
     
     var body: some View {

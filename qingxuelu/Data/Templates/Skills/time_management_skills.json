@@ -1,0 +1,86 @@
+{
+  "id": "time_management_skills",
+  "name": "时间管理技能",
+  "description": "通过实践提升时间管理能力，提高效率。",
+  "category": "其他",
+  "goalType": "smart",
+  "priority": "high",
+  "duration": 21,
+  "icon": "clock",
+  "tags": ["时间管理", "效率", "技能"],
+  "milestones": [
+    {
+      "title": "理论学习",
+      "description": "第1周：建立时间日志记录习惯",
+      "duration": 3,
+      "order": 1
+    },
+    {
+      "title": "工具实践",
+      "description": "第2-3周：完成初步的时间使用分析",
+      "duration": 7,
+      "order": 2
+    },
+    {
+      "title": "习惯养成",
+      "description": "第4周：完成时间管理优化方案",
+      "duration": 14,
+      "order": 3
+    },
+    {
+      "title": "效果评估",
+      "description": "第5-6周：应用优化方案并评估效果",
+      "duration": 21,
+      "order": 4
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "时间日志",
+      "description": "连续 30 天坚持使用时间日志",
+      "targetValue": 30,
+      "unit": "天"
+    },
+    {
+      "title": "分析报告",
+      "description": "形成一份完整的时间日志分析报告",
+      "targetValue": 1,
+      "unit": "份"
+    },
+    {
+      "title": "任务完成率",
+      "description": "任务完成率 ≥85%",
+      "targetValue": 85,
+      "unit": "%"
+    },
+    {
+      "title": "专注学习",
+      "description": "平均每日专注学习 ≥2 小时",
+      "targetValue": 2,
+      "unit": "小时"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "理论学习",
+      "description": "学习时间管理理论",
+      "estimatedDuration": 30,
+      "difficulty": "easy",
+      "tags": ["理论", "学习"]
+    },
+    {
+      "title": "工具使用",
+      "description": "使用时间管理工具",
+      "estimatedDuration": 20,
+      "difficulty": "medium",
+      "tags": ["工具", "实践"]
+    },
+    {
+      "title": "习惯培养",
+      "description": "培养时间管理习惯",
+      "estimatedDuration": 15,
+      "difficulty": "hard",
+      "tags": ["习惯", "坚持"]
+    }
+  ]
+}

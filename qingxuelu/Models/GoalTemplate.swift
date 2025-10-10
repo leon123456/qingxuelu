@@ -117,6 +117,8 @@ enum TaskDifficulty: String, CaseIterable, Codable {
     }
 }
 
+// MARK: - 增强模板数据结构（使用 EnhancedGoalTemplate.swift 中的定义）
+
 // MARK: - 模板管理器
 class GoalTemplateManager: ObservableObject {
     static let shared = GoalTemplateManager()
@@ -128,20 +130,80 @@ class GoalTemplateManager: ObservableObject {
     
     // MARK: - 从JSON文件加载模板
     private func loadTemplatesFromJSON() {
-        guard let url = Bundle.main.url(forResource: "goal_templates", withExtension: "json") else {
-            print("❌ 无法找到goal_templates.json文件")
-            loadDefaultTemplates()
-            return
+        var allTemplates: [GoalTemplate] = []
+        
+        // 直接加载已知的模板文件
+        let templateFiles = [
+            // Math templates
+            "advanced_math_review",
+            "junior_math_grade7",
+            "junior_math_grade8", 
+            "junior_math_grade9",
+            // Chinese templates
+            "classical_chinese_learning",
+            "classical_literature_reading",
+            "tang_song_poetry_learning",
+            "writing_skills_improvement",
+            "junior_chinese_grade7",
+            "junior_chinese_grade8",
+            "junior_chinese_grade9",
+            // English templates
+            "english_speaking_improvement",
+            "middle_school_english_improvement",
+            "junior_english_grade7",
+            "junior_english_grade8",
+            "junior_english_grade9",
+            // Skills templates
+            "python_programming_basics",
+            "time_management_skills"
+        ]
+        
+        for templateFile in templateFiles {
+            // 尝试从不同目录加载模板文件
+            let possiblePaths = [
+                templateFile, // 根目录
+                "Templates/Math/\(templateFile)",
+                "Templates/Chinese/\(templateFile)", 
+                "Templates/English/\(templateFile)",
+                "Templates/Skills/\(templateFile)",
+                "Templates/Science/\(templateFile)"
+            ]
+            
+            var templateLoaded = false
+            for path in possiblePaths {
+                if let bundlePath = Bundle.main.path(forResource: path, ofType: "json") {
+                    if let template = loadTemplateFromFile(bundlePath) {
+                        allTemplates.append(template)
+                        print("✅ 加载模板: \(template.name) (从 \(path))")
+                        templateLoaded = true
+                        break
+                    }
+                }
+            }
+            
+            if !templateLoaded {
+                print("❌ 无法找到模板文件: \(templateFile).json")
+            }
         }
         
-        do {
-            let data = try Data(contentsOf: url)
-            let templateData = try JSONDecoder().decode(TemplateData.self, from: data)
-            templates = templateData.templates.map { $0.toGoalTemplate() }
-            print("✅ 成功从JSON加载了 \(templates.count) 个目标模板")
-        } catch {
-            print("❌ 加载JSON模板失败: \(error)")
+        if allTemplates.isEmpty {
+            print("❌ 没有加载到任何模板，使用默认模板")
             loadDefaultTemplates()
+        } else {
+            templates = allTemplates.sorted { $0.name < $1.name }
+            print("✅ 成功从独立JSON文件加载了 \(templates.count) 个目标模板")
+        }
+    }
+    
+    // MARK: - 从文件加载单个模板
+    private func loadTemplateFromFile(_ filePath: String) -> GoalTemplate? {
+        do {
+            let data = try Data(contentsOf: URL(fileURLWithPath: filePath))
+            let templateData = try JSONDecoder().decode(TemplateDataModel.self, from: data)
+            return templateData.toGoalTemplate()
+        } catch {
+            print("❌ 加载模板文件失败: \(filePath), 错误: \(error)")
+            return nil
         }
     }
     
@@ -152,9 +214,9 @@ class GoalTemplateManager: ObservableObject {
             GoalTemplate(
                 name: "英语口语提升",
                 description: "通过日常练习和对话，提升英语口语表达能力",
-                category: .english,
-                goalType: .smart,
-                priority: .high,
+                category: SubjectCategory.english,
+                goalType: GoalType.smart,
+                priority: Priority.high,
                 duration: 90,
                 icon: "speaker.wave.2",
                 tags: ["口语", "英语", "日常对话"],
@@ -317,3 +379,5 @@ struct TaskDataModel: Codable {
         )
     }
 }
+
+// MARK: - 增强字段的JSON数据模型（使用 EnhancedGoalTemplate.swift 中的定义）

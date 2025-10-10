@@ -1,0 +1,430 @@
+{
+  "id": "junior_chinese_grade8",
+  "name": "八年级语文学习（上册）",
+  "description": "通过系统学习八年级语文上册的六个单元内容，深化阅读理解能力、写作表达能力和文学鉴赏能力，期末成绩达到班级前20%，并能运用语文知识进行深度思考和表达。",
+  "category": "语文",
+  "goalType": "okr",
+  "priority": "high",
+  "duration": 120,
+  "icon": "text.book.closed",
+  "tags": ["语文", "初中", "阅读", "写作", "文学鉴赏", "古诗词"],
+  "milestones": [
+    {
+      "title": "第一单元 新闻阅读",
+      "description": "学习新闻的文体特点和阅读方法，掌握新闻写作的基本技巧，培养新闻敏感度。",
+      "duration": 20,
+      "order": 1
+    },
+    {
+      "title": "第二单元 生活的记忆",
+      "description": "阅读回忆性散文，学习回忆性文章的写作方法，培养对生活的感悟能力。",
+      "duration": 20,
+      "order": 2
+    },
+    {
+      "title": "第三单元 山川之美",
+      "description": "学习山水游记类文章，掌握景物描写和游记写作的方法，培养审美能力。",
+      "duration": 20,
+      "order": 3
+    },
+    {
+      "title": "第四单元 文明的印迹",
+      "description": "阅读历史文化类文章，了解中华文明的发展历程，培养文化自信。",
+      "duration": 20,
+      "order": 4
+    },
+    {
+      "title": "第五单元 情感的表达",
+      "description": "学习情感表达类文章，掌握情感描写的方法，提高情感表达能力。",
+      "duration": 20,
+      "order": 5
+    },
+    {
+      "title": "第六单元 志趣与品格",
+      "description": "阅读人物传记类文章，学习人物描写的方法，培养正确的价值观。",
+      "duration": 20,
+      "order": 6
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "课文背诵",
+      "description": "熟练背诵 25 篇经典课文和古诗词",
+      "targetValue": 25,
+      "unit": "篇"
+    },
+    {
+      "title": "阅读理解",
+      "description": "完成 120 篇阅读理解练习，正确率 ≥80%",
+      "targetValue": 120,
+      "unit": "篇"
+    },
+    {
+      "title": "作文练习",
+      "description": "完成 35 篇作文练习，包括记叙文、说明文、议论文、应用文",
+      "targetValue": 35,
+      "unit": "篇"
+    },
+    {
+      "title": "古诗词积累",
+      "description": "掌握 60 首古诗词，能够默写和理解诗意",
+      "targetValue": 60,
+      "unit": "首"
+    },
+    {
+      "title": "文学鉴赏",
+      "description": "完成 20 篇文学鉴赏练习，提高文学素养",
+      "targetValue": 20,
+      "unit": "篇"
+    },
+    {
+      "title": "期末成绩",
+      "description": "期末语文成绩 ≥85 分，班级排名前 20%",
+      "targetValue": 85,
+      "unit": "分"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "每日阅读",
+      "description": "每天阅读一篇课文或课外文章，做好读书笔记和批注",
+      "estimatedDuration": 35,
+      "difficulty": "easy",
+      "tags": ["阅读", "积累"]
+    },
+    {
+      "title": "古诗词背诵",
+      "description": "每周背诵3首古诗词，理解诗意并能够默写",
+      "estimatedDuration": 25,
+      "difficulty": "medium",
+      "tags": ["背诵", "古诗词"]
+    },
+    {
+      "title": "作文练习",
+      "description": "每周完成1篇作文，包括不同文体的练习",
+      "estimatedDuration": 50,
+      "difficulty": "medium",
+      "tags": ["写作", "表达"]
+    },
+    {
+      "title": "阅读理解训练",
+      "description": "每周完成6篇阅读理解练习，提高阅读能力",
+      "estimatedDuration": 45,
+      "difficulty": "medium",
+      "tags": ["阅读", "理解"]
+    },
+    {
+      "title": "文学鉴赏练习",
+      "description": "每周完成1篇文学鉴赏练习，提高文学素养",
+      "estimatedDuration": 40,
+      "difficulty": "hard",
+      "tags": ["鉴赏", "文学"]
+    }
+  ],
+  "learningPath": [
+    {
+      "title": "第一单元 新闻阅读",
+      "description": "学习新闻的文体特点和阅读方法，掌握新闻写作的基本技巧，培养新闻敏感度。",
+      "estimatedDuration": 20,
+      "order": 1,
+      "keyResults": [
+        {
+          "title": "新闻阅读",
+          "description": "掌握新闻阅读方法，正确率 ≥85%",
+          "targetValue": 85,
+          "unit": "%"
+        },
+        {
+          "title": "新闻写作练习",
+          "description": "完成 3 篇新闻写作练习",
+          "targetValue": 3,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "新闻阅读训练",
+          "description": "阅读各类新闻，分析新闻特点",
+          "estimatedDuration": 20,
+          "difficulty": "easy",
+          "tags": ["阅读", "新闻"]
+        },
+        {
+          "title": "新闻写作练习",
+          "description": "练习新闻写作的基本格式和技巧",
+          "estimatedDuration": 35,
+          "difficulty": "medium",
+          "tags": ["写作", "新闻"]
+        }
+      ]
+    },
+    {
+      "title": "第二单元 生活的记忆",
+      "description": "阅读回忆性散文，学习回忆性文章的写作方法，培养对生活的感悟能力。",
+      "estimatedDuration": 20,
+      "order": 2,
+      "keyResults": [
+        {
+          "title": "散文理解",
+          "description": "深入理解回忆性散文的思想感情",
+          "targetValue": 100,
+          "unit": "%"
+        },
+        {
+          "title": "回忆性作文",
+          "description": "完成 3 篇回忆性作文",
+          "targetValue": 3,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "散文分析",
+          "description": "分析回忆性散文的写作特点",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["分析", "散文"]
+        },
+        {
+          "title": "回忆性写作",
+          "description": "写一篇回忆性文章",
+          "estimatedDuration": 45,
+          "difficulty": "medium",
+          "tags": ["写作", "回忆"]
+        }
+      ]
+    },
+    {
+      "title": "第三单元 山川之美",
+      "description": "学习山水游记类文章，掌握景物描写和游记写作的方法，培养审美能力。",
+      "estimatedDuration": 20,
+      "order": 3,
+      "keyResults": [
+        {
+          "title": "游记理解",
+          "description": "理解山水游记的写作特点",
+          "targetValue": 100,
+          "unit": "%"
+        },
+        {
+          "title": "游记写作",
+          "description": "完成 2 篇游记作文",
+          "targetValue": 2,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "景物描写训练",
+          "description": "练习景物描写的方法和技巧",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["描写", "景物"]
+        },
+        {
+          "title": "游记写作练习",
+          "description": "写一篇山水游记",
+          "estimatedDuration": 50,
+          "difficulty": "hard",
+          "tags": ["写作", "游记"]
+        }
+      ]
+    },
+    {
+      "title": "第四单元 文明的印迹",
+      "description": "阅读历史文化类文章，了解中华文明的发展历程，培养文化自信。",
+      "estimatedDuration": 20,
+      "order": 4,
+      "keyResults": [
+        {
+          "title": "文化理解",
+          "description": "理解中华文明的发展历程",
+          "targetValue": 100,
+          "unit": "%"
+        },
+        {
+          "title": "文化主题作文",
+          "description": "完成 2 篇文化主题作文",
+          "targetValue": 2,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "历史文化学习",
+          "description": "学习中华文明的发展历程",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["历史", "文化"]
+        },
+        {
+          "title": "文化自信表达",
+          "description": "写一篇关于文化自信的文章",
+          "estimatedDuration": 45,
+          "difficulty": "hard",
+          "tags": ["写作", "文化"]
+        }
+      ]
+    },
+    {
+      "title": "第五单元 情感的表达",
+      "description": "学习情感表达类文章，掌握情感描写的方法，提高情感表达能力。",
+      "estimatedDuration": 20,
+      "order": 5,
+      "keyResults": [
+        {
+          "title": "情感理解",
+          "description": "理解文章中的情感表达方法",
+          "targetValue": 100,
+          "unit": "%"
+        },
+        {
+          "title": "情感表达作文",
+          "description": "完成 3 篇情感表达作文",
+          "targetValue": 3,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "情感分析",
+          "description": "分析文章中的情感表达技巧",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["分析", "情感"]
+        },
+        {
+          "title": "情感表达训练",
+          "description": "练习情感描写和表达方法",
+          "estimatedDuration": 40,
+          "difficulty": "medium",
+          "tags": ["表达", "情感"]
+        }
+      ]
+    },
+    {
+      "title": "第六单元 志趣与品格",
+      "description": "阅读人物传记类文章，学习人物描写的方法，培养正确的价值观。",
+      "estimatedDuration": 20,
+      "order": 6,
+      "keyResults": [
+        {
+          "title": "人物理解",
+          "description": "理解人物传记的写作特点",
+          "targetValue": 100,
+          "unit": "%"
+        },
+        {
+          "title": "人物描写作文",
+          "description": "完成 2 篇人物描写作文",
+          "targetValue": 2,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "人物分析",
+          "description": "分析人物传记中的人物形象",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["分析", "人物"]
+        },
+        {
+          "title": "人物描写练习",
+          "description": "练习人物描写的方法和技巧",
+          "estimatedDuration": 40,
+          "difficulty": "medium",
+          "tags": ["描写", "人物"]
+        }
+      ]
+    }
+  ],
+  "contentContext": "本模板针对八年级语文上册设计，通过系统化的学习路径和AI个性化练习，帮助学生掌握新闻阅读、散文鉴赏、游记写作、文化理解等核心内容，培养深度阅读能力和文学素养。适用于初中二年级学生。",
+  "aiContentGenerationConfig": {
+    "enableVocabularyGeneration": true,
+    "enableExerciseGeneration": true,
+    "enableDialogueGeneration": false,
+    "enableReadingMaterialGeneration": true,
+    "enableWritingPromptGeneration": true,
+    "enableListeningMaterialGeneration": false,
+    "enableSpeakingPromptGeneration": false,
+    "enableAssessmentGeneration": true,
+    "generationLanguage": "zh-CN",
+    "difficultyLevel": "medium"
+  },
+  "learningResources": [
+    {
+      "title": "人教版八年级语文上册教材",
+      "url": null,
+      "type": "book",
+      "description": "课程主教材，系统讲解各单元知识点。"
+    },
+    {
+      "title": "古诗词三百首",
+      "url": null,
+      "type": "book",
+      "description": "经典古诗词选集，提高文学素养。"
+    },
+    {
+      "title": "初中语文阅读理解训练",
+      "url": null,
+      "type": "book",
+      "description": "阅读理解专项训练材料。"
+    },
+    {
+      "title": "中华文明史",
+      "url": null,
+      "type": "book",
+      "description": "了解中华文明发展历程的参考书籍。"
+    }
+  ],
+  "assessmentCriteria": [
+    {
+      "title": "课文背诵",
+      "description": "评估课文和古诗词的背诵熟练程度",
+      "evaluationMethod": "背诵测试/默写测试",
+      "passingScore": 80
+    },
+    {
+      "title": "阅读理解",
+      "description": "评估阅读理解能力和文本分析能力",
+      "evaluationMethod": "阅读理解测试/AI自动批改",
+      "passingScore": 75
+    },
+    {
+      "title": "写作表达",
+      "description": "评估写作能力和语言表达能力",
+      "evaluationMethod": "作文评分/写作测试",
+      "passingScore": 75
+    },
+    {
+      "title": "文学鉴赏",
+      "description": "评估文学鉴赏能力和文学素养",
+      "evaluationMethod": "文学鉴赏测试/作品分析",
+      "passingScore": 70
+    }
+  ],
+  "adaptiveAdjustmentRules": [
+    {
+      "condition": "如果课文背诵正确率低于70%",
+      "action": "增加背诵练习时间并采用多种背诵方法"
+    },
+    {
+      "condition": "如果阅读理解正确率低于60%",
+      "action": "推荐阅读技巧训练并安排专项阅读理解练习"
+    },
+    {
+      "condition": "如果作文得分低于70分",
+      "action": "推荐写作技巧指导并安排专项写作训练"
+    },
+    {
+      "condition": "如果文学鉴赏得分低于60分",
+      "action": "推荐文学基础知识学习并安排专项鉴赏训练"
+    },
+    {
+      "condition": "如果期中考试成绩未达预期",
+      "action": "生成个性化学习计划并制定强化训练方案"
+    }
+  ]
+}
+

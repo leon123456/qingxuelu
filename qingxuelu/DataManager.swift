@@ -25,6 +25,9 @@ class DataManager: ObservableObject {
     @Published var students: [Student] = []
     @Published var currentStudent: Student?
     
+    // 优化：添加数据更新时间戳，用于缓存机制
+    @Published var lastUpdateTime: Date = Date()
+    
     private let userDefaults = UserDefaults.standard
     
     // 核心数据键
@@ -58,41 +61,59 @@ class DataManager: ObservableObject {
     
     // MARK: - 数据持久化
     private func saveData() {
-        // 保存核心数据
-        if let goalsData = try? JSONEncoder().encode(goals) {
-            userDefaults.set(goalsData, forKey: goalsKey)
-        }
-        if let tasksData = try? JSONEncoder().encode(tasks) {
-            userDefaults.set(tasksData, forKey: tasksKey)
-        }
-        if let recordsData = try? JSONEncoder().encode(records) {
-            userDefaults.set(recordsData, forKey: recordsKey)
-        }
-        if let reflectionsData = try? JSONEncoder().encode(reflections) {
-            userDefaults.set(reflectionsData, forKey: reflectionsKey)
-        }
-        if let plansData = try? JSONEncoder().encode(plans) {
-            userDefaults.set(plansData, forKey: plansKey)
-        }
-        if let recycleBinData = try? JSONEncoder().encode(recycleBin) {
-            userDefaults.set(recycleBinData, forKey: recycleBinKey)
-        }
-        if let pomodoroSessionsData = try? JSONEncoder().encode(pomodoroSessions) {
-            userDefaults.set(pomodoroSessionsData, forKey: pomodoroSessionsKey)
-        }
-        
-        // 兼容性保存
-        if let studentsData = try? JSONEncoder().encode(students) {
-            userDefaults.set(studentsData, forKey: studentsKey)
-        }
-        if let templatesData = try? JSONEncoder().encode(templates) {
-            userDefaults.set(templatesData, forKey: templatesKey)
-        }
-        if let profilesData = try? JSONEncoder().encode(profiles) {
-            userDefaults.set(profilesData, forKey: profilesKey)
-        }
-        if let currentStudentData = try? JSONEncoder().encode(currentStudent) {
-            userDefaults.set(currentStudentData, forKey: currentStudentKey)
+        // 使用后台队列进行数据编码，避免阻塞主线程
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            guard let self = self else { return }
+            
+            // 在后台线程进行JSON编码
+            let goalsData = try? JSONEncoder().encode(self.goals)
+            let tasksData = try? JSONEncoder().encode(self.tasks)
+            let recordsData = try? JSONEncoder().encode(self.records)
+            let reflectionsData = try? JSONEncoder().encode(self.reflections)
+            let plansData = try? JSONEncoder().encode(self.plans)
+            let recycleBinData = try? JSONEncoder().encode(self.recycleBin)
+            let pomodoroSessionsData = try? JSONEncoder().encode(self.pomodoroSessions)
+            let studentsData = try? JSONEncoder().encode(self.students)
+            let templatesData = try? JSONEncoder().encode(self.templates)
+            let profilesData = try? JSONEncoder().encode(self.profiles)
+            let currentStudentData = try? JSONEncoder().encode(self.currentStudent)
+            
+            // 回到主线程进行UserDefaults写入
+            DispatchQueue.main.async {
+                if let goalsData = goalsData {
+                    self.userDefaults.set(goalsData, forKey: self.goalsKey)
+                }
+                if let tasksData = tasksData {
+                    self.userDefaults.set(tasksData, forKey: self.tasksKey)
+                }
+                if let recordsData = recordsData {
+                    self.userDefaults.set(recordsData, forKey: self.recordsKey)
+                }
+                if let reflectionsData = reflectionsData {
+                    self.userDefaults.set(reflectionsData, forKey: self.reflectionsKey)
+                }
+                if let plansData = plansData {
+                    self.userDefaults.set(plansData, forKey: self.plansKey)
+                }
+                if let recycleBinData = recycleBinData {
+                    self.userDefaults.set(recycleBinData, forKey: self.recycleBinKey)
+                }
+                if let pomodoroSessionsData = pomodoroSessionsData {
+                    self.userDefaults.set(pomodoroSessionsData, forKey: self.pomodoroSessionsKey)
+                }
+                if let studentsData = studentsData {
+                    self.userDefaults.set(studentsData, forKey: self.studentsKey)
+                }
+                if let templatesData = templatesData {
+                    self.userDefaults.set(templatesData, forKey: self.templatesKey)
+                }
+                if let profilesData = profilesData {
+                    self.userDefaults.set(profilesData, forKey: self.profilesKey)
+                }
+                if let currentStudentData = currentStudentData {
+                    self.userDefaults.set(currentStudentData, forKey: self.currentStudentKey)
+                }
+            }
         }
     }
     
@@ -204,13 +225,167 @@ class DataManager: ObservableObject {
     // MARK: - 任务管理
     func addTask(_ task: LearningTask) {
         tasks.append(task)
+        lastUpdateTime = Date()
         saveData()
     }
     
     func updateTask(_ task: LearningTask) {
         if let index = tasks.firstIndex(where: { $0.id == task.id }) {
             tasks[index] = task
+            lastUpdateTime = Date()
             saveData()
+        }
+    }
+    
+    // MARK: - 任务完成逻辑
+    func completeTask(_ task: LearningTask, actualDuration: TimeInterval, notes: String? = nil, rating: Int? = nil) {
+        // 1. 更新任务状态
+        var updatedTask = task
+        updatedTask.status = .completed
+        updatedTask.completedDate = Date()
+        updatedTask.actualDuration = actualDuration
+        updatedTask.updatedAt = Date()
+        updateTask(updatedTask)
+        
+        // 2. 创建学习记录
+        let record = LearningRecord(
+            taskId: task.id,
+            startTime: Date().addingTimeInterval(-actualDuration),
+            endTime: Date(),
+            notes: notes,
+            rating: rating
+        )
+        addRecord(record)
+        
+        // 3. 更新相关进度
+        updateProgressForTaskCompletion(task)
+        
+        print("✅ 任务「\(task.title)」已完成，学习时长: \(Int(actualDuration/60))分钟")
+    }
+    
+    // MARK: - 进度更新机制
+    private func updateProgressForTaskCompletion(_ task: LearningTask) {
+        // 更新目标进度
+        if let goalId = task.goalId {
+            updateGoalProgress(goalId)
+        }
+        
+        // 更新里程碑进度
+        if let planId = task.planId {
+            updateMilestoneProgress(planId)
+        }
+        
+        // 更新关键结果进度
+        if let goalId = task.goalId {
+            updateKeyResultProgress(goalId)
+        }
+    }
+    
+    private func updateGoalProgress(_ goalId: UUID) {
+        guard let goalIndex = goals.firstIndex(where: { $0.id == goalId }) else { return }
+        
+        let goalTasks = getTasksForGoal(goalId)
+        let completedTasks = goalTasks.filter { $0.status == .completed }
+        let progress = goalTasks.isEmpty ? 0.0 : Double(completedTasks.count) / Double(goalTasks.count)
+        
+        goals[goalIndex].progress = progress
+        goals[goalIndex].updatedAt = Date()
+        
+        // 检查目标是否完成
+        if progress >= 1.0 {
+            goals[goalIndex].status = .completed
+            goals[goalIndex].actualEndDate = Date()
+            print("🎉 目标「\(goals[goalIndex].title)」已完成！")
+        }
+        
+        saveData()
+    }
+    
+    private func updateMilestoneProgress(_ planId: UUID) {
+        guard let planIndex = plans.firstIndex(where: { $0.id == planId }) else { return }
+        
+        for (_, weeklyPlan) in plans[planIndex].weeklyPlans.enumerated() {
+            let weekTasks = getTasksForWeek(planId, weekNumber: weeklyPlan.weekNumber)
+            let completedWeekTasks = weekTasks.filter { $0.status == .completed }
+            
+            // 检查周里程碑是否完成
+            if !completedWeekTasks.isEmpty && completedWeekTasks.count == weekTasks.count {
+                // 里程碑完成逻辑
+                checkMilestoneCompletion(planId, weekNumber: weeklyPlan.weekNumber)
+            }
+        }
+    }
+    
+    private func checkMilestoneCompletion(_ planId: UUID, weekNumber: Int) {
+        // 检查并更新相关里程碑
+        guard let goalId = plans.first(where: { $0.id == planId })?.id else { return }
+        
+        if let goalIndex = goals.firstIndex(where: { $0.id == goalId }) {
+            // 更新里程碑进度
+            for (milestoneIndex, milestone) in goals[goalIndex].milestones.enumerated() {
+                if shouldCompleteMilestone(milestone, weekNumber: weekNumber) {
+                    goals[goalIndex].milestones[milestoneIndex].isCompleted = true
+                    goals[goalIndex].milestones[milestoneIndex].completedDate = Date()
+                    print("🏆 里程碑「\(milestone.title)」已完成！")
+                }
+            }
+            saveData()
+        }
+    }
+    
+    private func shouldCompleteMilestone(_ milestone: Milestone, weekNumber: Int) -> Bool {
+        // 根据里程碑的目标日期和周数判断是否应该完成
+        let calendar = Calendar.current
+        let milestoneWeek = calendar.component(.weekOfYear, from: milestone.targetDate)
+        let currentWeek = calendar.component(.weekOfYear, from: Date())
+        
+        return currentWeek >= milestoneWeek && !milestone.isCompleted
+    }
+    
+    private func updateKeyResultProgress(_ goalId: UUID) {
+        guard let goalIndex = goals.firstIndex(where: { $0.id == goalId }) else { return }
+        
+        // 根据任务完成情况更新关键结果
+        let goalTasks = getTasksForGoal(goalId)
+        let completedTasks = goalTasks.filter { $0.status == .completed }
+        
+        for (krIndex, keyResult) in goals[goalIndex].keyResults.enumerated() {
+            // 根据关键结果类型更新进度
+            switch keyResult.unit {
+            case "分钟", "小时":
+                // 时间类关键结果：累计学习时长
+                let totalDuration = completedTasks.reduce(0) { $0 + ($1.actualDuration ?? 0) }
+                goals[goalIndex].keyResults[krIndex].currentValue = totalDuration / 60 // 转换为分钟
+                
+            case "题", "个", "篇":
+                // 数量类关键结果：完成任务数量
+                goals[goalIndex].keyResults[krIndex].currentValue = Double(completedTasks.count)
+                
+            case "%":
+                // 百分比类关键结果：完成率
+                let completionRate = goalTasks.isEmpty ? 0.0 : Double(completedTasks.count) / Double(goalTasks.count) * 100
+                goals[goalIndex].keyResults[krIndex].currentValue = completionRate
+                
+            default:
+                // 其他类型：基于任务完成数量
+                goals[goalIndex].keyResults[krIndex].currentValue = Double(completedTasks.count)
+            }
+            
+            // 检查关键结果是否完成
+            if goals[goalIndex].keyResults[krIndex].currentValue >= keyResult.targetValue {
+                goals[goalIndex].keyResults[krIndex].isCompleted = true
+                print("🎯 关键结果「\(keyResult.title)」已完成！")
+            }
+        }
+        
+        saveData()
+    }
+    
+    // MARK: - 辅助方法
+    func getTasksForWeek(_ planId: UUID, weekNumber: Int) -> [LearningTask] {
+        // 暂时返回所有关联该计划的任务，后续可以根据周计划ID优化
+        return tasks.filter { task in
+            task.planId == planId
         }
     }
     
@@ -596,8 +771,8 @@ class DataManager: ObservableObject {
             return 8 + week // 文科任务递增
         case .history, .geography, .politics:
             return 6 + (week / 2) // 文科任务递增较慢
-        case .biology:
-            return 8 + (week * 3 / 2) // 生物任务递增
+        case .biology, .science:
+            return 8 + (week * 3 / 2) // 生物和科学任务递增
         case .other:
             return 5 + week // 其他任务递增
         }
@@ -613,7 +788,7 @@ class DataManager: ObservableObject {
             baseHours = 12.0
         case .history, .geography, .politics:
             baseHours = 10.0
-        case .biology:
+        case .biology, .science:
             baseHours = 12.0
         case .other:
             baseHours = 8.0

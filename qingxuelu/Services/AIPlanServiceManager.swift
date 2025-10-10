@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 import Combine
 
 // MARK: - AI学习计划生成服务管理器
@@ -47,12 +48,18 @@ class AIPlanServiceManager: ObservableObject {
     }
     
     // MARK: - 生成学习计划
-    func generateLearningPlan(for goal: LearningGoal, totalWeeks: Int? = nil, dataManager: DataManager? = nil) async throws -> LearningPlan {
+    func generateLearningPlan(for goal: LearningGoal, totalWeeks: Int? = nil, dataManager: DataManager? = nil, useBackgroundTask: Bool = false) async throws -> LearningPlan {
         // 根据目标的开始日期和结束日期计算实际周数
         let actualWeeks = calculateActualWeeks(from: goal.startDate, to: goal.targetDate)
         let weeks = totalWeeks ?? actualWeeks
         isLoading = true
         defer { isLoading = false }
+        
+        // 如果使用后台任务，启动后台任务
+        var backgroundTaskId: UIBackgroundTaskIdentifier = .invalid
+        if useBackgroundTask {
+            backgroundTaskId = BackgroundTaskManager.shared.startBackgroundTask(name: "AI Plan Generation")
+        }
         
         do {
             let prompt = buildPlanPrompt(for: goal, totalWeeks: weeks)
@@ -63,6 +70,7 @@ class AIPlanServiceManager: ObservableObject {
             print("目标结束时间: \(goal.targetDate)")
             print("计算的实际周数: \(actualWeeks)")
             print("使用的周数: \(weeks)")
+            print("使用后台任务: \(useBackgroundTask)")
             print("完整Prompt:")
             print(prompt)
             print("=== AI计划生成Prompt结束 ===")
@@ -87,7 +95,16 @@ class AIPlanServiceManager: ObservableObject {
             throw error
         } catch {
             errorMessage = "生成计划失败：\(error.localizedDescription)"
+            // 确保结束后台任务
+            if useBackgroundTask && backgroundTaskId != .invalid {
+                BackgroundTaskManager.shared.endBackgroundTask()
+            }
             throw error
+        }
+        
+        // 确保结束后台任务
+        if useBackgroundTask && backgroundTaskId != .invalid {
+            BackgroundTaskManager.shared.endBackgroundTask()
         }
     }
     
@@ -131,7 +148,6 @@ class AIPlanServiceManager: ObservableObject {
         3. 每周的里程碑和关键结果
         4. 每周的任务数量和预估学习时长
         5. 每周的具体学习任务列表
-        6. 学习资源推荐
         
         要求：
         - 计划要具体可量化，每项任务都要有明确的数量指标
@@ -161,14 +177,6 @@ class AIPlanServiceManager: ObservableObject {
                   "difficulty": "难度"
                 }
               ]
-            }
-          ],
-          "resources": [
-            {
-              "title": "资源标题",
-              "type": "资源类型",
-              "url": "资源链接",
-              "description": "资源描述"
             }
           ]
         }
@@ -326,23 +334,11 @@ class AIPlanServiceManager: ObservableObject {
             }
         }
         
-        // 解析学习资源
-        var resources: [LearningResource] = []
-        if let resourcesArray = dict["resources"] as? [[String: Any]] {
-            for resourceDict in resourcesArray {
-                if let resource = parseResource(from: resourceDict) {
-                    resources.append(resource)
-                }
-            }
-        }
-        
         var updatedPlan = plan
         updatedPlan.weeklyPlans = weeklyPlans
-        updatedPlan.resources = resources
         
         print("✅ AI计划解析成功！")
         print("📊 周计划数量: \(weeklyPlans.count)")
-        print("📊 资源数量: \(resources.count)")
         
         return updatedPlan
     }
@@ -459,39 +455,6 @@ class AIPlanServiceManager: ObservableObject {
         return 3600 // 默认1小时 = 3600秒
     }
     
-    // MARK: - 解析学习资源
-    private func parseResource(from resourceDict: [String: Any]) -> LearningResource? {
-        guard let title = resourceDict["title"] as? String else { return nil }
-        
-        let description = resourceDict["description"] as? String ?? ""
-        let url = resourceDict["url"] as? String ?? ""
-        let typeString = resourceDict["type"] as? String ?? "文档"
-        
-        let resourceType: ResourceType
-        switch typeString.lowercased() {
-        case "视频", "video":
-            resourceType = .video
-        case "文档", "document", "pdf", "教材", "textbook":
-            resourceType = .textbook
-        case "网站", "website", "url":
-            resourceType = .website
-        case "应用", "app", "application":
-            resourceType = .app
-        case "习题", "exercise":
-            resourceType = .exercise
-        case "课程", "course":
-            resourceType = .course
-        default:
-            resourceType = .other
-        }
-        
-        return LearningResource(
-            title: title,
-            type: resourceType,
-            url: url,
-            description: description
-        )
-    }
     
     // MARK: - 创建默认计划
     private func createDefaultPlan(for goal: LearningGoal, totalWeeks: Int) -> LearningPlan {
@@ -593,7 +556,6 @@ struct AIPlanResponse: Codable {
     let description: String
     let totalWeeks: Int
     let weeklyPlans: [AIWeeklyPlan]
-    let resources: [AIResource]
 }
 
 struct AIWeeklyPlan: Codable {
@@ -612,9 +574,3 @@ struct AITask: Codable {
     let difficulty: String?
 }
 
-struct AIResource: Codable {
-    let title: String
-    let type: String
-    let url: String?
-    let description: String?
-}

@@ -1,0 +1,413 @@
+{
+  "id": "junior_math_grade9",
+  "name": "九年级数学学习（上册）",
+  "description": "通过系统学习九年级数学上册的六个单元内容，掌握二次函数、圆、相似等核心知识，为中考做好充分准备，期末成绩达到班级前15%，并能运用数学知识解决实际问题。",
+  "category": "数学",
+  "goalType": "okr",
+  "priority": "high",
+  "duration": 120,
+  "icon": "function",
+  "tags": ["数学", "初中", "二次函数", "圆", "相似", "中考"],
+  "milestones": [
+    {
+      "title": "第二十一章 一元二次方程",
+      "description": "掌握一元二次方程的解法，理解根的判别式，能够解决实际问题。",
+      "duration": 20,
+      "order": 1
+    },
+    {
+      "title": "第二十二章 二次函数",
+      "description": "理解二次函数的概念和性质，掌握二次函数的图像和性质，能够解决最值问题。",
+      "duration": 30,
+      "order": 2
+    },
+    {
+      "title": "第二十三章 旋转",
+      "description": "理解旋转的概念和性质，掌握旋转对称图形，能够进行旋转变换。",
+      "duration": 15,
+      "order": 3
+    },
+    {
+      "title": "第二十四章 圆",
+      "description": "掌握圆的基本性质，理解圆周角定理、切线长定理等重要定理，能够解决圆的相关问题。",
+      "duration": 25,
+      "order": 4
+    },
+    {
+      "title": "第二十五章 概率初步",
+      "description": "理解概率的概念，掌握概率的计算方法，能够解决简单的概率问题。",
+      "duration": 15,
+      "order": 5
+    },
+    {
+      "title": "第二十六章 反比例函数",
+      "description": "理解反比例函数的概念和性质，掌握反比例函数的图像和性质。",
+      "duration": 15,
+      "order": 6
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "概念掌握",
+      "description": "准确理解并掌握 40 个核心数学概念（一元二次方程、二次函数、圆、相似、概率等）",
+      "targetValue": 40,
+      "unit": "个"
+    },
+    {
+      "title": "题目练习",
+      "description": "完成 1000 道课本与拓展练习题，正确率 ≥85%",
+      "targetValue": 1000,
+      "unit": "题"
+    },
+    {
+      "title": "中考真题",
+      "description": "完成 200 道中考真题，熟悉考试题型和难度",
+      "targetValue": 200,
+      "unit": "题"
+    },
+    {
+      "title": "阶段测验",
+      "description": "完成 6 次单元测验，平均分 ≥85 分",
+      "targetValue": 6,
+      "unit": "次"
+    },
+    {
+      "title": "期末成绩",
+      "description": "期末数学成绩 ≥90 分，班级排名前 15%",
+      "targetValue": 90,
+      "unit": "分"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "每日练习题",
+      "description": "每天完成15道综合题，并记录错题",
+      "estimatedDuration": 40,
+      "difficulty": "easy",
+      "tags": ["练习", "巩固"]
+    },
+    {
+      "title": "中考真题训练",
+      "description": "每周完成20道中考真题，熟悉考试模式",
+      "estimatedDuration": 50,
+      "difficulty": "medium",
+      "tags": ["中考", "真题"]
+    },
+    {
+      "title": "章节测验",
+      "description": "每章学习结束后完成一次章节测验并分析错题",
+      "estimatedDuration": 60,
+      "difficulty": "medium",
+      "tags": ["测验", "总结"]
+    },
+    {
+      "title": "综合应用题",
+      "description": "每周完成3道综合应用题，提升问题解决能力",
+      "estimatedDuration": 60,
+      "difficulty": "hard",
+      "tags": ["应用", "综合"]
+    }
+  ],
+  "learningPath": [
+    {
+      "title": "第二十一章 一元二次方程",
+      "description": "学习一元二次方程的概念、解法，掌握配方法、公式法、因式分解法，能够解决实际问题。",
+      "estimatedDuration": 20,
+      "order": 1,
+      "keyResults": [
+        {
+          "title": "解法掌握",
+          "description": "一元二次方程解法正确率 ≥90%",
+          "targetValue": 90,
+          "unit": "%"
+        },
+        {
+          "title": "应用题完成数",
+          "description": "完成 25 道一元二次方程应用题",
+          "targetValue": 25,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "配方法练习",
+          "description": "练习用配方法解一元二次方程",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["配方法", "解法"]
+        },
+        {
+          "title": "判别式应用",
+          "description": "运用判别式判断方程根的情况",
+          "estimatedDuration": 20,
+          "difficulty": "medium",
+          "tags": ["判别式", "判断"]
+        }
+      ]
+    },
+    {
+      "title": "第二十二章 二次函数",
+      "description": "理解二次函数的概念和性质，掌握二次函数的图像和性质，能够解决最值问题。",
+      "estimatedDuration": 30,
+      "order": 2,
+      "keyResults": [
+        {
+          "title": "图像性质掌握",
+          "description": "二次函数图像性质掌握正确率 ≥85%",
+          "targetValue": 85,
+          "unit": "%"
+        },
+        {
+          "title": "最值问题完成数",
+          "description": "完成 30 道二次函数最值问题",
+          "targetValue": 30,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "二次函数图像",
+          "description": "绘制和分析二次函数图像",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["图像", "分析"]
+        },
+        {
+          "title": "最值问题训练",
+          "description": "解决二次函数的最值问题",
+          "estimatedDuration": 40,
+          "difficulty": "hard",
+          "tags": ["最值", "应用"]
+        }
+      ]
+    },
+    {
+      "title": "第二十三章 旋转",
+      "description": "理解旋转的概念和性质，掌握旋转对称图形，能够进行旋转变换。",
+      "estimatedDuration": 15,
+      "order": 3,
+      "keyResults": [
+        {
+          "title": "旋转性质掌握",
+          "description": "旋转性质掌握正确率 ≥90%",
+          "targetValue": 90,
+          "unit": "%"
+        },
+        {
+          "title": "旋转变换完成数",
+          "description": "完成 20 个旋转变换任务",
+          "targetValue": 20,
+          "unit": "个"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "旋转识别练习",
+          "description": "识别旋转对称图形",
+          "estimatedDuration": 15,
+          "difficulty": "easy",
+          "tags": ["识别", "旋转"]
+        },
+        {
+          "title": "旋转变换作图",
+          "description": "进行旋转变换作图",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["作图", "变换"]
+        }
+      ]
+    },
+    {
+      "title": "第二十四章 圆",
+      "description": "掌握圆的基本性质，理解圆周角定理、切线长定理等重要定理，能够解决圆的相关问题。",
+      "estimatedDuration": 25,
+      "order": 4,
+      "keyResults": [
+        {
+          "title": "圆的性质掌握",
+          "description": "圆的性质掌握正确率 ≥85%",
+          "targetValue": 85,
+          "unit": "%"
+        },
+        {
+          "title": "圆的计算题完成数",
+          "description": "完成 35 道圆的计算题",
+          "targetValue": 35,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "圆周角定理练习",
+          "description": "运用圆周角定理解决问题",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["圆周角", "定理"]
+        },
+        {
+          "title": "切线长定理应用",
+          "description": "运用切线长定理解决实际问题",
+          "estimatedDuration": 35,
+          "difficulty": "hard",
+          "tags": ["切线", "应用"]
+        }
+      ]
+    },
+    {
+      "title": "第二十五章 概率初步",
+      "description": "理解概率的概念，掌握概率的计算方法，能够解决简单的概率问题。",
+      "estimatedDuration": 15,
+      "order": 5,
+      "keyResults": [
+        {
+          "title": "概率计算正确率",
+          "description": "概率计算正确率 ≥85%",
+          "targetValue": 85,
+          "unit": "%"
+        },
+        {
+          "title": "概率问题完成数",
+          "description": "完成 20 道概率问题",
+          "targetValue": 20,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "概率计算练习",
+          "description": "计算各种事件的概率",
+          "estimatedDuration": 20,
+          "difficulty": "medium",
+          "tags": ["概率", "计算"]
+        },
+        {
+          "title": "概率应用问题",
+          "description": "解决生活中的概率问题",
+          "estimatedDuration": 25,
+          "difficulty": "hard",
+          "tags": ["应用", "概率"]
+        }
+      ]
+    },
+    {
+      "title": "第二十六章 反比例函数",
+      "description": "理解反比例函数的概念和性质，掌握反比例函数的图像和性质。",
+      "estimatedDuration": 15,
+      "order": 6,
+      "keyResults": [
+        {
+          "title": "反比例函数性质掌握",
+          "description": "反比例函数性质掌握正确率 ≥85%",
+          "targetValue": 85,
+          "unit": "%"
+        },
+        {
+          "title": "反比例函数题完成数",
+          "description": "完成 20 道反比例函数题",
+          "targetValue": 20,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "反比例函数图像",
+          "description": "绘制和分析反比例函数图像",
+          "estimatedDuration": 20,
+          "difficulty": "medium",
+          "tags": ["图像", "分析"]
+        },
+        {
+          "title": "反比例函数应用",
+          "description": "解决反比例函数的应用问题",
+          "estimatedDuration": 25,
+          "difficulty": "hard",
+          "tags": ["应用", "函数"]
+        }
+      ]
+    }
+  ],
+  "contentContext": "本模板针对九年级数学上册设计，通过系统化的学习路径和AI个性化练习，帮助学生掌握一元二次方程、二次函数、圆、概率等核心内容，为中考做好充分准备。适用于初中三年级学生。",
+  "aiContentGenerationConfig": {
+    "enableVocabularyGeneration": false,
+    "enableExerciseGeneration": true,
+    "enableDialogueGeneration": false,
+    "enableReadingMaterialGeneration": true,
+    "enableWritingPromptGeneration": false,
+    "enableListeningMaterialGeneration": false,
+    "enableSpeakingPromptGeneration": false,
+    "enableAssessmentGeneration": true,
+    "generationLanguage": "zh-CN",
+    "difficultyLevel": "hard"
+  },
+  "learningResources": [
+    {
+      "title": "人教版九年级数学上册教材",
+      "url": null,
+      "type": "book",
+      "description": "课程主教材，系统讲解各章节知识点。"
+    },
+    {
+      "title": "学而思初中数学视频课",
+      "url": null,
+      "type": "video",
+      "description": "配合章节讲解，帮助理解难点。"
+    },
+    {
+      "title": "中考数学真题集",
+      "url": null,
+      "type": "book",
+      "description": "历年中考数学真题，熟悉考试题型。"
+    },
+    {
+      "title": "可汗学院初中数学课程",
+      "url": "https://www.khanacademy.org/math/",
+      "type": "website",
+      "description": "免费在线数学课程和练习题。"
+    }
+  ],
+  "assessmentCriteria": [
+    {
+      "title": "概念理解",
+      "description": "评估对数学概念、定义、公式的掌握程度",
+      "evaluationMethod": "课堂测验/AI测试",
+      "passingScore": 80
+    },
+    {
+      "title": "计算准确率",
+      "description": "评估代数运算和几何计算的正确性",
+      "evaluationMethod": "练习统计/AI自动批改",
+      "passingScore": 85
+    },
+    {
+      "title": "函数理解",
+      "description": "评估对二次函数、反比例函数的理解和应用能力",
+      "evaluationMethod": "函数题评分/综合测验",
+      "passingScore": 80
+    },
+    {
+      "title": "中考适应性",
+      "description": "评估中考题型的适应性和解题能力",
+      "evaluationMethod": "中考真题测试/模拟考试",
+      "passingScore": 85
+    }
+  ],
+  "adaptiveAdjustmentRules": [
+    {
+      "condition": "如果章节测验分数低于70分",
+      "action": "增加该章节练习题数量并延长学习时间"
+    },
+    {
+      "condition": "如果中考真题正确率低于60%",
+      "action": "推荐复习基础知识并安排专项中考训练"
+    },
+    {
+      "condition": "如果函数题错误率高于25%",
+      "action": "推荐复习函数基础知识并安排专项函数训练"
+    },
+    {
+      "condition": "如果期中考试成绩未达预期",
+      "action": "生成个性化错题集并制定强化训练计划"
+    }
+  ]
+}
+

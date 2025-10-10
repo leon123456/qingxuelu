@@ -1,0 +1,459 @@
+{
+  "id": "junior_chinese_grade9",
+  "name": "九年级语文学习（上册）",
+  "description": "通过系统学习九年级语文上册的六个单元内容，全面提升语文综合能力，为中考做好充分准备，期末成绩达到班级前15%，并能运用语文知识进行深度思考和表达。",
+  "category": "语文",
+  "goalType": "okr",
+  "priority": "high",
+  "duration": 120,
+  "icon": "text.book.closed",
+  "tags": ["语文", "初中", "阅读", "写作", "文学鉴赏", "古诗词", "中考"],
+  "milestones": [
+    {
+      "title": "第一单元 自然之音",
+      "description": "学习自然主题的诗歌和散文，掌握诗歌鉴赏方法，培养对自然的感悟能力。",
+      "duration": 20,
+      "order": 1
+    },
+    {
+      "title": "第二单元 思想之光",
+      "description": "阅读哲理类文章，学习议论文的写作方法，培养思辨能力和逻辑思维。",
+      "duration": 20,
+      "order": 2
+    },
+    {
+      "title": "第三单元 游目骋怀",
+      "description": "学习山水游记和抒情散文，掌握情景交融的写作方法，提高文学鉴赏能力。",
+      "duration": 20,
+      "order": 3
+    },
+    {
+      "title": "第四单元 青春年少",
+      "description": "阅读青春主题的文章，学习青春文学的写作特点，培养正确的青春观。",
+      "duration": 20,
+      "order": 4
+    },
+    {
+      "title": "第五单元 理想信念",
+      "description": "学习理想主题的文章，掌握议论文的写作方法，培养正确的理想信念。",
+      "duration": 20,
+      "order": 5
+    },
+    {
+      "title": "第六单元 人物百态",
+      "description": "阅读人物传记和小说，学习人物描写的方法，提高文学鉴赏能力。",
+      "duration": 20,
+      "order": 6
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "课文背诵",
+      "description": "熟练背诵 30 篇经典课文和古诗词",
+      "targetValue": 30,
+      "unit": "篇"
+    },
+    {
+      "title": "阅读理解",
+      "description": "完成 150 篇阅读理解练习，正确率 ≥80%",
+      "targetValue": 150,
+      "unit": "篇"
+    },
+    {
+      "title": "作文练习",
+      "description": "完成 40 篇作文练习，包括记叙文、说明文、议论文、应用文",
+      "targetValue": 40,
+      "unit": "篇"
+    },
+    {
+      "title": "古诗词积累",
+      "description": "掌握 80 首古诗词，能够默写和理解诗意",
+      "targetValue": 80,
+      "unit": "首"
+    },
+    {
+      "title": "文学鉴赏",
+      "description": "完成 30 篇文学鉴赏练习，提高文学素养",
+      "targetValue": 30,
+      "unit": "篇"
+    },
+    {
+      "title": "中考真题",
+      "description": "完成 100 道中考语文真题，熟悉考试题型",
+      "targetValue": 100,
+      "unit": "题"
+    },
+    {
+      "title": "期末成绩",
+      "description": "期末语文成绩 ≥85 分，班级排名前 15%",
+      "targetValue": 85,
+      "unit": "分"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "每日阅读",
+      "description": "每天阅读一篇课文或课外文章，做好读书笔记和批注",
+      "estimatedDuration": 40,
+      "difficulty": "easy",
+      "tags": ["阅读", "积累"]
+    },
+    {
+      "title": "古诗词背诵",
+      "description": "每周背诵4首古诗词，理解诗意并能够默写",
+      "estimatedDuration": 30,
+      "difficulty": "medium",
+      "tags": ["背诵", "古诗词"]
+    },
+    {
+      "title": "作文练习",
+      "description": "每周完成1篇作文，包括不同文体的练习",
+      "estimatedDuration": 55,
+      "difficulty": "medium",
+      "tags": ["写作", "表达"]
+    },
+    {
+      "title": "阅读理解训练",
+      "description": "每周完成8篇阅读理解练习，提高阅读能力",
+      "estimatedDuration": 50,
+      "difficulty": "medium",
+      "tags": ["阅读", "理解"]
+    },
+    {
+      "title": "文学鉴赏练习",
+      "description": "每周完成2篇文学鉴赏练习，提高文学素养",
+      "estimatedDuration": 45,
+      "difficulty": "hard",
+      "tags": ["鉴赏", "文学"]
+    },
+    {
+      "title": "中考真题训练",
+      "description": "每周完成10道中考真题，熟悉考试模式",
+      "estimatedDuration": 40,
+      "difficulty": "medium",
+      "tags": ["中考", "真题"]
+    }
+  ],
+  "learningPath": [
+    {
+      "title": "第一单元 自然之音",
+      "description": "学习自然主题的诗歌和散文，掌握诗歌鉴赏方法，培养对自然的感悟能力。",
+      "estimatedDuration": 20,
+      "order": 1,
+      "keyResults": [
+        {
+          "title": "诗歌鉴赏",
+          "description": "掌握诗歌鉴赏方法，正确率 ≥85%",
+          "targetValue": 85,
+          "unit": "%"
+        },
+        {
+          "title": "自然主题作文",
+          "description": "完成 3 篇自然主题作文",
+          "targetValue": 3,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "诗歌朗读",
+          "description": "有感情地朗读诗歌，体会诗歌的韵律美",
+          "estimatedDuration": 20,
+          "difficulty": "easy",
+          "tags": ["朗读", "诗歌"]
+        },
+        {
+          "title": "诗歌鉴赏训练",
+          "description": "分析诗歌的意象、情感和艺术手法",
+          "estimatedDuration": 35,
+          "difficulty": "medium",
+          "tags": ["鉴赏", "诗歌"]
+        }
+      ]
+    },
+    {
+      "title": "第二单元 思想之光",
+      "description": "阅读哲理类文章，学习议论文的写作方法，培养思辨能力和逻辑思维。",
+      "estimatedDuration": 20,
+      "order": 2,
+      "keyResults": [
+        {
+          "title": "议论文理解",
+          "description": "理解议论文的论证方法和逻辑结构",
+          "targetValue": 100,
+          "unit": "%"
+        },
+        {
+          "title": "议论文写作",
+          "description": "完成 3 篇议论文写作练习",
+          "targetValue": 3,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "议论文分析",
+          "description": "分析议论文的论证方法和逻辑结构",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["分析", "议论文"]
+        },
+        {
+          "title": "议论文写作练习",
+          "description": "练习议论文的写作方法和技巧",
+          "estimatedDuration": 50,
+          "difficulty": "hard",
+          "tags": ["写作", "议论文"]
+        }
+      ]
+    },
+    {
+      "title": "第三单元 游目骋怀",
+      "description": "学习山水游记和抒情散文，掌握情景交融的写作方法，提高文学鉴赏能力。",
+      "estimatedDuration": 20,
+      "order": 3,
+      "keyResults": [
+        {
+          "title": "散文鉴赏",
+          "description": "掌握抒情散文的鉴赏方法",
+          "targetValue": 100,
+          "unit": "%"
+        },
+        {
+          "title": "抒情散文写作",
+          "description": "完成 2 篇抒情散文",
+          "targetValue": 2,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "散文分析",
+          "description": "分析抒情散文的写作特点和艺术手法",
+          "estimatedDuration": 35,
+          "difficulty": "medium",
+          "tags": ["分析", "散文"]
+        },
+        {
+          "title": "情景交融写作",
+          "description": "练习情景交融的写作方法",
+          "estimatedDuration": 45,
+          "difficulty": "hard",
+          "tags": ["写作", "抒情"]
+        }
+      ]
+    },
+    {
+      "title": "第四单元 青春年少",
+      "description": "阅读青春主题的文章，学习青春文学的写作特点，培养正确的青春观。",
+      "estimatedDuration": 20,
+      "order": 4,
+      "keyResults": [
+        {
+          "title": "青春文学理解",
+          "description": "理解青春文学的写作特点和主题",
+          "targetValue": 100,
+          "unit": "%"
+        },
+        {
+          "title": "青春主题作文",
+          "description": "完成 3 篇青春主题作文",
+          "targetValue": 3,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "青春文学分析",
+          "description": "分析青春文学的写作特点和主题",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["分析", "青春"]
+        },
+        {
+          "title": "青春感悟写作",
+          "description": "写一篇关于青春感悟的文章",
+          "estimatedDuration": 50,
+          "difficulty": "medium",
+          "tags": ["写作", "青春"]
+        }
+      ]
+    },
+    {
+      "title": "第五单元 理想信念",
+      "description": "学习理想主题的文章，掌握议论文的写作方法，培养正确的理想信念。",
+      "estimatedDuration": 20,
+      "order": 5,
+      "keyResults": [
+        {
+          "title": "理想主题理解",
+          "description": "理解理想主题文章的思想内涵",
+          "targetValue": 100,
+          "unit": "%"
+        },
+        {
+          "title": "理想主题议论文",
+          "description": "完成 2 篇理想主题议论文",
+          "targetValue": 2,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "理想主题分析",
+          "description": "分析理想主题文章的思想内涵和写作方法",
+          "estimatedDuration": 35,
+          "difficulty": "medium",
+          "tags": ["分析", "理想"]
+        },
+        {
+          "title": "理想议论文写作",
+          "description": "写一篇关于理想的议论文",
+          "estimatedDuration": 55,
+          "difficulty": "hard",
+          "tags": ["写作", "议论文"]
+        }
+      ]
+    },
+    {
+      "title": "第六单元 人物百态",
+      "description": "阅读人物传记和小说，学习人物描写的方法，提高文学鉴赏能力。",
+      "estimatedDuration": 20,
+      "order": 6,
+      "keyResults": [
+        {
+          "title": "人物描写理解",
+          "description": "理解人物描写的各种方法和技巧",
+          "targetValue": 100,
+          "unit": "%"
+        },
+        {
+          "title": "人物描写作文",
+          "description": "完成 3 篇人物描写作文",
+          "targetValue": 3,
+          "unit": "篇"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "人物形象分析",
+          "description": "分析小说中的人物形象和性格特点",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["分析", "人物"]
+        },
+        {
+          "title": "人物描写练习",
+          "description": "练习各种人物描写的方法和技巧",
+          "estimatedDuration": 45,
+          "difficulty": "medium",
+          "tags": ["描写", "人物"]
+        }
+      ]
+    }
+  ],
+  "contentContext": "本模板针对九年级语文上册设计，通过系统化的学习路径和AI个性化练习，帮助学生掌握诗歌鉴赏、议论文写作、散文分析、文学鉴赏等核心内容，为中考做好充分准备。适用于初中三年级学生。",
+  "aiContentGenerationConfig": {
+    "enableVocabularyGeneration": true,
+    "enableExerciseGeneration": true,
+    "enableDialogueGeneration": false,
+    "enableReadingMaterialGeneration": true,
+    "enableWritingPromptGeneration": true,
+    "enableListeningMaterialGeneration": false,
+    "enableSpeakingPromptGeneration": false,
+    "enableAssessmentGeneration": true,
+    "generationLanguage": "zh-CN",
+    "difficultyLevel": "hard"
+  },
+  "learningResources": [
+    {
+      "title": "人教版九年级语文上册教材",
+      "url": null,
+      "type": "book",
+      "description": "课程主教材，系统讲解各单元知识点。"
+    },
+    {
+      "title": "古诗词三百首",
+      "url": null,
+      "type": "book",
+      "description": "经典古诗词选集，提高文学素养。"
+    },
+    {
+      "title": "初中语文阅读理解训练",
+      "url": null,
+      "type": "book",
+      "description": "阅读理解专项训练材料。"
+    },
+    {
+      "title": "中考语文真题集",
+      "url": null,
+      "type": "book",
+      "description": "历年中考语文真题，熟悉考试题型。"
+    },
+    {
+      "title": "文学鉴赏指南",
+      "url": null,
+      "type": "book",
+      "description": "文学鉴赏方法和技巧指导。"
+    }
+  ],
+  "assessmentCriteria": [
+    {
+      "title": "课文背诵",
+      "description": "评估课文和古诗词的背诵熟练程度",
+      "evaluationMethod": "背诵测试/默写测试",
+      "passingScore": 80
+    },
+    {
+      "title": "阅读理解",
+      "description": "评估阅读理解能力和文本分析能力",
+      "evaluationMethod": "阅读理解测试/AI自动批改",
+      "passingScore": 75
+    },
+    {
+      "title": "写作表达",
+      "description": "评估写作能力和语言表达能力",
+      "evaluationMethod": "作文评分/写作测试",
+      "passingScore": 75
+    },
+    {
+      "title": "文学鉴赏",
+      "description": "评估文学鉴赏能力和文学素养",
+      "evaluationMethod": "文学鉴赏测试/作品分析",
+      "passingScore": 70
+    },
+    {
+      "title": "中考适应性",
+      "description": "评估中考题型的适应性和解题能力",
+      "evaluationMethod": "中考真题测试/模拟考试",
+      "passingScore": 80
+    }
+  ],
+  "adaptiveAdjustmentRules": [
+    {
+      "condition": "如果课文背诵正确率低于70%",
+      "action": "增加背诵练习时间并采用多种背诵方法"
+    },
+    {
+      "condition": "如果阅读理解正确率低于60%",
+      "action": "推荐阅读技巧训练并安排专项阅读理解练习"
+    },
+    {
+      "condition": "如果作文得分低于70分",
+      "action": "推荐写作技巧指导并安排专项写作训练"
+    },
+    {
+      "condition": "如果文学鉴赏得分低于60分",
+      "action": "推荐文学基础知识学习并安排专项鉴赏训练"
+    },
+    {
+      "condition": "如果中考真题正确率低于70%",
+      "action": "推荐中考题型训练并安排专项中考练习"
+    },
+    {
+      "condition": "如果期中考试成绩未达预期",
+      "action": "生成个性化学习计划并制定强化训练方案"
+    }
+  ]
+}
+

@@ -10,6 +10,7 @@ import SwiftUI
 struct GoalTemplateView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var dataManager: DataManager
+    @StateObject private var templateManager = GoalTemplateManager.shared
     
     @State private var searchText = ""
     @State private var selectedCategoryIndex = 0
@@ -35,7 +36,7 @@ struct GoalTemplateView: View {
     }
     
     private var filteredTemplates: [GoalTemplate] {
-        let templates = GoalTemplateManager.shared.templates
+        let templates = templateManager.templates
         
         var filtered = templates
         
@@ -57,7 +58,7 @@ struct GoalTemplateView: View {
     }
     
     private func getTemplatesForCategory(_ category: SubjectCategory?) -> [GoalTemplate] {
-        let templates = GoalTemplateManager.shared.templates
+        let templates = templateManager.templates
         
         var filtered = templates
         
@@ -86,23 +87,32 @@ struct GoalTemplateView: View {
                     .padding(.horizontal)
                 
                 // 类别筛选按钮
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
-                        ForEach(Array(allCategories.enumerated()), id: \.offset) { index, category in
-                            CategoryChip(
-                                title: category.0,
-                                isSelected: selectedCategoryIndex == index,
-                                action: { 
-                                    withAnimation(.easeInOut(duration: 0.3)) {
-                                        selectedCategoryIndex = index
+                ScrollViewReader { proxy in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 12) {
+                            ForEach(Array(allCategories.enumerated()), id: \.offset) { index, category in
+                                CategoryChip(
+                                    title: category.0,
+                                    isSelected: selectedCategoryIndex == index,
+                                    action: { 
+                                        withAnimation(.easeInOut(duration: 0.3)) {
+                                            selectedCategoryIndex = index
+                                        }
                                     }
-                                }
-                            )
+                                )
+                                .id(index) // 为每个按钮添加ID，用于滚动定位
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                    .padding(.vertical, 8)
+                    .onChange(of: selectedCategoryIndex) { newIndex in
+                        // 当选中类别改变时，自动滚动到对应的按钮
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            proxy.scrollTo(newIndex, anchor: .center)
                         }
                     }
-                    .padding(.horizontal)
                 }
-                .padding(.vertical, 8)
                 
                 // 使用 TabView 实现左右滑动
                 TabView(selection: $selectedCategoryIndex) {
@@ -215,7 +225,7 @@ struct CategoryChip: View {
                     RoundedRectangle(cornerRadius: 20)
                         .fill(isSelected ? Color.blue : Color(.systemGray6))
                 )
-                .foregroundColor(isSelected ? .white : .primary)
+                .foregroundColor(isSelected ? Color(.systemBackground) : .primary)
         }
         .buttonStyle(PlainButtonStyle())
     }
@@ -304,7 +314,7 @@ struct TemplateCardView: View {
             .padding()
             .background(Color(.systemBackground))
             .cornerRadius(12)
-            .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+            .shadow(color: Color(.label).opacity(0.1), radius: 2, x: 0, y: 1)
         }
         .buttonStyle(PlainButtonStyle())
     }
@@ -315,6 +325,7 @@ struct TemplateDetailView: View {
     @Environment(\.dismiss) private var dismiss
     let template: GoalTemplate
     let onApply: (GoalTemplate) -> Void
+    
     
     var body: some View {
         NavigationView {

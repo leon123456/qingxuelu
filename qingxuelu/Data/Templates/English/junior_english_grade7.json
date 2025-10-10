@@ -1,0 +1,375 @@
+{
+  "id": "junior_english_grade7",
+  "name": "七年级英语学习（上册）",
+  "description": "通过系统学习七年级英语上册的十二个单元内容，掌握基础英语语法、词汇和日常交际用语，培养英语听说读写能力，期末成绩达到班级前20%，并能进行简单的英语交流。",
+  "category": "英语",
+  "goalType": "okr",
+  "priority": "high",
+  "duration": 120,
+  "icon": "globe",
+  "tags": ["英语", "初中", "语法", "词汇", "听说读写"],
+  "milestones": [
+    {
+      "title": "Unit 1-3 自我介绍与问候",
+      "description": "学习自我介绍、问候语和基本个人信息表达，掌握be动词的用法。",
+      "duration": 10,
+      "order": 1
+    },
+    {
+      "title": "Unit 4-6 家庭与学校",
+      "description": "学习家庭成员的表达、学校生活的描述，掌握一般现在时的用法。",
+      "duration": 10,
+      "order": 2
+    },
+    {
+      "title": "Unit 7-9 购物与食物",
+      "description": "学习购物用语、食物名称和价格表达，掌握可数名词和不可数名词。",
+      "duration": 10,
+      "order": 3
+    },
+    {
+      "title": "Unit 10-12 时间与活动",
+      "description": "学习时间表达、日常活动描述，掌握一般现在时的疑问句和否定句。",
+      "duration": 10,
+      "order": 4
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "词汇掌握",
+      "description": "掌握 500 个基础英语单词，能够正确拼写和运用",
+      "targetValue": 500,
+      "unit": "个"
+    },
+    {
+      "title": "语法练习",
+      "description": "完成 200 道语法练习题，正确率 ≥80%",
+      "targetValue": 200,
+      "unit": "题"
+    },
+    {
+      "title": "听力训练",
+      "description": "完成 100 次听力练习，提高英语听力理解能力",
+      "targetValue": 100,
+      "unit": "次"
+    },
+    {
+      "title": "口语练习",
+      "description": "完成 50 次口语练习，提高英语口语表达能力",
+      "targetValue": 50,
+      "unit": "次"
+    },
+    {
+      "title": "阅读理解",
+      "description": "完成 80 篇阅读理解练习，正确率 ≥75%",
+      "targetValue": 80,
+      "unit": "篇"
+    },
+    {
+      "title": "写作练习",
+      "description": "完成 30 篇英语写作练习，包括日记、书信等",
+      "targetValue": 30,
+      "unit": "篇"
+    },
+    {
+      "title": "期末成绩",
+      "description": "期末英语成绩 ≥85 分，班级排名前 20%",
+      "targetValue": 85,
+      "unit": "分"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "每日单词",
+      "description": "每天学习10个新单词，复习已学单词",
+      "estimatedDuration": 20,
+      "difficulty": "easy",
+      "tags": ["词汇", "记忆"]
+    },
+    {
+      "title": "语法练习",
+      "description": "每天完成5道语法练习题，巩固语法知识",
+      "estimatedDuration": 15,
+      "difficulty": "medium",
+      "tags": ["语法", "练习"]
+    },
+    {
+      "title": "听力训练",
+      "description": "每天进行10分钟英语听力练习",
+      "estimatedDuration": 10,
+      "difficulty": "medium",
+      "tags": ["听力", "理解"]
+    },
+    {
+      "title": "口语练习",
+      "description": "每天进行5分钟英语口语练习",
+      "estimatedDuration": 5,
+      "difficulty": "medium",
+      "tags": ["口语", "表达"]
+    },
+    {
+      "title": "阅读理解",
+      "description": "每周完成5篇阅读理解练习",
+      "estimatedDuration": 30,
+      "difficulty": "medium",
+      "tags": ["阅读", "理解"]
+    },
+    {
+      "title": "英语写作",
+      "description": "每周完成1篇英语写作练习",
+      "estimatedDuration": 25,
+      "difficulty": "hard",
+      "tags": ["写作", "表达"]
+    }
+  ],
+  "learningPath": [
+    {
+      "title": "Unit 1-3 自我介绍与问候",
+      "description": "学习自我介绍、问候语和基本个人信息表达，掌握be动词的用法。",
+      "estimatedDuration": 10,
+      "order": 1,
+      "keyResults": [
+        {
+          "title": "词汇掌握",
+          "description": "掌握本单元 50 个基础词汇",
+          "targetValue": 50,
+          "unit": "个"
+        },
+        {
+          "title": "be动词练习",
+          "description": "完成 20 道be动词练习题",
+          "targetValue": 20,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "自我介绍练习",
+          "description": "练习用英语进行自我介绍",
+          "estimatedDuration": 15,
+          "difficulty": "easy",
+          "tags": ["口语", "自我介绍"]
+        },
+        {
+          "title": "be动词训练",
+          "description": "练习be动词的各种形式和使用方法",
+          "estimatedDuration": 20,
+          "difficulty": "medium",
+          "tags": ["语法", "be动词"]
+        }
+      ]
+    },
+    {
+      "title": "Unit 4-6 家庭与学校",
+      "description": "学习家庭成员的表达、学校生活的描述，掌握一般现在时的用法。",
+      "estimatedDuration": 10,
+      "order": 2,
+      "keyResults": [
+        {
+          "title": "词汇掌握",
+          "description": "掌握本单元 60 个基础词汇",
+          "targetValue": 60,
+          "unit": "个"
+        },
+        {
+          "title": "一般现在时练习",
+          "description": "完成 25 道一般现在时练习题",
+          "targetValue": 25,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "家庭介绍练习",
+          "description": "练习用英语介绍家庭成员",
+          "estimatedDuration": 20,
+          "difficulty": "medium",
+          "tags": ["口语", "家庭"]
+        },
+        {
+          "title": "一般现在时训练",
+          "description": "练习一般现在时的构成和使用方法",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["语法", "时态"]
+        }
+      ]
+    },
+    {
+      "title": "Unit 7-9 购物与食物",
+      "description": "学习购物用语、食物名称和价格表达，掌握可数名词和不可数名词。",
+      "estimatedDuration": 10,
+      "order": 3,
+      "keyResults": [
+        {
+          "title": "词汇掌握",
+          "description": "掌握本单元 70 个基础词汇",
+          "targetValue": 70,
+          "unit": "个"
+        },
+        {
+          "title": "名词练习",
+          "description": "完成 20 道可数名词和不可数名词练习题",
+          "targetValue": 20,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "购物对话练习",
+          "description": "练习购物场景的英语对话",
+          "estimatedDuration": 20,
+          "difficulty": "medium",
+          "tags": ["口语", "购物"]
+        },
+        {
+          "title": "名词分类训练",
+          "description": "练习可数名词和不可数名词的分类和使用",
+          "estimatedDuration": 20,
+          "difficulty": "medium",
+          "tags": ["语法", "名词"]
+        }
+      ]
+    },
+    {
+      "title": "Unit 10-12 时间与活动",
+      "description": "学习时间表达、日常活动描述，掌握一般现在时的疑问句和否定句。",
+      "estimatedDuration": 10,
+      "order": 4,
+      "keyResults": [
+        {
+          "title": "词汇掌握",
+          "description": "掌握本单元 80 个基础词汇",
+          "targetValue": 80,
+          "unit": "个"
+        },
+        {
+          "title": "疑问句否定句练习",
+          "description": "完成 25 道疑问句和否定句练习题",
+          "targetValue": 25,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "时间表达练习",
+          "description": "练习用英语表达时间和日常活动",
+          "estimatedDuration": 20,
+          "difficulty": "medium",
+          "tags": ["口语", "时间"]
+        },
+        {
+          "title": "疑问句否定句训练",
+          "description": "练习一般现在时的疑问句和否定句构成",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["语法", "句型"]
+        }
+      ]
+    }
+  ],
+  "contentContext": "本模板针对七年级英语上册设计，通过系统化的学习路径和AI个性化练习，帮助学生掌握基础英语语法、词汇和日常交际用语，培养英语听说读写能力。适用于初中一年级学生。",
+  "aiContentGenerationConfig": {
+    "enableVocabularyGeneration": true,
+    "enableExerciseGeneration": true,
+    "enableDialogueGeneration": true,
+    "enableReadingMaterialGeneration": true,
+    "enableWritingPromptGeneration": true,
+    "enableListeningMaterialGeneration": true,
+    "enableSpeakingPromptGeneration": true,
+    "enableAssessmentGeneration": true,
+    "generationLanguage": "en-US",
+    "difficultyLevel": "easy"
+  },
+  "learningResources": [
+    {
+      "title": "人教版七年级英语上册教材",
+      "url": null,
+      "type": "book",
+      "description": "课程主教材，系统讲解各单元知识点。"
+    },
+    {
+      "title": "初中英语词汇手册",
+      "url": null,
+      "type": "book",
+      "description": "基础英语词汇学习参考书。"
+    },
+    {
+      "title": "英语语法练习册",
+      "url": null,
+      "type": "book",
+      "description": "英语语法专项练习材料。"
+    },
+    {
+      "title": "英语听力训练",
+      "url": null,
+      "type": "audio",
+      "description": "英语听力练习音频材料。"
+    }
+  ],
+  "assessmentCriteria": [
+    {
+      "title": "词汇掌握",
+      "description": "评估英语词汇的掌握程度和运用能力",
+      "evaluationMethod": "词汇测试/拼写测试",
+      "passingScore": 80
+    },
+    {
+      "title": "语法理解",
+      "description": "评估英语语法的理解和运用能力",
+      "evaluationMethod": "语法测试/AI自动批改",
+      "passingScore": 75
+    },
+    {
+      "title": "听力理解",
+      "description": "评估英语听力理解能力",
+      "evaluationMethod": "听力测试/口语对话",
+      "passingScore": 70
+    },
+    {
+      "title": "口语表达",
+      "description": "评估英语口语表达能力",
+      "evaluationMethod": "口语测试/对话练习",
+      "passingScore": 70
+    },
+    {
+      "title": "阅读理解",
+      "description": "评估英语阅读理解能力",
+      "evaluationMethod": "阅读理解测试/AI自动批改",
+      "passingScore": 75
+    },
+    {
+      "title": "写作表达",
+      "description": "评估英语写作表达能力",
+      "evaluationMethod": "写作测试/作文评分",
+      "passingScore": 70
+    }
+  ],
+  "adaptiveAdjustmentRules": [
+    {
+      "condition": "如果词汇测试正确率低于70%",
+      "action": "增加词汇学习时间并采用多种记忆方法"
+    },
+    {
+      "condition": "如果语法练习正确率低于60%",
+      "action": "推荐语法基础知识复习并安排专项语法训练"
+    },
+    {
+      "condition": "如果听力理解正确率低于60%",
+      "action": "推荐听力技巧训练并安排专项听力练习"
+    },
+    {
+      "condition": "如果口语表达得分低于60分",
+      "action": "推荐口语练习方法并安排专项口语训练"
+    },
+    {
+      "condition": "如果阅读理解正确率低于60%",
+      "action": "推荐阅读技巧训练并安排专项阅读理解练习"
+    },
+    {
+      "condition": "如果期中考试成绩未达预期",
+      "action": "生成个性化学习计划并制定强化训练方案"
+    }
+  ]
+}
+

@@ -1,0 +1,86 @@
+{
+  "id": "classical_chinese_learning",
+  "name": "文言文学习",
+  "description": "掌握文言实词、虚词用法，提升篇章阅读能力。",
+  "category": "语文",
+  "goalType": "okr",
+  "priority": "high",
+  "duration": 45,
+  "icon": "book.closed",
+  "tags": ["文言文", "古文", "语文", "阅读"],
+  "milestones": [
+    {
+      "title": "实词积累",
+      "description": "第1个月：完成 10 篇浅易文言文阅读，掌握 80 个实词",
+      "duration": 10,
+      "order": 1
+    },
+    {
+      "title": "虚词理解",
+      "description": "第2个月：完成 20 篇中等难度阅读，掌握 150 个实词和 10 个虚词",
+      "duration": 18,
+      "order": 2
+    },
+    {
+      "title": "句式分析",
+      "description": "第3个月：累计完成 30 篇进阶阅读，掌握 200 实词和 20 虚词",
+      "duration": 28,
+      "order": 3
+    },
+    {
+      "title": "篇章阅读",
+      "description": "能够独立阅读中等难度的文言文",
+      "duration": 45,
+      "order": 4
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "实词掌握",
+      "description": "掌握 200 个文言实词，20 个虚词",
+      "targetValue": 200,
+      "unit": "个"
+    },
+    {
+      "title": "虚词掌握",
+      "description": "掌握20个常用文言虚词",
+      "targetValue": 20,
+      "unit": "个"
+    },
+    {
+      "title": "篇章阅读",
+      "description": "完成 30 篇文言文阅读练习，正确率 ≥85%",
+      "targetValue": 30,
+      "unit": "篇"
+    },
+    {
+      "title": "翻译准确率",
+      "description": "能独立翻译课本指定篇章",
+      "targetValue": 85,
+      "unit": "%"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "实词学习",
+      "description": "学习文言实词的含义和用法",
+      "estimatedDuration": 25,
+      "difficulty": "easy",
+      "tags": ["实词", "词汇"]
+    },
+    {
+      "title": "虚词分析",
+      "description": "分析文言虚词的语法功能",
+      "estimatedDuration": 20,
+      "difficulty": "medium",
+      "tags": ["虚词", "语法"]
+    },
+    {
+      "title": "文言翻译",
+      "description": "翻译文言文段落",
+      "estimatedDuration": 35,
+      "difficulty": "hard",
+      "tags": ["翻译", "理解"]
+    }
+  ]
+}

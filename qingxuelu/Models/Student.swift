@@ -382,6 +382,7 @@ enum SubjectCategory: String, CaseIterable, Codable {
     case physics = "物理"
     case chemistry = "化学"
     case biology = "生物"
+    case science = "科学"
     case history = "历史"
     case geography = "地理"
     case politics = "政治"
@@ -395,6 +396,7 @@ enum SubjectCategory: String, CaseIterable, Codable {
         case .physics: return "atom"
         case .chemistry: return "flask.fill"
         case .biology: return "leaf.fill"
+        case .science: return "flask"
         case .history: return "clock.fill"
         case .geography: return "map.fill"
         case .politics: return "building.columns.fill"
@@ -469,8 +471,10 @@ struct LearningPlan: Identifiable, Codable {
     var createdAt: Date
     var userId: UUID = UUID() // 默认值，第一版暂不使用
     var scheduledTasks: [LearningTask] = [] // 新增：调度的任务列表
+    var scheduleStatus: ScheduleStatus = .notScheduled // 新增：调度状态
+    var scheduleSettings: ScheduleSettings? = nil // 新增：调度设置
     
-    init(id: UUID, title: String, description: String, startDate: Date, endDate: Date, totalWeeks: Int, weeklyPlans: [WeeklyPlan] = [], resources: [LearningResource] = [], isActive: Bool = true, userId: UUID = UUID(), scheduledTasks: [LearningTask] = []) {
+    init(id: UUID, title: String, description: String, startDate: Date, endDate: Date, totalWeeks: Int, weeklyPlans: [WeeklyPlan] = [], resources: [LearningResource] = [], isActive: Bool = true, userId: UUID = UUID(), scheduledTasks: [LearningTask] = [], scheduleStatus: ScheduleStatus = .notScheduled, scheduleSettings: ScheduleSettings? = nil) {
         self.id = id  // 使用目标的ID
         self.title = title
         self.description = description
@@ -483,6 +487,8 @@ struct LearningPlan: Identifiable, Codable {
         self.createdAt = Date()
         self.userId = userId
         self.scheduledTasks = scheduledTasks
+        self.scheduleStatus = scheduleStatus
+        self.scheduleSettings = scheduleSettings
     }
 }
 

@@ -278,9 +278,6 @@ struct GoalDetailView: View {
                 
                 // 里程碑
                 MilestonesSection(goal: goal)
-                
-                // 相关任务
-                RelatedTasksSection(goal: goal)
             }
             .padding()
         }
@@ -549,36 +546,6 @@ struct GoalKeyResultRowView: View {
     }
 }
 
-// MARK: - 相关任务区域
-struct RelatedTasksSection: View {
-    let goal: LearningGoal
-    @EnvironmentObject var dataManager: DataManager
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("相关任务")
-                .font(.headline)
-                .fontWeight(.semibold)
-            
-            let relatedTasks = dataManager.getTasksForGoal(goal.id)
-            
-            if relatedTasks.isEmpty {
-                Text("暂无相关任务")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding()
-            } else {
-                ForEach(relatedTasks) { task in
-                    SimpleTaskRowView(task: task)
-                }
-            }
-        }
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(12)
-    }
-}
 
 // MARK: - 信息行视图
 struct InfoRow: View {
@@ -670,11 +637,11 @@ struct CreatePlanSection: View {
                 Spacer()
                 
                 if hasExistingPlan {
-                    NavigationLink(destination: PlanDetailView(plan: existingPlan!)) {
+                    NavigationLink(destination: PlanDetailViewNew(plan: existingPlan!)) {
                         Text("查看计划")
                             .font(.subheadline)
                             .fontWeight(.medium)
-                            .foregroundColor(.white)
+                            .foregroundColor(Color(.systemBackground))
                             .padding(.horizontal, 16)
                             .padding(.vertical, 8)
                             .background(Color.green)
@@ -686,7 +653,7 @@ struct CreatePlanSection: View {
                     }
                     .font(.subheadline)
                     .fontWeight(.medium)
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(.systemBackground))
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
                     .background(Color.blue)

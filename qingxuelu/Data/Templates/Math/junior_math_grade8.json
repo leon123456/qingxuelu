@@ -1,0 +1,365 @@
+{
+  "id": "junior_math_grade8",
+  "name": "八年级数学学习（上册）",
+  "description": "通过系统学习八年级数学上册的五个单元内容，深化代数与几何基础，培养抽象思维和空间想象能力，期末成绩达到班级前20%，并能运用数学知识解决复杂问题。",
+  "category": "数学",
+  "goalType": "okr",
+  "priority": "high",
+  "duration": 120,
+  "icon": "function",
+  "tags": ["数学", "初中", "代数", "几何", "函数"],
+  "milestones": [
+    {
+      "title": "第十一章 三角形",
+      "description": "掌握三角形的性质、全等三角形的判定和性质，理解等腰三角形和等边三角形的特征。",
+      "duration": 25,
+      "order": 1
+    },
+    {
+      "title": "第十二章 全等三角形",
+      "description": "深入理解全等三角形的判定方法，能够运用全等三角形解决几何证明问题。",
+      "duration": 30,
+      "order": 2
+    },
+    {
+      "title": "第十三章 轴对称",
+      "description": "理解轴对称图形的性质，掌握轴对称变换，能够识别和绘制轴对称图形。",
+      "duration": 20,
+      "order": 3
+    },
+    {
+      "title": "第十四章 整式的乘法与因式分解",
+      "description": "掌握整式的乘法运算，理解因式分解的概念和方法，能够进行多项式因式分解。",
+      "duration": 35,
+      "order": 4
+    },
+    {
+      "title": "第十五章 分式",
+      "description": "理解分式的概念和性质，掌握分式的运算，能够解决分式方程。",
+      "duration": 30,
+      "order": 5
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "概念掌握",
+      "description": "准确理解并掌握 35 个核心数学概念（三角形、全等、轴对称、因式分解、分式等）",
+      "targetValue": 35,
+      "unit": "个"
+    },
+    {
+      "title": "题目练习",
+      "description": "完成 800 道课本与拓展练习题，正确率 ≥85%",
+      "targetValue": 800,
+      "unit": "题"
+    },
+    {
+      "title": "几何证明",
+      "description": "完成 50 道几何证明题，掌握基本证明方法",
+      "targetValue": 50,
+      "unit": "题"
+    },
+    {
+      "title": "阶段测验",
+      "description": "完成 5 次单元测验，平均分 ≥85 分",
+      "targetValue": 5,
+      "unit": "次"
+    },
+    {
+      "title": "期末成绩",
+      "description": "期末数学成绩 ≥90 分，班级排名前 20%",
+      "targetValue": 90,
+      "unit": "分"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "每日练习题",
+      "description": "每天完成12道代数或几何题，并记录错题",
+      "estimatedDuration": 35,
+      "difficulty": "easy",
+      "tags": ["练习", "巩固"]
+    },
+    {
+      "title": "几何证明训练",
+      "description": "每周完成3道几何证明题，培养逻辑推理能力",
+      "estimatedDuration": 45,
+      "difficulty": "medium",
+      "tags": ["证明", "推理"]
+    },
+    {
+      "title": "章节测验",
+      "description": "每章学习结束后完成一次章节测验并分析错题",
+      "estimatedDuration": 60,
+      "difficulty": "medium",
+      "tags": ["测验", "总结"]
+    },
+    {
+      "title": "综合应用题",
+      "description": "每周完成2道综合应用题，提升问题解决能力",
+      "estimatedDuration": 50,
+      "difficulty": "hard",
+      "tags": ["应用", "综合"]
+    }
+  ],
+  "learningPath": [
+    {
+      "title": "第十一章 三角形",
+      "description": "学习三角形的基本性质、内角和定理、外角定理，掌握等腰三角形和等边三角形的性质。",
+      "estimatedDuration": 25,
+      "order": 1,
+      "keyResults": [
+        {
+          "title": "性质掌握",
+          "description": "掌握三角形基本性质，正确率 ≥90%",
+          "targetValue": 90,
+          "unit": "%"
+        },
+        {
+          "title": "计算题完成数",
+          "description": "完成 30 道三角形计算题",
+          "targetValue": 30,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "三角形内角和练习",
+          "description": "计算各种三角形的内角和",
+          "estimatedDuration": 20,
+          "difficulty": "easy",
+          "tags": ["计算", "基础"]
+        },
+        {
+          "title": "等腰三角形性质",
+          "description": "掌握等腰三角形的性质和判定",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["性质", "判定"]
+        }
+      ]
+    },
+    {
+      "title": "第十二章 全等三角形",
+      "description": "理解全等三角形的概念，掌握SSS、SAS、ASA、AAS等判定方法，能够进行几何证明。",
+      "estimatedDuration": 30,
+      "order": 2,
+      "keyResults": [
+        {
+          "title": "判定方法掌握",
+          "description": "全等三角形判定方法正确率 ≥85%",
+          "targetValue": 85,
+          "unit": "%"
+        },
+        {
+          "title": "证明题完成数",
+          "description": "完成 20 道全等三角形证明题",
+          "targetValue": 20,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "全等判定练习",
+          "description": "练习各种全等三角形的判定方法",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["判定", "证明"]
+        },
+        {
+          "title": "几何证明训练",
+          "description": "运用全等三角形进行几何证明",
+          "estimatedDuration": 40,
+          "difficulty": "hard",
+          "tags": ["证明", "推理"]
+        }
+      ]
+    },
+    {
+      "title": "第十三章 轴对称",
+      "description": "理解轴对称图形的概念和性质，掌握轴对称变换，能够识别和绘制轴对称图形。",
+      "estimatedDuration": 20,
+      "order": 3,
+      "keyResults": [
+        {
+          "title": "识别准确率",
+          "description": "轴对称图形识别准确率 ≥90%",
+          "targetValue": 90,
+          "unit": "%"
+        },
+        {
+          "title": "绘图任务完成数",
+          "description": "完成 15 个轴对称图形绘制任务",
+          "targetValue": 15,
+          "unit": "个"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "轴对称识别练习",
+          "description": "识别各种轴对称图形",
+          "estimatedDuration": 15,
+          "difficulty": "easy",
+          "tags": ["识别", "理解"]
+        },
+        {
+          "title": "轴对称图形绘制",
+          "description": "绘制各种轴对称图形",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["绘图", "实践"]
+        }
+      ]
+    },
+    {
+      "title": "第十四章 整式的乘法与因式分解",
+      "description": "掌握整式的乘法运算，理解因式分解的概念，能够进行多项式的因式分解。",
+      "estimatedDuration": 35,
+      "order": 4,
+      "keyResults": [
+        {
+          "title": "乘法运算正确率",
+          "description": "整式乘法运算正确率 ≥85%",
+          "targetValue": 85,
+          "unit": "%"
+        },
+        {
+          "title": "因式分解完成数",
+          "description": "完成 40 道因式分解题",
+          "targetValue": 40,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "整式乘法练习",
+          "description": "练习单项式与多项式的乘法",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["乘法", "运算"]
+        },
+        {
+          "title": "因式分解训练",
+          "description": "掌握提公因式法、公式法等因式分解方法",
+          "estimatedDuration": 35,
+          "difficulty": "hard",
+          "tags": ["因式分解", "技巧"]
+        }
+      ]
+    },
+    {
+      "title": "第十五章 分式",
+      "description": "理解分式的概念和性质，掌握分式的加减乘除运算，能够解决分式方程。",
+      "estimatedDuration": 30,
+      "order": 5,
+      "keyResults": [
+        {
+          "title": "分式运算正确率",
+          "description": "分式运算正确率 ≥85%",
+          "targetValue": 85,
+          "unit": "%"
+        },
+        {
+          "title": "分式方程完成数",
+          "description": "完成 25 道分式方程题",
+          "targetValue": 25,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "分式运算练习",
+          "description": "练习分式的加减乘除运算",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["运算", "分式"]
+        },
+        {
+          "title": "分式方程求解",
+          "description": "解分式方程并检验",
+          "estimatedDuration": 35,
+          "difficulty": "hard",
+          "tags": ["方程", "检验"]
+        }
+      ]
+    }
+  ],
+  "contentContext": "本模板针对八年级数学上册设计，通过系统化的学习路径和AI个性化练习，帮助学生掌握三角形、全等、轴对称、因式分解和分式等核心内容，培养几何推理能力和代数运算能力。适用于初中二年级学生。",
+  "aiContentGenerationConfig": {
+    "enableVocabularyGeneration": false,
+    "enableExerciseGeneration": true,
+    "enableDialogueGeneration": false,
+    "enableReadingMaterialGeneration": true,
+    "enableWritingPromptGeneration": false,
+    "enableListeningMaterialGeneration": false,
+    "enableSpeakingPromptGeneration": false,
+    "enableAssessmentGeneration": true,
+    "generationLanguage": "zh-CN",
+    "difficultyLevel": "medium"
+  },
+  "learningResources": [
+    {
+      "title": "人教版八年级数学上册教材",
+      "url": null,
+      "type": "book",
+      "description": "课程主教材，系统讲解各章节知识点。"
+    },
+    {
+      "title": "学而思初中数学视频课",
+      "url": null,
+      "type": "video",
+      "description": "配合章节讲解，帮助理解难点。"
+    },
+    {
+      "title": "可汗学院初中数学课程",
+      "url": "https://www.khanacademy.org/math/",
+      "type": "website",
+      "description": "免费在线数学课程和练习题。"
+    }
+  ],
+  "assessmentCriteria": [
+    {
+      "title": "概念理解",
+      "description": "评估对数学概念、定义、公式的掌握程度",
+      "evaluationMethod": "课堂测验/AI测试",
+      "passingScore": 80
+    },
+    {
+      "title": "计算准确率",
+      "description": "评估代数运算和几何计算的正确性",
+      "evaluationMethod": "练习统计/AI自动批改",
+      "passingScore": 85
+    },
+    {
+      "title": "几何推理",
+      "description": "评估几何证明和逻辑推理能力",
+      "evaluationMethod": "证明题评分/综合测验",
+      "passingScore": 80
+    },
+    {
+      "title": "应用能力",
+      "description": "评估在综合问题中的数学建模和解决能力",
+      "evaluationMethod": "综合测验/项目作业",
+      "passingScore": 80
+    }
+  ],
+  "adaptiveAdjustmentRules": [
+    {
+      "condition": "如果章节测验分数低于70分",
+      "action": "增加该章节练习题数量并延长学习时间"
+    },
+    {
+      "condition": "如果几何证明题正确率低于60%",
+      "action": "推荐复习几何基础知识并安排专项证明训练"
+    },
+    {
+      "condition": "如果代数运算错误率高于20%",
+      "action": "推荐复习基础运算法则并安排专项练习"
+    },
+    {
+      "condition": "如果期中考试成绩未达预期",
+      "action": "生成个性化错题集并制定强化训练计划"
+    }
+  ]
+}
+

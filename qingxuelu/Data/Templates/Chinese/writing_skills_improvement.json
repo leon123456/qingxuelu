@@ -1,0 +1,93 @@
+{
+  "id": "writing_skills_improvement",
+  "name": "写作能力提升",
+  "description": "提升写作水平，掌握不同文体表达能力。",
+  "category": "语文",
+  "goalType": "hybrid",
+  "priority": "high",
+  "duration": 75,
+  "icon": "pencil.and.outline",
+  "tags": ["写作", "作文", "语文", "表达"],
+  "milestones": [
+    {
+      "title": "记叙文写作",
+      "description": "第1个月：完成 3 篇记叙文、2 篇议论文，至少 1 篇得分 ≥85 分",
+      "duration": 20,
+      "order": 1
+    },
+    {
+      "title": "议论文写作",
+      "description": "第2-3个月：累计完成 7 篇记叙文、6 篇议论文、2 篇说明文",
+      "duration": 40,
+      "order": 2
+    },
+    {
+      "title": "说明文写作",
+      "description": "第4-5个月：累计完成 10 篇记叙文、10 篇议论文、5 篇说明文，并通过质量检测",
+      "duration": 55,
+      "order": 3
+    },
+    {
+      "title": "综合提升",
+      "description": "综合运用各种写作技巧",
+      "duration": 75,
+      "order": 4
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "记叙文",
+      "description": "完成 ≥10 篇记叙文，≥3 篇得分 ≥85 分",
+      "targetValue": 10,
+      "unit": "篇"
+    },
+    {
+      "title": "议论文",
+      "description": "完成 ≥10 篇议论文，≥3 篇得分 ≥85 分",
+      "targetValue": 10,
+      "unit": "篇"
+    },
+    {
+      "title": "说明文",
+      "description": "完成 ≥5 篇说明文，≥2 篇得分 ≥85 分",
+      "targetValue": 5,
+      "unit": "篇"
+    },
+    {
+      "title": "优秀作文",
+      "description": "至少5篇作文获得优秀评价",
+      "targetValue": 5,
+      "unit": "篇"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "记叙文练习",
+      "description": "写一篇记叙文",
+      "estimatedDuration": 60,
+      "difficulty": "medium",
+      "tags": ["记叙文", "写作"]
+    },
+    {
+      "title": "议论文练习",
+      "description": "写一篇议论文",
+      "estimatedDuration": 75,
+      "difficulty": "hard",
+      "tags": ["议论文", "论证"]
+    },
+    {
+      "title": "说明文练习",
+      "description": "写一篇说明文",
+      "estimatedDuration": 50,
+      "difficulty": "medium",
+      "tags": ["说明文", "说明"]
+    },
+    {
+      "title": "作文修改",
+      "description": "修改和完善作文",
+      "estimatedDuration": 30,
+      "difficulty": "easy",
+      "tags": ["修改", "完善"]
+    }
+  ]
+}

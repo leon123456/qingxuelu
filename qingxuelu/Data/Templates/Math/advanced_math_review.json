@@ -1,0 +1,225 @@
+{
+  "id": "advanced_math_review",
+  "name": "高等数学复习",
+  "description": "在 2 个月内系统复习高数，考试成绩提升至 ≥85 分。",
+  "category": "数学",
+  "goalType": "okr",
+  "priority": "medium",
+  "duration": 30,
+  "icon": "function",
+  "tags": ["数学", "复习", "考试"],
+  "milestones": [
+    {
+      "title": "微积分基础",
+      "description": "第1-2周：完成极限与微积分部分复习",
+      "duration": 7,
+      "order": 1
+    },
+    {
+      "title": "积分计算",
+      "description": "第3-4周：完成积分与级数部分复习，完成 200 道练习题",
+      "duration": 14,
+      "order": 2
+    },
+    {
+      "title": "级数理论",
+      "description": "第5-6周：完成多元函数部分复习，累计练习 400 道题",
+      "duration": 21,
+      "order": 3
+    },
+    {
+      "title": "综合练习",
+      "description": "第7-8周：完成综合复习与 ≥3 次模拟考试",
+      "duration": 30,
+      "order": 4
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "章节完成",
+      "description": "完成指定教材 10 章复习",
+      "targetValue": 10,
+      "unit": "章"
+    },
+    {
+      "title": "练习题",
+      "description": "完成 ≥500 道练习题，正确率 ≥80%",
+      "targetValue": 500,
+      "unit": "题"
+    },
+    {
+      "title": "模拟考试",
+      "description": "完成 ≥5 次模拟考试，平均分 ≥85",
+      "targetValue": 5,
+      "unit": "次"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "概念复习",
+      "description": "复习数学概念和定理",
+      "estimatedDuration": 30,
+      "difficulty": "easy",
+      "tags": ["概念", "理论"]
+    },
+    {
+      "title": "计算练习",
+      "description": "进行数学计算练习",
+      "estimatedDuration": 45,
+      "difficulty": "medium",
+      "tags": ["计算", "练习"]
+    },
+    {
+      "title": "综合题",
+      "description": "解决综合性数学问题",
+      "estimatedDuration": 60,
+      "difficulty": "hard",
+      "tags": ["综合", "应用"]
+    }
+  ],
+  "learningPath": [
+    {
+      "title": "极限与连续性",
+      "description": "掌握极限的概念、性质和计算方法，理解连续性的定义和应用。",
+      "estimatedDuration": 7,
+      "order": 1,
+      "keyResults": [
+        {
+          "title": "极限计算",
+          "description": "能够计算各种类型的极限",
+          "targetValue": 50,
+          "unit": "题"
+        },
+        {
+          "title": "连续性判断",
+          "description": "能够判断函数在某点的连续性",
+          "targetValue": 30,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "极限计算练习",
+          "description": "练习各种极限的计算方法",
+          "estimatedDuration": 45,
+          "difficulty": "medium",
+          "tags": ["极限", "计算"]
+        },
+        {
+          "title": "连续性分析",
+          "description": "分析函数的连续性",
+          "estimatedDuration": 30,
+          "difficulty": "easy",
+          "tags": ["连续性", "分析"]
+        }
+      ],
+      "requiredSkills": ["函数基础", "极限概念", "连续性理解"],
+      "outputDeliverables": ["极限计算练习册", "连续性分析报告"]
+    },
+    {
+      "title": "导数与微分",
+      "description": "学习导数的定义、计算方法和几何意义，掌握微分的概念和应用。",
+      "estimatedDuration": 7,
+      "order": 2,
+      "keyResults": [
+        {
+          "title": "导数计算",
+          "description": "能够计算各种函数的导数",
+          "targetValue": 80,
+          "unit": "题"
+        },
+        {
+          "title": "微分应用",
+          "description": "能够应用微分解决实际问题",
+          "targetValue": 20,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "导数计算练习",
+          "description": "练习各种导数的计算方法",
+          "estimatedDuration": 60,
+          "difficulty": "medium",
+          "tags": ["导数", "计算"]
+        },
+        {
+          "title": "微分应用",
+          "description": "应用微分解决实际问题",
+          "estimatedDuration": 45,
+          "difficulty": "hard",
+          "tags": ["微分", "应用"]
+        }
+      ],
+      "requiredSkills": ["极限基础", "函数性质", "几何直观"],
+      "outputDeliverables": ["导数计算练习册", "微分应用案例"]
+    }
+  ],
+  "contentContext": "本模板针对高等数学复习设计，通过系统化的学习路径和AI个性化练习，帮助学生在2个月内提升数学成绩至85分以上。适用于准备期末考试或考研的学生。",
+  "aiContentGenerationConfig": {
+    "enableVocabularyGeneration": false,
+    "enableExerciseGeneration": true,
+    "enableDialogueGeneration": false,
+    "enableReadingMaterialGeneration": true,
+    "enableWritingPromptGeneration": false,
+    "enableListeningMaterialGeneration": false,
+    "enableSpeakingPromptGeneration": false,
+    "enableAssessmentGeneration": true,
+    "generationLanguage": "zh-CN",
+    "difficultyLevel": "medium"
+  },
+  "learningResources": [
+    {
+      "title": "《高等数学》教材",
+      "url": null,
+      "type": "book",
+      "description": "经典的高等数学教材，内容全面。"
+    },
+    {
+      "title": "Khan Academy",
+      "url": "https://www.khanacademy.org/",
+      "type": "website",
+      "description": "提供免费的数学学习视频和练习。"
+    },
+    {
+      "title": "Wolfram Alpha",
+      "url": "https://www.wolframalpha.com/",
+      "type": "website",
+      "description": "强大的数学计算和可视化工具。"
+    }
+  ],
+  "assessmentCriteria": [
+    {
+      "title": "计算准确性",
+      "description": "评估数学计算的准确性和速度",
+      "evaluationMethod": "AI自动批改/教师评估",
+      "passingScore": 85
+    },
+    {
+      "title": "概念理解",
+      "description": "评估对数学概念的理解程度",
+      "evaluationMethod": "概念测试/教师评估",
+      "passingScore": 80
+    },
+    {
+      "title": "应用能力",
+      "description": "评估将数学知识应用到实际问题的能力",
+      "evaluationMethod": "应用题测试/教师评估",
+      "passingScore": 75
+    }
+  ],
+  "adaptiveAdjustmentRules": [
+    {
+      "condition": "如果计算练习正确率低于80%",
+      "action": "推荐更多基础计算练习，并调整练习难度"
+    },
+    {
+      "condition": "如果概念理解测试未达标",
+      "action": "增加概念讲解视频和互动练习"
+    },
+    {
+      "condition": "如果模拟考试成绩低于85分",
+      "action": "延长复习时间，增加针对性练习"
+    }
+  ]
+}

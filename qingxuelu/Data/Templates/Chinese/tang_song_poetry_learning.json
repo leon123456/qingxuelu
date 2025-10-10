@@ -1,0 +1,86 @@
+{
+  "id": "tang_song_poetry_learning",
+  "name": "唐诗宋词学习",
+  "description": "系统学习唐诗宋词，掌握经典诗词的背诵、理解和鉴赏，提升文学素养和古诗词功底",
+  "category": "语文",
+  "goalType": "smart",
+  "priority": "medium",
+  "duration": 60,
+  "icon": "scroll",
+  "tags": ["唐诗", "宋词", "古诗词", "文学"],
+  "milestones": [
+    {
+      "title": "唐诗基础",
+      "description": "学习并背诵30首经典唐诗",
+      "duration": 15,
+      "order": 1
+    },
+    {
+      "title": "宋词入门",
+      "description": "学习并背诵20首经典宋词",
+      "duration": 30,
+      "order": 2
+    },
+    {
+      "title": "诗词鉴赏",
+      "description": "掌握诗词鉴赏的基本方法和技巧",
+      "duration": 45,
+      "order": 3
+    },
+    {
+      "title": "创作实践",
+      "description": "尝试创作简单的古体诗",
+      "duration": 60,
+      "order": 4
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "唐诗背诵",
+      "description": "背诵30首经典唐诗",
+      "targetValue": 30,
+      "unit": "首"
+    },
+    {
+      "title": "宋词背诵",
+      "description": "背诵20首经典宋词",
+      "targetValue": 20,
+      "unit": "首"
+    },
+    {
+      "title": "诗词鉴赏",
+      "description": "完成50首诗词的鉴赏分析",
+      "targetValue": 50,
+      "unit": "首"
+    },
+    {
+      "title": "创作作品",
+      "description": "创作5首古体诗",
+      "targetValue": 5,
+      "unit": "首"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "诗词背诵",
+      "description": "背诵指定诗词",
+      "estimatedDuration": 20,
+      "difficulty": "easy",
+      "tags": ["背诵", "记忆"]
+    },
+    {
+      "title": "诗词鉴赏",
+      "description": "分析诗词的意境和技巧",
+      "estimatedDuration": 30,
+      "difficulty": "medium",
+      "tags": ["鉴赏", "分析"]
+    },
+    {
+      "title": "诗词创作",
+      "description": "尝试创作古体诗",
+      "estimatedDuration": 45,
+      "difficulty": "hard",
+      "tags": ["创作", "写作"]
+    }
+  ]
+}

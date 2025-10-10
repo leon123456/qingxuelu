@@ -1,0 +1,150 @@
+{
+  "id": "middle_school_english_improvement",
+  "name": "提升初中英语成绩",
+  "description": "期末英语成绩达到班级前 10 名，成绩 ≥ 90 分。",
+  "category": "英语",
+  "goalType": "okr",
+  "priority": "high",
+  "duration": 90,
+  "icon": "graduationcap.fill",
+  "tags": ["英语", "成绩提升", "初中", "OKR"],
+  "milestones": [
+    {
+      "title": "词汇积累",
+      "description": "第1-2个月：完成 400 个核心单词学习；完成 4 篇阅读理解，正确率 ≥75%",
+      "duration": 30,
+      "order": 1
+    },
+    {
+      "title": "阅读理解",
+      "description": "第3-4个月：累计 600 个单词；完成 8 篇作文，至少 3 篇得分 ≥85 分",
+      "duration": 45,
+      "order": 2
+    },
+    {
+      "title": "写作能力",
+      "description": "第5-6个月：累计 800 个单词；完成全部 6 套模拟试卷；听力和口语达标",
+      "duration": 60,
+      "order": 3
+    },
+    {
+      "title": "听力与口语",
+      "description": "每周 30 分钟听力训练，参与 5 次口语对话练习",
+      "duration": 75,
+      "order": 4
+    },
+    {
+      "title": "考试模拟",
+      "description": "完成 6 套英语模拟试卷，错题订正率 ≥90%",
+      "duration": 90,
+      "order": 5
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "词汇掌握",
+      "description": "掌握并熟练运用 800 个核心单词",
+      "targetValue": 800,
+      "unit": "个"
+    },
+    {
+      "title": "阅读理解",
+      "description": "完成 12 篇英语阅读理解练习",
+      "targetValue": 12,
+      "unit": "篇"
+    },
+    {
+      "title": "阅读正确率",
+      "description": "阅读正确率 ≥80%",
+      "targetValue": 80,
+      "unit": "%"
+    },
+    {
+      "title": "作文完成",
+      "description": "完成 15 篇英语作文",
+      "targetValue": 15,
+      "unit": "篇"
+    },
+    {
+      "title": "高分作文",
+      "description": "至少 5 篇作文得分 ≥85/100",
+      "targetValue": 5,
+      "unit": "篇"
+    },
+    {
+      "title": "听力训练",
+      "description": "每周 30 分钟听力训练",
+      "targetValue": 6,
+      "unit": "小时"
+    },
+    {
+      "title": "口语练习",
+      "description": "参与 5 次口语对话练习",
+      "targetValue": 5,
+      "unit": "次"
+    },
+    {
+      "title": "模拟考试",
+      "description": "完成 6 套英语模拟试卷",
+      "targetValue": 6,
+      "unit": "套"
+    },
+    {
+      "title": "错题订正",
+      "description": "错题订正率 ≥90%",
+      "targetValue": 90,
+      "unit": "%"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "单词背诵",
+      "description": "背诵20个新单词",
+      "estimatedDuration": 30,
+      "difficulty": "easy",
+      "tags": ["词汇", "背诵"]
+    },
+    {
+      "title": "阅读理解",
+      "description": "完成一篇英语阅读理解",
+      "estimatedDuration": 25,
+      "difficulty": "medium",
+      "tags": ["阅读", "理解"]
+    },
+    {
+      "title": "英语作文",
+      "description": "写一篇英语作文",
+      "estimatedDuration": 45,
+      "difficulty": "medium",
+      "tags": ["写作", "作文"]
+    },
+    {
+      "title": "听力练习",
+      "description": "进行30分钟听力训练",
+      "estimatedDuration": 30,
+      "difficulty": "easy",
+      "tags": ["听力", "练习"]
+    },
+    {
+      "title": "口语对话",
+      "description": "参与英语口语对话练习",
+      "estimatedDuration": 20,
+      "difficulty": "hard",
+      "tags": ["口语", "对话"]
+    },
+    {
+      "title": "模拟考试",
+      "description": "完成一套英语模拟试卷",
+      "estimatedDuration": 90,
+      "difficulty": "hard",
+      "tags": ["考试", "模拟"]
+    },
+    {
+      "title": "错题订正",
+      "description": "订正错题并总结",
+      "estimatedDuration": 20,
+      "difficulty": "medium",
+      "tags": ["订正", "总结"]
+    }
+  ]
+}

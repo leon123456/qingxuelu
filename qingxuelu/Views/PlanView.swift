@@ -148,7 +148,7 @@ struct PlanContentView: View {
             VStack(spacing: 20) {
                 if let plan = planForGoal {
                     // 显示计划
-                    NavigationLink(destination: PlanDetailView(plan: plan)) {
+                    NavigationLink(destination: PlanDetailViewNew(plan: plan)) {
                         PlanCardView(plan: plan, action: {}, onDelete: {
                             deletePlan(plan)
                         })
@@ -235,29 +235,9 @@ struct GeneratePlanView: View {
         .sheet(isPresented: $showingAIPlan) {
             if let plan = generatedPlan {
                 AIPlanPreviewView(plan: plan, goal: goal) {
-                    // 应用计划
+                    // 应用计划（不立即调度任务）
                     dataManager.addPlan(plan)
-                    
-                    // 在后台进行任务调度
-                    Task {
-                        do {
-                            let scheduledPlan = try await AIPlanServiceManager.shared.schedulePlanTasks(plan, dataManager: dataManager)
-                            
-                            await MainActor.run {
-                                // 保存调度后的任务
-                                for task in scheduledPlan.scheduledTasks {
-                                    dataManager.addTask(task)
-                                    print("📅 调度任务已保存: \(task.title) - \(task.scheduledStartTime?.formatted() ?? "未安排时间")")
-                                }
-                                
-                                print("✅ 计划「\(plan.title)」及其 \(scheduledPlan.scheduledTasks.count) 个任务已保存")
-                            }
-                        } catch {
-                            await MainActor.run {
-                                print("❌ 任务调度失败: \(error)")
-                            }
-                        }
-                    }
+                    print("✅ 计划「\(plan.title)」已保存，请进入计划详情进行任务调度")
                     
                     showingAIPlan = false
                 }
@@ -269,21 +249,22 @@ struct GeneratePlanView: View {
         isGenerating = true
         errorMessage = nil
         
-        Task {
-            do {
-                // 移除错误的周数计算，让AIPlanServiceManager自己计算正确的周数
-                let plan = try await AIPlanServiceManager.shared.generateLearningPlan(for: goal, dataManager: dataManager)
-                
-                await MainActor.run {
-                    generatedPlan = plan
-                    isGenerating = false
-                    showingAIPlan = true
-                }
-            } catch {
-                await MainActor.run {
+        // 使用后台任务生成AI计划
+        BackgroundTaskManager.shared.generateAIPlanInBackground(
+            for: goal,
+            dataManager: dataManager
+        ) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let plan):
+                    self.generatedPlan = plan
+                    self.isGenerating = false
+                    self.showingAIPlan = true
+                    print("✅ AI计划生成完成")
+                case .failure(let error):
                     print("❌ AI计划生成错误: \(error)")
-                    errorMessage = error.localizedDescription
-                    isGenerating = false
+                    self.errorMessage = error.localizedDescription
+                    self.isGenerating = false
                 }
             }
         }
@@ -716,7 +697,7 @@ struct PlanOverviewCard: View {
     @State private var showingDeleteAlert = false
     
     var body: some View {
-        NavigationLink(destination: PlanDetailView(plan: plan)) {
+        NavigationLink(destination: PlanDetailViewNew(plan: plan)) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {

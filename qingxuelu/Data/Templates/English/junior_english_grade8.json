@@ -1,0 +1,423 @@
+{
+  "id": "junior_english_grade8",
+  "name": "八年级英语学习（上册）",
+  "description": "通过系统学习八年级英语上册的十个单元内容，深化英语语法知识、扩大词汇量，提高英语听说读写能力，期末成绩达到班级前20%，并能进行较为流利的英语交流。",
+  "category": "英语",
+  "goalType": "okr",
+  "priority": "high",
+  "duration": 120,
+  "icon": "globe",
+  "tags": ["英语", "初中", "语法", "词汇", "听说读写", "交际"],
+  "milestones": [
+    {
+      "title": "Unit 1-2 假期与健康",
+      "description": "学习假期活动和健康话题的表达，掌握一般过去时的用法。",
+      "duration": 12,
+      "order": 1
+    },
+    {
+      "title": "Unit 3-4 计划与交通",
+      "description": "学习制定计划和交通方式的表达，掌握一般将来时的用法。",
+      "duration": 12,
+      "order": 2
+    },
+    {
+      "title": "Unit 5-6 娱乐与教育",
+      "description": "学习娱乐活动和教育话题的表达，掌握比较级和最高级的用法。",
+      "duration": 12,
+      "order": 3
+    },
+    {
+      "title": "Unit 7-8 环境与科技",
+      "description": "学习环境保护和科技话题的表达，掌握被动语态的用法。",
+      "duration": 12,
+      "order": 4
+    },
+    {
+      "title": "Unit 9-10 邀请与建议",
+      "description": "学习邀请和建议的表达方式，掌握情态动词的用法。",
+      "duration": 12,
+      "order": 5
+    }
+  ],
+  "keyResults": [
+    {
+      "title": "词汇掌握",
+      "description": "掌握 800 个英语单词，能够正确拼写和运用",
+      "targetValue": 800,
+      "unit": "个"
+    },
+    {
+      "title": "语法练习",
+      "description": "完成 300 道语法练习题，正确率 ≥80%",
+      "targetValue": 300,
+      "unit": "题"
+    },
+    {
+      "title": "听力训练",
+      "description": "完成 150 次听力练习，提高英语听力理解能力",
+      "targetValue": 150,
+      "unit": "次"
+    },
+    {
+      "title": "口语练习",
+      "description": "完成 80 次口语练习，提高英语口语表达能力",
+      "targetValue": 80,
+      "unit": "次"
+    },
+    {
+      "title": "阅读理解",
+      "description": "完成 120 篇阅读理解练习，正确率 ≥75%",
+      "targetValue": 120,
+      "unit": "篇"
+    },
+    {
+      "title": "写作练习",
+      "description": "完成 40 篇英语写作练习，包括日记、书信、短文等",
+      "targetValue": 40,
+      "unit": "篇"
+    },
+    {
+      "title": "期末成绩",
+      "description": "期末英语成绩 ≥85 分，班级排名前 20%",
+      "targetValue": 85,
+      "unit": "分"
+    }
+  ],
+  "suggestedTasks": [
+    {
+      "title": "每日单词",
+      "description": "每天学习15个新单词，复习已学单词",
+      "estimatedDuration": 25,
+      "difficulty": "easy",
+      "tags": ["词汇", "记忆"]
+    },
+    {
+      "title": "语法练习",
+      "description": "每天完成8道语法练习题，巩固语法知识",
+      "estimatedDuration": 20,
+      "difficulty": "medium",
+      "tags": ["语法", "练习"]
+    },
+    {
+      "title": "听力训练",
+      "description": "每天进行15分钟英语听力练习",
+      "estimatedDuration": 15,
+      "difficulty": "medium",
+      "tags": ["听力", "理解"]
+    },
+    {
+      "title": "口语练习",
+      "description": "每天进行10分钟英语口语练习",
+      "estimatedDuration": 10,
+      "difficulty": "medium",
+      "tags": ["口语", "表达"]
+    },
+    {
+      "title": "阅读理解",
+      "description": "每周完成8篇阅读理解练习",
+      "estimatedDuration": 40,
+      "difficulty": "medium",
+      "tags": ["阅读", "理解"]
+    },
+    {
+      "title": "英语写作",
+      "description": "每周完成2篇英语写作练习",
+      "estimatedDuration": 35,
+      "difficulty": "hard",
+      "tags": ["写作", "表达"]
+    }
+  ],
+  "learningPath": [
+    {
+      "title": "Unit 1-2 假期与健康",
+      "description": "学习假期活动和健康话题的表达，掌握一般过去时的用法。",
+      "estimatedDuration": 12,
+      "order": 1,
+      "keyResults": [
+        {
+          "title": "词汇掌握",
+          "description": "掌握本单元 80 个基础词汇",
+          "targetValue": 80,
+          "unit": "个"
+        },
+        {
+          "title": "一般过去时练习",
+          "description": "完成 30 道一般过去时练习题",
+          "targetValue": 30,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "假期活动描述",
+          "description": "练习用英语描述假期活动",
+          "estimatedDuration": 20,
+          "difficulty": "medium",
+          "tags": ["口语", "假期"]
+        },
+        {
+          "title": "一般过去时训练",
+          "description": "练习一般过去时的构成和使用方法",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["语法", "时态"]
+        }
+      ]
+    },
+    {
+      "title": "Unit 3-4 计划与交通",
+      "description": "学习制定计划和交通方式的表达，掌握一般将来时的用法。",
+      "estimatedDuration": 12,
+      "order": 2,
+      "keyResults": [
+        {
+          "title": "词汇掌握",
+          "description": "掌握本单元 90 个基础词汇",
+          "targetValue": 90,
+          "unit": "个"
+        },
+        {
+          "title": "一般将来时练习",
+          "description": "完成 35 道一般将来时练习题",
+          "targetValue": 35,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "计划制定练习",
+          "description": "练习用英语制定计划和安排",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["口语", "计划"]
+        },
+        {
+          "title": "一般将来时训练",
+          "description": "练习一般将来时的构成和使用方法",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["语法", "时态"]
+        }
+      ]
+    },
+    {
+      "title": "Unit 5-6 娱乐与教育",
+      "description": "学习娱乐活动和教育话题的表达，掌握比较级和最高级的用法。",
+      "estimatedDuration": 12,
+      "order": 3,
+      "keyResults": [
+        {
+          "title": "词汇掌握",
+          "description": "掌握本单元 100 个基础词汇",
+          "targetValue": 100,
+          "unit": "个"
+        },
+        {
+          "title": "比较级最高级练习",
+          "description": "完成 30 道比较级和最高级练习题",
+          "targetValue": 30,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "娱乐活动讨论",
+          "description": "练习用英语讨论娱乐活动",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["口语", "娱乐"]
+        },
+        {
+          "title": "比较级最高级训练",
+          "description": "练习形容词和副词的比较级和最高级",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["语法", "比较"]
+        }
+      ]
+    },
+    {
+      "title": "Unit 7-8 环境与科技",
+      "description": "学习环境保护和科技话题的表达，掌握被动语态的用法。",
+      "estimatedDuration": 12,
+      "order": 4,
+      "keyResults": [
+        {
+          "title": "词汇掌握",
+          "description": "掌握本单元 110 个基础词汇",
+          "targetValue": 110,
+          "unit": "个"
+        },
+        {
+          "title": "被动语态练习",
+          "description": "完成 35 道被动语态练习题",
+          "targetValue": 35,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "环境保护讨论",
+          "description": "练习用英语讨论环境保护话题",
+          "estimatedDuration": 30,
+          "difficulty": "hard",
+          "tags": ["口语", "环境"]
+        },
+        {
+          "title": "被动语态训练",
+          "description": "练习被动语态的构成和使用方法",
+          "estimatedDuration": 35,
+          "difficulty": "hard",
+          "tags": ["语法", "语态"]
+        }
+      ]
+    },
+    {
+      "title": "Unit 9-10 邀请与建议",
+      "description": "学习邀请和建议的表达方式，掌握情态动词的用法。",
+      "estimatedDuration": 12,
+      "order": 5,
+      "keyResults": [
+        {
+          "title": "词汇掌握",
+          "description": "掌握本单元 120 个基础词汇",
+          "targetValue": 120,
+          "unit": "个"
+        },
+        {
+          "title": "情态动词练习",
+          "description": "完成 30 道情态动词练习题",
+          "targetValue": 30,
+          "unit": "题"
+        }
+      ],
+      "suggestedTasks": [
+        {
+          "title": "邀请建议练习",
+          "description": "练习用英语发出邀请和提出建议",
+          "estimatedDuration": 25,
+          "difficulty": "medium",
+          "tags": ["口语", "交际"]
+        },
+        {
+          "title": "情态动词训练",
+          "description": "练习情态动词的用法和区别",
+          "estimatedDuration": 30,
+          "difficulty": "medium",
+          "tags": ["语法", "情态动词"]
+        }
+      ]
+    }
+  ],
+  "contentContext": "本模板针对八年级英语上册设计，通过系统化的学习路径和AI个性化练习，帮助学生深化英语语法知识、扩大词汇量，提高英语听说读写能力。适用于初中二年级学生。",
+  "aiContentGenerationConfig": {
+    "enableVocabularyGeneration": true,
+    "enableExerciseGeneration": true,
+    "enableDialogueGeneration": true,
+    "enableReadingMaterialGeneration": true,
+    "enableWritingPromptGeneration": true,
+    "enableListeningMaterialGeneration": true,
+    "enableSpeakingPromptGeneration": true,
+    "enableAssessmentGeneration": true,
+    "generationLanguage": "en-US",
+    "difficultyLevel": "medium"
+  },
+  "learningResources": [
+    {
+      "title": "人教版八年级英语上册教材",
+      "url": null,
+      "type": "book",
+      "description": "课程主教材，系统讲解各单元知识点。"
+    },
+    {
+      "title": "初中英语词汇手册",
+      "url": null,
+      "type": "book",
+      "description": "英语词汇学习参考书。"
+    },
+    {
+      "title": "英语语法练习册",
+      "url": null,
+      "type": "book",
+      "description": "英语语法专项练习材料。"
+    },
+    {
+      "title": "英语听力训练",
+      "url": null,
+      "type": "audio",
+      "description": "英语听力练习音频材料。"
+    },
+    {
+      "title": "英语口语练习",
+      "url": null,
+      "type": "audio",
+      "description": "英语口语练习材料。"
+    }
+  ],
+  "assessmentCriteria": [
+    {
+      "title": "词汇掌握",
+      "description": "评估英语词汇的掌握程度和运用能力",
+      "evaluationMethod": "词汇测试/拼写测试",
+      "passingScore": 80
+    },
+    {
+      "title": "语法理解",
+      "description": "评估英语语法的理解和运用能力",
+      "evaluationMethod": "语法测试/AI自动批改",
+      "passingScore": 75
+    },
+    {
+      "title": "听力理解",
+      "description": "评估英语听力理解能力",
+      "evaluationMethod": "听力测试/口语对话",
+      "passingScore": 70
+    },
+    {
+      "title": "口语表达",
+      "description": "评估英语口语表达能力",
+      "evaluationMethod": "口语测试/对话练习",
+      "passingScore": 70
+    },
+    {
+      "title": "阅读理解",
+      "description": "评估英语阅读理解能力",
+      "evaluationMethod": "阅读理解测试/AI自动批改",
+      "passingScore": 75
+    },
+    {
+      "title": "写作表达",
+      "description": "评估英语写作表达能力",
+      "evaluationMethod": "写作测试/作文评分",
+      "passingScore": 70
+    }
+  ],
+  "adaptiveAdjustmentRules": [
+    {
+      "condition": "如果词汇测试正确率低于70%",
+      "action": "增加词汇学习时间并采用多种记忆方法"
+    },
+    {
+      "condition": "如果语法练习正确率低于60%",
+      "action": "推荐语法基础知识复习并安排专项语法训练"
+    },
+    {
+      "condition": "如果听力理解正确率低于60%",
+      "action": "推荐听力技巧训练并安排专项听力练习"
+    },
+    {
+      "condition": "如果口语表达得分低于60分",
+      "action": "推荐口语练习方法并安排专项口语训练"
+    },
+    {
+      "condition": "如果阅读理解正确率低于60%",
+      "action": "推荐阅读技巧训练并安排专项阅读理解练习"
+    },
+    {
+      "condition": "如果期中考试成绩未达预期",
+      "action": "生成个性化学习计划并制定强化训练方案"
+    }
+  ]
+}
+

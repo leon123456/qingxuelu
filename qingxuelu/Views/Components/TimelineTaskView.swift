@@ -67,18 +67,18 @@ struct TimelineTaskView: View {
                         HStack(spacing: 8) {
                             Image(systemName: "plus")
                                 .font(.system(size: 18, weight: .medium))
-                                .foregroundColor(.white)
+                                .foregroundColor(Color(.systemBackground))
                             
                             Text("添加任务")
                                 .font(.system(size: 16, weight: .medium))
-                                .foregroundColor(.white)
+                                .foregroundColor(Color(.systemBackground))
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
                         .background(
                             Capsule()
                                 .fill(Color.green)
-                                .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
+                                .shadow(color: Color(.label).opacity(0.2), radius: 8, x: 0, y: 4)
                         )
                     }
                     .buttonStyle(PlainButtonStyle())
@@ -99,8 +99,8 @@ struct TimelineTaskView: View {
         let calendar = Calendar.current
         var dates: [Date] = []
         
-        // 以指定日期为中心，生成固定范围（前后各30天）
-        for i in -30...30 {
+        // 优化：减少初始范围，只生成前后各7天（共15天）
+        for i in -7...7 {
             if let date = calendar.date(byAdding: .day, value: i, to: centerDate) {
                 dates.append(date)
             }
@@ -116,7 +116,7 @@ struct TimelineTaskView: View {
             return 
         }
         
-        let threshold = 5 // 距离边界5个位置时开始扩展
+        let threshold = 2 // 优化：距离边界2个位置时开始扩展，减少扩展频率
         
         if currentIndex < threshold {
             // 接近左边界，扩展前面的日期
@@ -135,7 +135,8 @@ struct TimelineTaskView: View {
         guard let firstDate = dateRange.first else { return }
         
         var newDates: [Date] = []
-        for i in 1...30 {
+        // 优化：每次只扩展7天，减少扩展量
+        for i in 1...7 {
             if let date = calendar.date(byAdding: .day, value: -i, to: firstDate) {
                 newDates.append(date)
             }
@@ -152,7 +153,8 @@ struct TimelineTaskView: View {
         guard let lastDate = dateRange.last else { return }
         
         var newDates: [Date] = []
-        for i in 1...30 {
+        // 优化：每次只扩展7天，减少扩展量
+        for i in 1...7 {
             if let date = calendar.date(byAdding: .day, value: i, to: lastDate) {
                 newDates.append(date)
             }
@@ -162,6 +164,7 @@ struct TimelineTaskView: View {
         dateRange = dateRange + newDates
         print("📅 扩展后面日期完成，新范围大小: \(dateRange.count)")
     }
+    
     
     // MARK: - 检查选中日期是否有任务
     private var hasTasksForSelectedDate: Bool {
@@ -536,7 +539,7 @@ struct TaskTimelineCard: View {
             return .purple
         case .chemistry:
             return .orange
-        case .biology:
+        case .biology, .science:
             return .mint
         case .history:
             return .brown
@@ -742,9 +745,16 @@ struct TimelineContentView: View {
     let date: Date
     @EnvironmentObject var dataManager: DataManager
     
+    // 优化：添加缓存机制，避免重复计算
+    @State private var cachedTasks: [LearningTask] = []
+    @State private var lastUpdateDate: Date = Date.distantPast
+    
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 0) {
+                // 优化：使用缓存的任务数据
+                let tasksForDate = getCachedTasksForDate()
+                
                 // 检查是否有任务
                 if hasTasksForDate {
                     // 只显示有任务的时间槽
@@ -761,6 +771,31 @@ struct TimelineContentView: View {
             .padding(.top, 20) // 增加顶部距离
         }
         .animation(.easeInOut(duration: 0.3), value: date)
+    }
+    
+    // MARK: - 获取缓存的任务数据
+    private func getCachedTasksForDate() -> [LearningTask] {
+        // 优化：如果数据没有更新，直接返回缓存
+        if lastUpdateDate == dataManager.lastUpdateTime {
+            return cachedTasks
+        }
+        
+        // 重新计算并缓存
+        let tasks = dataManager.tasks.filter { task in
+            // 检查任务是否在指定日期
+            if task.isTimeBlocked, let scheduledTime = task.scheduledStartTime {
+                return Calendar.current.isDate(scheduledTime, inSameDayAs: date)
+            } else if let dueDate = task.dueDate {
+                return Calendar.current.isDate(dueDate, inSameDayAs: date)
+            } else if let scheduledTime = task.scheduledStartTime {
+                return Calendar.current.isDate(scheduledTime, inSameDayAs: date)
+            }
+            return false
+        }
+        
+        cachedTasks = tasks
+        lastUpdateDate = dataManager.lastUpdateTime
+        return tasks
     }
     
     // MARK: - 检查指定日期是否有任务
